@@ -362,6 +362,19 @@ const CSS = `
       font-family: var(--fh); font-size: 1.5rem; font-weight: 800;
       color: var(--gold); letter-spacing: 0.05em; line-height: 1;
     }
+    /* Real photo styles */
+    .founder-photo {
+      width: 100%; max-width: 320px;
+      aspect-ratio: 3 / 4;
+      object-fit: cover; object-position: center top;
+      border-radius: 3px;
+      border: 1.5px solid var(--gold-border);
+      display: block;
+      margin-bottom: 28px;
+      filter: grayscale(15%) contrast(1.05);
+      transition: filter 0.3s ease;
+    }
+    .founder-photo:hover { filter: grayscale(0%) contrast(1.08); }
     .founder-name {
       font-family: var(--fh); font-size: 1.6rem; font-weight: 800;
       color: var(--white); margin-bottom: 6px;
@@ -898,25 +911,19 @@ const HTML = `
 <div class="founders-panel">
 <!-- EVAN — left panel -->
 <div class="founder-half reveal-left">
-<div class="founder-placeholder">
-<span class="founder-initials">EV</span>
-</div>
+<img alt="Evan — Co-Founder, TriFactor Scaling" class="founder-photo" src="evan.jpg"/>
 <div class="founder-name">Evan</div>
 <div class="founder-title">Co-Founder — Growth Strategy &amp; Client Operations</div>
 <p class="founder-quote">"What does your pipeline actually look like right now?"</p>
 <p class="founder-bio">Evan leads client strategy, system architecture, and new business. He's the one on every intro call asking the question most consultants are afraid to ask — then building the answer. Direct, fast, and allergic to anything that doesn't move a needle.</p>
-<p class="founder-photo-note">Photo coming soon</p>
 </div>
 <!-- GAVIN — right panel -->
 <div class="founder-half reveal-right">
-<div class="founder-placeholder">
-<span class="founder-initials">GV</span>
-</div>
+<img alt="Gavin — Co-Founder, TriFactor Scaling" class="founder-photo" src="gavin.jpg"/>
 <div class="founder-name">Gavin</div>
 <div class="founder-title">Co-Founder — Technical Build &amp; Automation Engineering</div>
 <p class="founder-quote">"If it runs inside a client's business, Gavin built it."</p>
-<p class="founder-bio">Gavin builds the systems. GHL configuration, workflow automations, AppSheet dashboards, SMS sequences — every client deployment has Gavin's fingerprints on it. He solves problems by going deeper into the tool than most people know is possible.</p>
-<p class="founder-photo-note">Photo coming soon</p>
+<p class="founder-bio">Gavin builds the systems. GHL configuration, workflow automations, SMS sequences — every client deployment has Gavin's fingerprints on it. He solves problems by going deeper into the tool than most people know is possible.</p>
 </div>
 </div>
 </div>
@@ -1059,7 +1066,7 @@ const About = () => {
     document.head.appendChild(styleEl);
     if (!document.querySelector('script[data-clarity]')) {
       const cl = document.createElement("script");
-      cl.setAttribute("data-clarity", "vwvpjcliya");
+      cl.setAttribute("data-clarity","vwvpjcliya");
       cl.text = `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vwvpjcliya");`;
       document.head.appendChild(cl);
     }

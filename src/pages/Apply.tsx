@@ -461,6 +461,8 @@ const SCRIPT = `
     const formSuccess = document.getElementById('form-success');
     const formError   = document.getElementById('form-error');
 
+    const GHL_WEBHOOK = 'https://services.leadconnectorhq.com/hooks/jDScTGOzM7KyyAjSegMw/webhook-trigger/b7a9d311-467e-41bb-a433-6ce7e40ad2e1';
+
     if (applyForm) {
       applyForm.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -470,15 +472,40 @@ const SCRIPT = `
         formBtn.textContent = 'Sending…';
         formError.style.display = 'none';
 
-        try {
-          const response = await fetch(applyForm.action, {
-            method: 'POST',
-            body: new FormData(applyForm),
-            headers: { 'Accept': 'application/json' }
-          });
+        // Build structured payload for GHL
+        const fd = new FormData(applyForm);
+        const payload = {
+          firstName:    fd.get('First Name') || '',
+          lastName:     fd.get('Last Name')  || '',
+          email:        fd.get('email')      || '',
+          phone:        fd.get('Phone')      || '',
+          businessName: fd.get('Business Name') || '',
+          businessType: fd.get('Business Type') || '',
+          revenue:      fd.get('Monthly Revenue') || '',
+          challenge:    fd.get('Biggest Challenge') || '',
+          timeline:     fd.get('Timeline')   || '',
+          source:       'TFS Website — Apply Page',
+          tags:         ['website-lead', 'growth-audit-request']
+        };
 
-          if (response.ok) {
-            // Show success, hide form
+        try {
+          // Fire both in parallel — Formspree (email) + GHL (pipeline)
+          const [formspreeRes] = await Promise.allSettled([
+            fetch(applyForm.action, {
+              method: 'POST',
+              body: fd,
+              headers: { 'Accept': 'application/json' }
+            }),
+            fetch(GHL_WEBHOOK, {
+              method: 'POST',
+              body: JSON.stringify(payload),
+              headers: { 'Content-Type': 'application/json' }
+            })
+          ]);
+
+          // Show success if Formspree accepted (GHL is fire-and-forget)
+          const fsOk = formspreeRes.status === 'fulfilled' && formspreeRes.value.ok;
+          if (fsOk) {
             applyForm.style.display = 'none';
             const note = document.querySelector('.form-note');
             if (note) note.style.display = 'none';
@@ -931,7 +958,7 @@ const Apply = () => {
     document.head.appendChild(styleEl);
     if (!document.querySelector('script[data-clarity]')) {
       const cl = document.createElement("script");
-      cl.setAttribute("data-clarity", "vwvpjcliya");
+      cl.setAttribute("data-clarity","vwvpjcliya");
       cl.text = `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vwvpjcliya");`;
       document.head.appendChild(cl);
     }
