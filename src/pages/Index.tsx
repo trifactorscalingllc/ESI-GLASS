@@ -2789,6 +2789,12 @@ const Index = () => {
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Force black body background for full-bleed dark pages
+    const prevBg = document.body.style.background;
+    const prevColor = document.body.style.color;
+    document.body.style.background = "#000000";
+    document.body.style.color = "#FFFFFF";
+
     // Inject scoped CSS once per page
     const styleEl = document.createElement("style");
     styleEl.setAttribute("data-tri-page", "tri-home");
@@ -2824,6 +2830,8 @@ const Index = () => {
       styleEl.remove();
       scriptEl?.remove();
       root?.removeEventListener("click", onClick);
+      document.body.style.background = prevBg;
+      document.body.style.color = prevColor;
     };
   }, []);
 
