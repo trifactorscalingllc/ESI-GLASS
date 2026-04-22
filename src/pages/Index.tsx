@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CSS = `
     /* ======================== VARIABLES ======================== */
@@ -1500,11 +1501,11 @@ const HTML = `
   <nav id="navbar">
     <div class="container">
       <div class="nav-inner">
-        <a href="trifactor-website.html" class="nav-logo" aria-label="TriFactor Scaling">
+        <a href="/" class="nav-logo" aria-label="TriFactor Scaling">
           <img src="./TFS-Logo-Transparent.png" alt="TriFactor Scaling" height="40">
         </a>
         <ul class="nav-links">
-          <li><a href="trifactor-website.html" class="nav-link active-nav">Overview</a></li>
+          <li><a href="/" class="nav-link active-nav">Overview</a></li>
           <li><a href="/services" class="nav-link">Services</a></li>
           <li><a href="/results" class="nav-link">Results</a></li>
           <li><a href="/about" class="nav-link">About</a></li>
@@ -1520,7 +1521,7 @@ const HTML = `
   </nav>
 
   <div class="mobile-menu" id="mobileMenu">
-    <a href="trifactor-website.html"    onclick="toggleMenu()" class="active-nav">Overview</a>
+    <a href="/"    onclick="toggleMenu()" class="active-nav">Overview</a>
     <a href="/services" onclick="toggleMenu()">Services</a>
     <a href="/results"  onclick="toggleMenu()">Results</a>
     <a href="/about"    onclick="toggleMenu()">About</a>
@@ -2417,7 +2418,7 @@ const HTML = `
         <div>
           <div class="footer-col-label">Pages</div>
           <div class="footer-col-links">
-            <a href="trifactor-website.html">Overview</a>
+            <a href="/">Overview</a>
             <a href="/services">Services</a>
             <a href="/results">Results</a>
             <a href="/about">About</a>
@@ -2787,8 +2788,12 @@ const SCRIPT = `
 
 const Index = () => {
   const rootRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // Scroll to top on page mount
+    window.scrollTo(0, 0);
+
     // Force black body background for full-bleed dark pages
     const prevBg = document.body.style.background;
     const prevColor = document.body.style.color;
@@ -2811,31 +2816,38 @@ const Index = () => {
       } catch (e) { console.error("page script error", e); }
     }, 0);
 
-    // SPA link interception: route trifactor internal links via history
-    const onClick = (e: MouseEvent) => {
-      const a = (e.target as HTMLElement).closest("a");
-      if (!a) return;
-      const href = a.getAttribute("href") || "";
-      if (href.startsWith("/") && !href.startsWith("//")) {
-        e.preventDefault();
-        window.history.pushState({}, "", href);
-        window.dispatchEvent(new PopStateEvent("popstate"));
-      }
-    };
-    const root = rootRef.current;
-    root?.addEventListener("click", onClick);
-
     return () => {
       window.clearTimeout(t);
       styleEl.remove();
       scriptEl?.remove();
-      root?.removeEventListener("click", onClick);
       document.body.style.background = prevBg;
       document.body.style.color = prevColor;
     };
   }, []);
 
-  return <div ref={rootRef} className="tri-home" dangerouslySetInnerHTML={{ __html: HTML }} />;
+  // Intercept internal link clicks for smooth SPA routing
+  const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const a = (e.target as HTMLElement).closest("a");
+    if (!a) return;
+    const href = a.getAttribute("href") || "";
+    if (href.startsWith("/") && !href.startsWith("//")) {
+      e.preventDefault();
+      if (href === window.location.pathname) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        navigate(href);
+      }
+    }
+  };
+
+  return (
+    <div
+      ref={rootRef}
+      className="tri-home tri-page-fade"
+      onClick={onClick}
+      dangerouslySetInnerHTML={{ __html: HTML }}
+    />
+  );
 };
 
 export default Index;
