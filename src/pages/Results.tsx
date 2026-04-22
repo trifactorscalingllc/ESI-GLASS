@@ -885,10 +885,10 @@ const SCRIPT = `
 
   const nav = document.getElementById('navbar');
   window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 50));
-  function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+  window.toggleMenu = function() { document.getElementById('mobileMenu').classList.toggle('open'); }
   document.addEventListener('click', e => {
     const m = document.getElementById('mobileMenu');
-    if (m && m.classList.contains('open') && !nav.contains(e.target) && !m.contains(e.target)) m.classList.remove('open');
+    if (m && m.classList.contains('open') && !document.getElementById('navbar').contains(e.target) && !m.contains(e.target)) m.classList.remove('open');
   });
   const revObs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
@@ -1244,44 +1244,65 @@ const Results = () => {
   useEffect(() => {
     const prevBg = document.body.style.background;
     const prevColor = document.body.style.color;
-    document.body.style.background = "#040404";
-    document.body.style.color = "#f0ece0";
+    document.body.style.background = "#000000";
+    document.body.style.color = "#ffffff";
     document.documentElement.style.overflowX = "hidden";
     document.body.style.overflowX = "hidden";
+
     const styleEl = document.createElement("style");
     styleEl.setAttribute("data-tri-page", "tri-results");
     styleEl.innerHTML = CSS;
     document.head.appendChild(styleEl);
+
+    // Clarity
     if (!document.querySelector('script[data-clarity]')) {
       const cl = document.createElement("script");
-      cl.setAttribute("data-clarity", "vwvpjcliya");
+      cl.setAttribute("data-clarity","vwvpjcliya");
       cl.text = `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vwvpjcliya");`;
       document.head.appendChild(cl);
     }
+
     let scriptEl: HTMLScriptElement | null = null;
     const t = window.setTimeout(() => {
       try {
         scriptEl = document.createElement("script");
+        // Wrapped in IIFE but window.toggleMenu is set inside the page SCRIPT
         scriptEl.text = "(function(){try{\n" + SCRIPT + "\n}catch(e){console.error('tri page script error',e);}})();";
         document.body.appendChild(scriptEl);
       } catch (e) { console.error("page script error", e); }
     }, 0);
+
     return () => {
-      window.clearTimeout(t); styleEl.remove(); scriptEl?.remove();
-      document.body.style.background = prevBg; document.body.style.color = prevColor;
-      document.documentElement.style.overflowX = ""; document.body.style.overflowX = "";
+      window.clearTimeout(t);
+      styleEl.remove();
+      scriptEl?.remove();
+      // Clean up global nav fn to avoid stale refs
+      if ((window as any).toggleMenu) delete (window as any).toggleMenu;
+      document.body.style.background = prevBg;
+      document.body.style.color = prevColor;
+      document.documentElement.style.overflowX = "";
+      document.body.style.overflowX = "";
     };
   }, []);
+
+  // SPA routing — intercept all internal anchor clicks
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const a = (e.target as HTMLElement).closest("a");
     if (!a) return;
     const href = a.getAttribute("href") || "";
     if (href.startsWith("/") && !href.startsWith("//")) {
       e.preventDefault();
-      if (href === window.location.pathname) { window.scrollTo({ top: 0, behavior: "smooth" }); }
-      else { navigate(href); }
+      // Also close mobile menu if open
+      const menu = document.getElementById("mobileMenu");
+      if (menu) menu.classList.remove("open");
+      if (href === window.location.pathname) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        navigate(href);
+      }
     }
   };
+
   return (
     <div ref={rootRef} className="tri-results tri-page-fade"
       style={{ overflowX: "hidden", maxWidth: "100vw" }}
