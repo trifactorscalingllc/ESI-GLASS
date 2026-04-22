@@ -1661,6 +1661,13 @@ const CSS = `
 
 const SCRIPT = `
 
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "vwvpjcliya");
+  
+
     /* ============================================================
        NAV SCROLL
     ============================================================ */
@@ -2905,6 +2912,14 @@ const Index = () => {
     styleEl.setAttribute("data-tri-page", "tri-home");
     styleEl.innerHTML = CSS;
     document.head.appendChild(styleEl);
+
+    // Inject Microsoft Clarity
+    if (!document.querySelector('script[data-clarity]')) {
+      const clarityEl = document.createElement("script");
+      clarityEl.setAttribute("data-clarity", "vwvpjcliya");
+      clarityEl.text = `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vwvpjcliya");`;
+      document.head.appendChild(clarityEl);
+    }
 
     let scriptEl: HTMLScriptElement | null = null;
     const t = window.setTimeout(() => {
