@@ -67,7 +67,7 @@ const CSS = `
     @media(max-width:768px){.nav-links,.nav-cta{display:none;}.hamburger{display:flex;}}
 
     /* PAGE HERO */
-    .page-hero { background:var(--black); border-bottom:1px solid var(--border); padding:140px 0 80px; position:relative; overflow:hidden; }
+    .page-hero { background:var(--black); border-bottom:1px solid var(--border); padding:44px 0 80px; position:relative; overflow:hidden; }
     .page-hero::before { content:''; position:absolute; inset:0; background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px); background-size:60px 60px; opacity:0.2; pointer-events:none; }
     .page-hero::after { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 70% 60% at 50% 40%,transparent 25%,var(--black) 85%); pointer-events:none; }
     .page-hero .container { position:relative; z-index:1; }

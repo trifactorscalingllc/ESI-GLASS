@@ -188,7 +188,7 @@ const CSS = `
 
     /* ======================== PAGE HERO ======================== */
     .page-hero {
-      padding: 160px 0 100px;
+      padding: 64px 0 100px;
       background: var(--black);
       text-align: center;
       position: relative;
@@ -688,11 +688,11 @@ const CSS = `
     @media (max-width: 900px) {
       section { padding: 72px 0; }
       #featured-case, #client-grid, #testimonials, #final-cta { padding: 72px 0; }
-      .page-hero { padding: 130px 0 72px; }
+      .page-hero { padding: 40px 0 72px; }
     }
     @media (max-width: 768px) {
       section { padding: 72px 0; }
-      .page-hero { padding: 130px 0 72px; }
+      .page-hero { padding: 40px 0 72px; }
     }
     @media (max-width: 600px) {
       .container { padding: 0 18px; }
@@ -702,7 +702,7 @@ const CSS = `
       .footer-top { flex-direction: column; gap: 28px; }
     }
     @media (max-width: 480px) {
-      .page-hero { padding: 110px 0 56px; }
+      .page-hero { padding: 24px 0 56px; }
       .cta-headline { font-size: 1.9rem; }
     }
   
