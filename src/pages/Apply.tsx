@@ -247,7 +247,15 @@ const CSS = `
       .page-hero h1{font-size:2.2rem;}
     }
     @media(max-width:360px){.container{padding:0 16px;}}
-  `;
+  
+
+.tri-page-hero-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+.page-hero { position: relative; overflow: hidden; }
+.page-hero > .container, .page-hero > .page-hero-inner { position: relative; z-index: 2; }
+`;
 const HTML = `
 
   <!-- STICKY BAR -->
@@ -261,7 +269,7 @@ const HTML = `
     <div class="container">
       <div class="nav-inner">
         <a href="/" class="nav-logo" aria-label="TriFactor Scaling">
-          <img src="./TFS-Logo-Transparent.png" alt="TriFactor Scaling" height="40">
+          <img src="/tfs-logo.png" alt="TriFactor Scaling">
         </a>
         <ul class="nav-links">
           <li><a href="/" class="nav-link">Overview</a></li>
@@ -289,6 +297,7 @@ const HTML = `
 
   <!-- PAGE HERO -->
   <section class="page-hero">
+  <canvas class="tri-page-hero-canvas" aria-hidden="true"></canvas>
     <div class="container">
       <div class="apply-hero-grid">
         <!-- Left -->
@@ -653,11 +662,11 @@ const HTML = `
 
   <!-- FOOTER -->
   <footer>
-    <img src="./TFS-Logo-Transparent.png" alt="" class="footer-watermark" aria-hidden="true">
+    <img src="/tfs-logo.png" alt="" class="footer-watermark" aria-hidden="true">
     <div class="container footer-inner">
       <div class="footer-top">
         <div class="footer-brand">
-          <img src="./TFS-Logo-Transparent.png" alt="TriFactor Scaling" class="footer-logo-img">
+          <img src="/tfs-logo.png" alt="TriFactor Scaling" class="footer-logo-img">
           <p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
           <a href="mailto:trifactorscaling@gmail.com" class="footer-contact-link">trifactorscaling@gmail.com →</a>
         </div>
@@ -764,7 +773,35 @@ const SCRIPT = `
         }
       });
     }
-  `;
+  
+;
+
+(function(){
+  var canvas = document.querySelector('.tri-page-hero-canvas');
+  if (!canvas || !canvas.getContext) return;
+  var hero = canvas.closest('.page-hero, #hero'); if (!hero) return;
+  var ctx = canvas.getContext('2d');
+  var W=0, H=0, particles=[];
+  function resize(){ W = canvas.width = hero.offsetWidth; H = canvas.height = hero.offsetHeight; }
+  function mk(){ return { x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.5+0.4,
+    alpha:Math.random()*0.35+0.05, vx:(Math.random()-0.5)*0.18, vy:(Math.random()-0.5)*0.18,
+    life:Math.random()*200+100, age:0 }; }
+  function init(){ resize(); particles = Array.from({length:65}, mk); }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(function(p,i){
+      p.x+=p.vx; p.y+=p.vy; p.age+=1;
+      var t=p.age/p.life, fade = t<0.2 ? t/0.2 : t>0.8 ? (1-t)/0.2 : 1;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(212,175,55,'+(p.alpha*fade)+')'; ctx.fill();
+      if(p.age>=p.life||p.x<0||p.x>W||p.y<0||p.y>H) particles[i]=mk();
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', resize, {passive:true});
+  init(); draw();
+})();
+`;
 
 const Apply = () => {
   const rootRef = useRef<HTMLDivElement>(null);

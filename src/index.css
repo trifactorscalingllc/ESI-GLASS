@@ -104,13 +104,14 @@ All colors MUST be HSL.
   }
 }
 
-/* TriFactor page transition: smooth fade + slight rise on route change */
+/* TriFactor page transition: opacity-only fade so position:fixed children
+   (like the navbar) keep anchoring to the viewport during the animation. */
 @keyframes tri-page-fade-in {
-  0%   { opacity: 0; transform: translateY(8px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
 }
 .tri-page-fade {
-  animation: tri-page-fade-in 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: tri-page-fade-in 0.4s ease-out both;
 }
 @media (prefers-reduced-motion: reduce) {
   .tri-page-fade { animation: none; }
