@@ -174,8 +174,8 @@ const CSS = `
 
     /* ======================== HERO ======================== */
     #hero {
-      min-height: 88vh; display: flex; align-items: center;
-      padding-top: 90px; position: relative; overflow: hidden;
+      min-height: 88vh; display: flex; align-items: flex-start;
+      padding-top: 130px; position: relative; overflow: hidden;
     }
 
     /* Canvas particles */
