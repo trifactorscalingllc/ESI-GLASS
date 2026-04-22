@@ -2,8 +2,9 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CSS = `
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    .tri-apply {
+    :root {
       color-scheme: dark;
       --gold: #D4AF37; --gold-light: #E2C860; --gold-dark: #B8962A;
       --gold-dim: rgba(212,175,55,0.10); --gold-glow: rgba(212,175,55,0.22);
@@ -12,10 +13,12 @@ const CSS = `
       --card: #161616; --card-hover: #1C1C1C; --border: #222222; --border-mid: #2E2E2E;
       --white: #FFFFFF; --off-white: #F2F0EB; --gray: #6B7280; --gray-light: #9CA3AF;
       --fh: 'Plus Jakarta Sans', sans-serif; --fb: 'Inter', sans-serif;
-    } .tri-apply { scroll-behavior: smooth; }
+    }
+    html { scroll-behavior: smooth; }
     ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: var(--black); }
     ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
-    * { scrollbar-width: thin; scrollbar-color: var(--gold) var(--black); } .tri-apply { background: var(--black); color: var(--white); font-family: var(--fb); line-height: 1.6; overflow-x: hidden; }
+    * { scrollbar-width: thin; scrollbar-color: var(--gold) var(--black); }
+    body { background: var(--black); color: var(--white); font-family: var(--fb); line-height: 1.6; overflow-x: hidden; }
     h1,h2,h3,h4 { font-family: var(--fh); line-height: 1.08; letter-spacing: -0.025em; }
     .container { max-width: 1140px; margin: 0 auto; padding: 0 28px; }
     section { padding: 100px 0; }
@@ -67,7 +70,7 @@ const CSS = `
     @media(max-width:768px){.nav-links,.nav-cta{display:none;}.hamburger{display:flex;}}
 
     /* PAGE HERO */
-    .page-hero { background:var(--black); border-bottom:1px solid var(--border); padding:44px 0 80px; position:relative; overflow:hidden; }
+    .page-hero { background:var(--black); border-bottom:1px solid var(--border); padding:140px 0 80px; position:relative; overflow:hidden; }
     .page-hero::before { content:''; position:absolute; inset:0; background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px); background-size:60px 60px; opacity:0.2; pointer-events:none; }
     .page-hero::after { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 70% 60% at 50% 40%,transparent 25%,var(--black) 85%); pointer-events:none; }
     .page-hero .container { position:relative; z-index:1; }
@@ -248,458 +251,10 @@ const CSS = `
     }
     @media(max-width:360px){.container{padding:0 16px;}}
   
-
-.tri-page-hero-canvas {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  pointer-events: none; z-index: 0;
-}
-.page-hero { position: relative; overflow: hidden; }
-.page-hero > .container, .page-hero > .page-hero-inner { position: relative; z-index: 2; }
 `;
-const HTML = `
 
-  <!-- STICKY BAR -->
-  <div class="sticky-bar" id="stickyBar">
-    <p class="sticky-bar-text">We open <span>3 client spots per month.</span> Currently accepting applications.</p>
-    <a href="#apply-form-section" class="btn-gold" style="padding:11px 24px;font-size:0.8rem;white-space:nowrap;">Apply Below ↓</a>
-  </div>
-
-  <!-- NAV -->
-  <nav id="navbar">
-    <div class="container">
-      <div class="nav-inner">
-        <a href="/" class="nav-logo" aria-label="TriFactor Scaling">
-          <img src="/tfs-logo.png" alt="TriFactor Scaling">
-        </a>
-        <ul class="nav-links">
-          <li><a href="/" class="nav-link">Overview</a></li>
-          <li><a href="/services" class="nav-link">Services</a></li>
-          <li><a href="/results" class="nav-link">Results</a></li>
-          <li><a href="/about" class="nav-link">About</a></li>
-        </ul>
-        <div class="nav-cta-wrap">
-          <a href="#apply-form-section" class="btn-gold nav-cta active-nav" style="padding:11px 22px;font-size:0.8rem;">Apply Now →</a>
-          <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
-            <span></span><span></span><span></span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="/" onclick="toggleMenu()">Overview</a>
-    <a href="/services" onclick="toggleMenu()">Services</a>
-    <a href="/results" onclick="toggleMenu()">Results</a>
-    <a href="/about" onclick="toggleMenu()">About</a>
-    <a href="#apply-form-section" onclick="toggleMenu()" class="active-nav">Apply Now →</a>
-  </div>
-
-  <!-- PAGE HERO -->
-  <section class="page-hero">
-  <canvas class="tri-page-hero-canvas" aria-hidden="true"></canvas>
-    <div class="container">
-      <div class="apply-hero-grid">
-        <!-- Left -->
-        <div>
-          <div style="opacity:0;animation:fadeUp 0.7s ease 0.1s forwards;">
-            <span class="eyebrow"><span class="eline"></span>Apply Now</span>
-          </div>
-          <h1 style="opacity:0;animation:fadeUp 0.75s ease 0.25s forwards;">
-            We take<br><span class="gold-shimmer">3 clients</span><br>per month.
-          </h1>
-          <p style="opacity:0;animation:fadeUp 0.75s ease 0.4s forwards;margin-top:20px;">
-            Not because of capacity — because of quality. If we take your project, you get both founders on every call and every build. No account managers, no handoffs.
-          </p>
-          <div class="apply-availability" style="opacity:0;animation:fadeUp 0.75s ease 0.55s forwards;margin-top:32px;display:inline-flex;">
-            <div class="apply-avail-dot"></div>
-            <span class="apply-avail-text">Accepting applications for May 2026</span>
-          </div>
-        </div>
-        <!-- Right: what you get -->
-        <div class="apply-hero-right" style="opacity:0;animation:fadeUp 0.75s ease 0.45s forwards;">
-          <div class="apply-what-box">
-            <div class="apply-what-title">What happens when you apply</div>
-            <div class="apply-what-item">
-              <span class="apply-what-check">01</span>
-              <span>Fill out the form below (3 minutes). Tell us about your business and your biggest growth challenge.</span>
-            </div>
-            <div class="apply-what-item">
-              <span class="apply-what-check">02</span>
-              <span>We review and respond within 24 hours. If you're a potential fit, we send a calendar link.</span>
-            </div>
-            <div class="apply-what-item">
-              <span class="apply-what-check">03</span>
-              <span>Free 45-minute Growth Audit call. We map your gaps, show you exactly what needs building.</span>
-            </div>
-            <div class="apply-what-item">
-              <span class="apply-what-check">04</span>
-              <span>If it's a fit, we send a custom proposal. If not, you still walk away with a growth blueprint — no charge.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- WHO WE WORK WITH -->
-  <section id="qualify">
-    <div class="container">
-      <div class="qualify-split">
-
-        <!-- Left: header + context -->
-        <div class="qualify-left reveal-left">
-          <span class="eyebrow"><span class="eline"></span>Are We a Fit?</span>
-          <h2>Built for one type of business.</h2>
-          <p>We work with local service businesses that have real clients but no real system. If most of these describe you, the audit will tell you exactly what to build.</p>
-          <a href="#apply-form-section" class="btn-gold qualify-left-cta">Apply for the Audit →</a>
-        </div>
-
-        <!-- Right: clean checklist (no cards) -->
-        <div class="reveal-right" style="transition-delay:0.08s">
-          <div class="qualify-clean-list">
-            <div class="qualify-clean-item">
-              <div class="qualify-clean-dot"></div>
-              <p>You run a local service business with existing, paying clients</p>
-            </div>
-            <div class="qualify-clean-item">
-              <div class="qualify-clean-dot"></div>
-              <p>You're generating revenue but know you're leaving money on the table</p>
-            </div>
-            <div class="qualify-clean-item">
-              <div class="qualify-clean-dot"></div>
-              <p>You don't have time to build and manage systems yourself</p>
-            </div>
-            <div class="qualify-clean-item">
-              <div class="qualify-clean-dot"></div>
-              <p>You want your lead flow to be predictable and automated</p>
-            </div>
-            <div class="qualify-clean-item">
-              <div class="qualify-clean-dot"></div>
-              <p>You're ready to invest seriously in a proven growth system</p>
-            </div>
-            <div class="qualify-clean-item">
-              <div class="qualify-clean-dot"></div>
-              <p>You want full transparency on where your revenue is coming from</p>
-            </div>
-          </div>
-          <p class="qualify-note">If 4 or more apply, <strong>every week without a system is leads going cold.</strong> The audit costs nothing and you keep the blueprint either way.</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- PROCESS -->
-  <section id="process">
-    <div class="container">
-      <div class="process-header reveal">
-        <span class="eyebrow"><span class="eline"></span>After You Apply</span>
-        <h2>What happens next.</h2>
-        <p>Four steps from application to system running inside your business.</p>
-      </div>
-
-      <!-- Horizontal numbered timeline -->
-      <div class="process-timeline">
-
-        <div class="process-tl-step reveal" style="transition-delay:0.05s">
-          <div class="process-tl-ghost">01</div>
-          <div class="process-tl-dot"></div>
-          <h3>You Apply</h3>
-          <p>Fill out the form below. Takes 3 minutes. Tell us your business, your challenge, and what you want to fix first.</p>
-          <span class="process-time">Today</span>
-        </div>
-
-        <div class="process-tl-step reveal" style="transition-delay:0.1s">
-          <div class="process-tl-ghost">02</div>
-          <div class="process-tl-dot"></div>
-          <h3>We Review</h3>
-          <p>We look at your application and respond within 24 hours. If you're a fit, we send a calendar link for the audit call.</p>
-          <span class="process-time">Within 24 hrs</span>
-        </div>
-
-        <div class="process-tl-step reveal" style="transition-delay:0.15s">
-          <div class="process-tl-ghost">03</div>
-          <div class="process-tl-dot"></div>
-          <h3>Growth Audit Call</h3>
-          <p>Free 45-minute strategy session. We map your lead flow, identify your top 3 revenue leaks, and build a custom roadmap. No pitch. No pressure.</p>
-          <span class="process-time">45 min call</span>
-        </div>
-
-        <div class="process-tl-step reveal" style="transition-delay:0.2s">
-          <div class="process-tl-ghost">04</div>
-          <div class="process-tl-dot"></div>
-          <h3>Custom Proposal</h3>
-          <p>If it's a mutual fit, we send a scoped proposal with exact deliverables, timeline, and investment. If not, you keep the blueprint from the audit.</p>
-          <span class="process-time">Within 48 hrs</span>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- FORM -->
-  <section id="apply-form-section">
-    <div class="container">
-      <div class="form-grid">
-
-        <!-- Left: form fields -->
-        <div class="reveal-left">
-          <span class="eyebrow"><span class="eline"></span>The Application</span>
-          <h2 class="form-left" style="margin-top:18px;margin-bottom:16px;font-size:clamp(1.7rem,3vw,2.2rem);font-weight:800;">Tell us about your business.</h2>
-
-          <div class="apply-form">
-            <div class="form-title">Application Form</div>
-            <div class="form-sub">Takes 3 minutes. Every field helps us prepare for your call.</div>
-
-            <!-- SUCCESS STATE (hidden until submit) -->
-            <div id="form-success" style="display:none; border:1px solid var(--gold-border); border-radius:2px; padding:48px 36px; text-align:center;">
-              <div style="font-size:2rem; margin-bottom:16px;">✦</div>
-              <h3 style="font-family:var(--fh); font-size:1.5rem; font-weight:800; margin-bottom:12px;">Application received.</h3>
-              <p style="font-size:0.92rem; color:var(--gray-light); line-height:1.8; max-width:380px; margin:0 auto 24px;">Evan and Gavin will review it and respond within 24 hours. Check your inbox — including spam.</p>
-              <a href="mailto:trifactorscaling@gmail.com" style="font-size:0.8rem; color:var(--gold); text-decoration:none;">trifactorscaling@gmail.com</a>
-            </div>
-
-            <!-- ERROR STATE (hidden until needed) -->
-            <div id="form-error" style="display:none; border:1px solid rgba(220,50,50,0.3); background:rgba(220,50,50,0.05); border-radius:2px; padding:16px 20px; margin-bottom:20px;">
-              <p style="font-size:0.85rem; color:#f87171; margin:0;">Something went wrong. Please try again or email us directly at <a href="mailto:trifactorscaling@gmail.com" style="color:var(--gold);">trifactorscaling@gmail.com</a></p>
-            </div>
-
-            <form id="apply-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-              <!-- Formspree config -->
-              <input type="hidden" name="_subject" value="New TFS Growth Ops Application">
-
-              <div class="form-2col">
-                <div class="form-group">
-                  <label class="form-label" for="fname">First Name</label>
-                  <input class="form-input" type="text" id="fname" name="First Name" placeholder="Evan" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="lname">Last Name</label>
-                  <input class="form-input" type="text" id="lname" name="Last Name" placeholder="Smith" required>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="email">Email Address</label>
-                <input class="form-input" type="email" id="email" name="email" placeholder="you@yourbusiness.com" required>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="phone">Phone Number</label>
-                <input class="form-input" type="tel" id="phone" name="Phone" placeholder="(647) 555-0100">
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="biz">Business Name</label>
-                <input class="form-input" type="text" id="biz" name="Business Name" placeholder="CutByDack" required>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="biztype">Type of Business</label>
-                <select class="form-select" id="biztype" name="Business Type" required>
-                  <option value="" disabled selected>Select your industry</option>
-                  <option>Barbershop / Salon</option>
-                  <option>Restoration / Trades</option>
-                  <option>Coaching / Education</option>
-                  <option>Home Services</option>
-                  <option>Real Estate</option>
-                  <option>Fitness / Wellness</option>
-                  <option>Other Local Service</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="revenue">Monthly Revenue Range</label>
-                <select class="form-select" id="revenue" name="Monthly Revenue">
-                  <option value="" disabled selected>Approximate monthly revenue</option>
-                  <option>Under $5K/month</option>
-                  <option>$5K – $15K/month</option>
-                  <option>$15K – $30K/month</option>
-                  <option>$30K – $60K/month</option>
-                  <option>$60K+/month</option>
-                  <option>Prefer not to say</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="challenge">Biggest Challenge Right Now</label>
-                <textarea class="form-textarea" id="challenge" name="Biggest Challenge" placeholder="e.g. Leads come in but I lose them. Booking is manual and I get no-shows. I have no idea where my revenue is actually coming from..." required></textarea>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="timeline">When do you want to start?</label>
-                <select class="form-select" id="timeline" name="Timeline">
-                  <option value="" disabled selected>Select a timeline</option>
-                  <option>ASAP — I need this now</option>
-                  <option>Within the next 30 days</option>
-                  <option>1–3 months out</option>
-                  <option>Just exploring for now</option>
-                </select>
-              </div>
-
-              <button type="submit" id="form-btn" class="btn-gold form-submit" style="font-size:0.9rem;padding:16px 32px;justify-content:center;width:100%;">
-                Submit Application →
-              </button>
-            </form>
-            <p class="form-note">
-              Your info goes directly to Evan and Gavin. We'll respond within 24 hours.<br>
-              Prefer to email? <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a>
-            </p>
-          </div>
-        </div>
-
-        <!-- Right: trust/context box -->
-        <div class="form-right-wrap reveal-right" style="transition-delay:0.1s">
-
-          <!-- Why apply trust box -->
-          <div class="form-trust-box">
-            <div class="form-trust-box-title">Why this call is worth your time</div>
-            <div class="form-trust-stat">
-              <div class="form-trust-stat-val">Free</div>
-              <div class="form-trust-stat-label">45-minute Growth Audit. No charge. You keep the blueprint whether or not you hire us.</div>
-            </div>
-            <div class="form-trust-stat">
-              <div class="form-trust-stat-val">24h</div>
-              <div class="form-trust-stat-label">Response time. We read every application personally and respond within 24 hours.</div>
-            </div>
-            <div class="form-trust-stat">
-              <div class="form-trust-stat-val">6+</div>
-              <div class="form-trust-stat-label">Active client systems. Every business below went through this same process.</div>
-            </div>
-            <div class="form-trust-stat">
-              <div class="form-trust-stat-val">0</div>
-              <div class="form-trust-stat-label">Account managers. Evan and Gavin are on every call and every build — no middlemen.</div>
-            </div>
-          </div>
-
-          <!-- Reassure points -->
-          <div class="apply-form" style="background:transparent;border-color:var(--border-mid);padding:24px 0 0;border:none;">
-            <div class="form-reassure">
-              <div class="form-reassure-item">
-                <span class="form-reassure-icon">✦</span>
-                <span>No hard sell, no pressure. If we're not a fit we say so and you still walk away with clarity.</span>
-              </div>
-              <div class="form-reassure-item">
-                <span class="form-reassure-icon">✦</span>
-                <span>The Growth Audit is completely free. No card required, no obligation to hire us afterward.</span>
-              </div>
-              <div class="form-reassure-item">
-                <span class="form-reassure-icon">✦</span>
-                <span>We don't ghost applications. You'll hear from us within 24 hours — usually faster.</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="apply-direct">
-            <h3>Prefer to email?</h3>
-            <p>Send "Growth Audit Request" with your business name and biggest challenge.</p>
-            <a href="mailto:trifactorscaling@gmail.com?subject=Growth%20Audit%20Request" class="email-link">trifactorscaling@gmail.com</a>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section id="apply-faq">
-    <div class="container">
-      <div class="faq-grid">
-        <div class="faq-left reveal-left">
-          <span class="eyebrow"><span class="eline"></span>FAQ</span>
-          <h2>Questions about applying.</h2>
-          <p>Still unsure? Book the call — we'll answer everything in person with zero pressure.</p>
-          <a href="mailto:trifactorscaling@gmail.com" class="btn-outline" style="display:inline-flex;margin-top:4px;">Email Us Instead →</a>
-        </div>
-        <div class="faq-list reveal-right">
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFAQ(this)">
-              Is the Growth Audit really free?
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-a"><div class="faq-a-inner">Yes, completely. A 45-minute strategy session where we map your current lead flow, find your top 3 revenue leaks, and outline a custom growth roadmap. You keep the blueprint whether or not you hire us. No card required, no hidden pitch.</div></div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFAQ(this)">
-              What if I'm not sure I'm ready?
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-a"><div class="faq-a-inner">The audit is specifically designed for that situation. If after the call we both agree the timing isn't right, we say so honestly. You walk away with clarity on what you need — and we stay in touch for when the time is right.</div></div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFAQ(this)">
-              How long does the application take?
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-a"><div class="faq-a-inner">About 3 minutes. The more specific you are about your current challenges, the more we can prepare for the audit call. But even a rough answer is enough to start the conversation.</div></div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFAQ(this)">
-              Do you work with businesses outside of Canada?
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-a"><div class="faq-a-inner">Yes. All our work is done remotely. We have clients in Toronto and work with businesses across North America. Location is never a barrier — the systems we build work anywhere GHL is available (which is everywhere).</div></div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFAQ(this)">
-              What if my business is very early stage?
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-a"><div class="faq-a-inner">We work best with businesses that already have paying clients and some revenue — even if it's inconsistent. If you're pre-revenue, we'll be honest on the call about whether the timing is right for the kind of system we build.</div></div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFAQ(this)">
-              You're young — should I be concerned about that?
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-a"><div class="faq-a-inner">The only concern that should matter is whether the work is excellent and the results are real. Both founders work on every project personally, our clients are actively growing, and we stand behind every build. The age question tends to disappear after the first call.</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <img src="/tfs-logo.png" alt="" class="footer-watermark" aria-hidden="true">
-    <div class="container footer-inner">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <img src="/tfs-logo.png" alt="TriFactor Scaling" class="footer-logo-img">
-          <p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
-          <a href="mailto:trifactorscaling@gmail.com" class="footer-contact-link">trifactorscaling@gmail.com →</a>
-        </div>
-        <div>
-          <div class="footer-col-label">Pages</div>
-          <div class="footer-col-links">
-            <a href="/">Overview</a>
-            <a href="/services">Services</a>
-            <a href="/results">Results</a>
-            <a href="/about">About</a>
-            <a href="/apply">Apply Now</a>
-          </div>
-        </div>
-        <div>
-          <div class="footer-col-label">Work With Us</div>
-          <div class="footer-col-links">
-            <a href="/apply">Apply for Growth Ops</a>
-            <a href="/results">See Client Results</a>
-            <a href="/services">What We Build</a>
-            <a href="mailto:trifactorscaling@gmail.com">Send Us an Email</a>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <span class="footer-copy">© 2026 TriFactor Scaling. All rights reserved.</span>
-        <span class="footer-built">Built by <span>teens</span>. Powered by results.</span>
-      </div>
-    </div>
-  </footer>
-
-  
-`;
 const SCRIPT = `
+
     const nav = document.getElementById('navbar');
     window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 50));
     function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
@@ -774,33 +329,410 @@ const SCRIPT = `
       });
     }
   
-;
+`;
 
-(function(){
-  var canvas = document.querySelector('.tri-page-hero-canvas');
-  if (!canvas || !canvas.getContext) return;
-  var hero = canvas.closest('.page-hero, #hero'); if (!hero) return;
-  var ctx = canvas.getContext('2d');
-  var W=0, H=0, particles=[];
-  function resize(){ W = canvas.width = hero.offsetWidth; H = canvas.height = hero.offsetHeight; }
-  function mk(){ return { x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.5+0.4,
-    alpha:Math.random()*0.35+0.05, vx:(Math.random()-0.5)*0.18, vy:(Math.random()-0.5)*0.18,
-    life:Math.random()*200+100, age:0 }; }
-  function init(){ resize(); particles = Array.from({length:65}, mk); }
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    particles.forEach(function(p,i){
-      p.x+=p.vx; p.y+=p.vy; p.age+=1;
-      var t=p.age/p.life, fade = t<0.2 ? t/0.2 : t>0.8 ? (1-t)/0.2 : 1;
-      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle='rgba(212,175,55,'+(p.alpha*fade)+')'; ctx.fill();
-      if(p.age>=p.life||p.x<0||p.x>W||p.y<0||p.y>H) particles[i]=mk();
-    });
-    requestAnimationFrame(draw);
-  }
-  window.addEventListener('resize', resize, {passive:true});
-  init(); draw();
-})();
+const HTML = `
+<!-- STICKY BAR -->
+<div class="sticky-bar" id="stickyBar">
+<p class="sticky-bar-text">We open <span>3 client spots per month.</span> Currently accepting applications.</p>
+<a class="btn-gold" href="#apply-form-section" style="padding:11px 24px;font-size:0.8rem;white-space:nowrap;">Apply Below ↓</a>
+</div>
+<!-- NAV -->
+<nav id="navbar">
+<div class="container">
+<div class="nav-inner">
+<a aria-label="TriFactor Scaling" class="nav-logo" href="/">
+<img alt="TriFactor Scaling" height="40" src="./TFS-Logo-Transparent.png"/>
+</a>
+<ul class="nav-links">
+<li><a class="nav-link" href="/">Overview</a></li>
+<li><a class="nav-link" href="/services">Services</a></li>
+<li><a class="nav-link" href="/results">Results</a></li>
+<li><a class="nav-link" href="/about">About</a></li>
+</ul>
+<div class="nav-cta-wrap">
+<a class="btn-gold nav-cta active-nav" href="#apply-form-section" style="padding:11px 22px;font-size:0.8rem;">Apply Now →</a>
+<button aria-label="Menu" class="hamburger" onclick="toggleMenu()">
+<span></span><span></span><span></span>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+<a href="/" onclick="toggleMenu()">Overview</a>
+<a href="/services" onclick="toggleMenu()">Services</a>
+<a href="/results" onclick="toggleMenu()">Results</a>
+<a href="/about" onclick="toggleMenu()">About</a>
+<a class="active-nav" href="#apply-form-section" onclick="toggleMenu()">Apply Now →</a>
+</div>
+<!-- PAGE HERO -->
+<section class="page-hero">
+<div class="container">
+<div class="apply-hero-grid">
+<!-- Left -->
+<div>
+<div style="opacity:0;animation:fadeUp 0.7s ease 0.1s forwards;">
+<span class="eyebrow"><span class="eline"></span>Apply Now</span>
+</div>
+<h1 style="opacity:0;animation:fadeUp 0.75s ease 0.25s forwards;">
+            We take<br/><span class="gold-shimmer">3 clients</span><br/>per month.
+          </h1>
+<p style="opacity:0;animation:fadeUp 0.75s ease 0.4s forwards;margin-top:20px;">
+            Not because of capacity — because of quality. If we take your project, you get both founders on every call and every build. No account managers, no handoffs.
+          </p>
+<div class="apply-availability" style="opacity:0;animation:fadeUp 0.75s ease 0.55s forwards;margin-top:32px;display:inline-flex;">
+<div class="apply-avail-dot"></div>
+<span class="apply-avail-text">Accepting applications for May 2026</span>
+</div>
+</div>
+<!-- Right: what you get -->
+<div class="apply-hero-right" style="opacity:0;animation:fadeUp 0.75s ease 0.45s forwards;">
+<div class="apply-what-box">
+<div class="apply-what-title">What happens when you apply</div>
+<div class="apply-what-item">
+<span class="apply-what-check">01</span>
+<span>Fill out the form below (3 minutes). Tell us about your business and your biggest growth challenge.</span>
+</div>
+<div class="apply-what-item">
+<span class="apply-what-check">02</span>
+<span>We review and respond within 24 hours. If you're a potential fit, we send a calendar link.</span>
+</div>
+<div class="apply-what-item">
+<span class="apply-what-check">03</span>
+<span>Free 45-minute Growth Audit call. We map your gaps, show you exactly what needs building.</span>
+</div>
+<div class="apply-what-item">
+<span class="apply-what-check">04</span>
+<span>If it's a fit, we send a custom proposal. If not, you still walk away with a growth blueprint — no charge.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- WHO WE WORK WITH -->
+<section id="qualify">
+<div class="container">
+<div class="qualify-split">
+<!-- Left: header + context -->
+<div class="qualify-left reveal-left">
+<span class="eyebrow"><span class="eline"></span>Are We a Fit?</span>
+<h2>Built for one type of business.</h2>
+<p>We work with local service businesses that have real clients but no real system. If most of these describe you, the audit will tell you exactly what to build.</p>
+<a class="btn-gold qualify-left-cta" href="#apply-form-section">Apply for the Audit →</a>
+</div>
+<!-- Right: clean checklist (no cards) -->
+<div class="reveal-right" style="transition-delay:0.08s">
+<div class="qualify-clean-list">
+<div class="qualify-clean-item">
+<div class="qualify-clean-dot"></div>
+<p>You run a local service business with existing, paying clients</p>
+</div>
+<div class="qualify-clean-item">
+<div class="qualify-clean-dot"></div>
+<p>You're generating revenue but know you're leaving money on the table</p>
+</div>
+<div class="qualify-clean-item">
+<div class="qualify-clean-dot"></div>
+<p>You don't have time to build and manage systems yourself</p>
+</div>
+<div class="qualify-clean-item">
+<div class="qualify-clean-dot"></div>
+<p>You want your lead flow to be predictable and automated</p>
+</div>
+<div class="qualify-clean-item">
+<div class="qualify-clean-dot"></div>
+<p>You're ready to invest seriously in a proven growth system</p>
+</div>
+<div class="qualify-clean-item">
+<div class="qualify-clean-dot"></div>
+<p>You want full transparency on where your revenue is coming from</p>
+</div>
+</div>
+<p class="qualify-note">If 4 or more apply, <strong>every week without a system is leads going cold.</strong> The audit costs nothing and you keep the blueprint either way.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- PROCESS -->
+<section id="process">
+<div class="container">
+<div class="process-header reveal">
+<span class="eyebrow"><span class="eline"></span>After You Apply</span>
+<h2>What happens next.</h2>
+<p>Four steps from application to system running inside your business.</p>
+</div>
+<!-- Horizontal numbered timeline -->
+<div class="process-timeline">
+<div class="process-tl-step reveal" style="transition-delay:0.05s">
+<div class="process-tl-ghost">01</div>
+<div class="process-tl-dot"></div>
+<h3>You Apply</h3>
+<p>Fill out the form below. Takes 3 minutes. Tell us your business, your challenge, and what you want to fix first.</p>
+<span class="process-time">Today</span>
+</div>
+<div class="process-tl-step reveal" style="transition-delay:0.1s">
+<div class="process-tl-ghost">02</div>
+<div class="process-tl-dot"></div>
+<h3>We Review</h3>
+<p>We look at your application and respond within 24 hours. If you're a fit, we send a calendar link for the audit call.</p>
+<span class="process-time">Within 24 hrs</span>
+</div>
+<div class="process-tl-step reveal" style="transition-delay:0.15s">
+<div class="process-tl-ghost">03</div>
+<div class="process-tl-dot"></div>
+<h3>Growth Audit Call</h3>
+<p>Free 45-minute strategy session. We map your lead flow, identify your top 3 revenue leaks, and build a custom roadmap. No pitch. No pressure.</p>
+<span class="process-time">45 min call</span>
+</div>
+<div class="process-tl-step reveal" style="transition-delay:0.2s">
+<div class="process-tl-ghost">04</div>
+<div class="process-tl-dot"></div>
+<h3>Custom Proposal</h3>
+<p>If it's a mutual fit, we send a scoped proposal with exact deliverables, timeline, and investment. If not, you keep the blueprint from the audit.</p>
+<span class="process-time">Within 48 hrs</span>
+</div>
+</div>
+</div>
+</section>
+<!-- FORM -->
+<section id="apply-form-section">
+<div class="container">
+<div class="form-grid">
+<!-- Left: form fields -->
+<div class="reveal-left">
+<span class="eyebrow"><span class="eline"></span>The Application</span>
+<h2 class="form-left" style="margin-top:18px;margin-bottom:16px;font-size:clamp(1.7rem,3vw,2.2rem);font-weight:800;">Tell us about your business.</h2>
+<div class="apply-form">
+<div class="form-title">Application Form</div>
+<div class="form-sub">Takes 3 minutes. Every field helps us prepare for your call.</div>
+<!-- SUCCESS STATE (hidden until submit) -->
+<div id="form-success" style="display:none; border:1px solid var(--gold-border); border-radius:2px; padding:48px 36px; text-align:center;">
+<div style="font-size:2rem; margin-bottom:16px;">✦</div>
+<h3 style="font-family:var(--fh); font-size:1.5rem; font-weight:800; margin-bottom:12px;">Application received.</h3>
+<p style="font-size:0.92rem; color:var(--gray-light); line-height:1.8; max-width:380px; margin:0 auto 24px;">Evan and Gavin will review it and respond within 24 hours. Check your inbox — including spam.</p>
+<a href="mailto:trifactorscaling@gmail.com" style="font-size:0.8rem; color:var(--gold); text-decoration:none;">trifactorscaling@gmail.com</a>
+</div>
+<!-- ERROR STATE (hidden until needed) -->
+<div id="form-error" style="display:none; border:1px solid rgba(220,50,50,0.3); background:rgba(220,50,50,0.05); border-radius:2px; padding:16px 20px; margin-bottom:20px;">
+<p style="font-size:0.85rem; color:#f87171; margin:0;">Something went wrong. Please try again or email us directly at <a href="mailto:trifactorscaling@gmail.com" style="color:var(--gold);">trifactorscaling@gmail.com</a></p>
+</div>
+<form action="https://formspree.io/f/YOUR_FORM_ID" id="apply-form" method="POST">
+<!-- Formspree config -->
+<input name="_subject" type="hidden" value="New TFS Growth Ops Application"/>
+<div class="form-2col">
+<div class="form-group">
+<label class="form-label" for="fname">First Name</label>
+<input class="form-input" id="fname" name="First Name" placeholder="Evan" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label" for="lname">Last Name</label>
+<input class="form-input" id="lname" name="Last Name" placeholder="Smith" required="" type="text"/>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label" for="email">Email Address</label>
+<input class="form-input" id="email" name="email" placeholder="you@yourbusiness.com" required="" type="email"/>
+</div>
+<div class="form-group">
+<label class="form-label" for="phone">Phone Number</label>
+<input class="form-input" id="phone" name="Phone" placeholder="(647) 555-0100" type="tel"/>
+</div>
+<div class="form-group">
+<label class="form-label" for="biz">Business Name</label>
+<input class="form-input" id="biz" name="Business Name" placeholder="CutByDack" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label" for="biztype">Type of Business</label>
+<select class="form-select" id="biztype" name="Business Type" required="">
+<option disabled="" selected="" value="">Select your industry</option>
+<option>Barbershop / Salon</option>
+<option>Restoration / Trades</option>
+<option>Coaching / Education</option>
+<option>Home Services</option>
+<option>Real Estate</option>
+<option>Fitness / Wellness</option>
+<option>Other Local Service</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label" for="revenue">Monthly Revenue Range</label>
+<select class="form-select" id="revenue" name="Monthly Revenue">
+<option disabled="" selected="" value="">Approximate monthly revenue</option>
+<option>Under $5K/month</option>
+<option>$5K – $15K/month</option>
+<option>$15K – $30K/month</option>
+<option>$30K – $60K/month</option>
+<option>$60K+/month</option>
+<option>Prefer not to say</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label" for="challenge">Biggest Challenge Right Now</label>
+<textarea class="form-textarea" id="challenge" name="Biggest Challenge" placeholder="e.g. Leads come in but I lose them. Booking is manual and I get no-shows. I have no idea where my revenue is actually coming from..." required=""></textarea>
+</div>
+<div class="form-group">
+<label class="form-label" for="timeline">When do you want to start?</label>
+<select class="form-select" id="timeline" name="Timeline">
+<option disabled="" selected="" value="">Select a timeline</option>
+<option>ASAP — I need this now</option>
+<option>Within the next 30 days</option>
+<option>1–3 months out</option>
+<option>Just exploring for now</option>
+</select>
+</div>
+<button class="btn-gold form-submit" id="form-btn" style="font-size:0.9rem;padding:16px 32px;justify-content:center;width:100%;" type="submit">
+                Submit Application →
+              </button>
+</form>
+<p class="form-note">
+              Your info goes directly to Evan and Gavin. We'll respond within 24 hours.<br/>
+              Prefer to email? <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a>
+</p>
+</div>
+</div>
+<!-- Right: trust/context box -->
+<div class="form-right-wrap reveal-right" style="transition-delay:0.1s">
+<!-- Why apply trust box -->
+<div class="form-trust-box">
+<div class="form-trust-box-title">Why this call is worth your time</div>
+<div class="form-trust-stat">
+<div class="form-trust-stat-val">Free</div>
+<div class="form-trust-stat-label">45-minute Growth Audit. No charge. You keep the blueprint whether or not you hire us.</div>
+</div>
+<div class="form-trust-stat">
+<div class="form-trust-stat-val">24h</div>
+<div class="form-trust-stat-label">Response time. We read every application personally and respond within 24 hours.</div>
+</div>
+<div class="form-trust-stat">
+<div class="form-trust-stat-val">6+</div>
+<div class="form-trust-stat-label">Active client systems. Every business below went through this same process.</div>
+</div>
+<div class="form-trust-stat">
+<div class="form-trust-stat-val">0</div>
+<div class="form-trust-stat-label">Account managers. Evan and Gavin are on every call and every build — no middlemen.</div>
+</div>
+</div>
+<!-- Reassure points -->
+<div class="apply-form" style="background:transparent;border-color:var(--border-mid);padding:24px 0 0;border:none;">
+<div class="form-reassure">
+<div class="form-reassure-item">
+<span class="form-reassure-icon">✦</span>
+<span>No hard sell, no pressure. If we're not a fit we say so and you still walk away with clarity.</span>
+</div>
+<div class="form-reassure-item">
+<span class="form-reassure-icon">✦</span>
+<span>The Growth Audit is completely free. No card required, no obligation to hire us afterward.</span>
+</div>
+<div class="form-reassure-item">
+<span class="form-reassure-icon">✦</span>
+<span>We don't ghost applications. You'll hear from us within 24 hours — usually faster.</span>
+</div>
+</div>
+</div>
+<div class="apply-direct">
+<h3>Prefer to email?</h3>
+<p>Send "Growth Audit Request" with your business name and biggest challenge.</p>
+<a class="email-link" href="mailto:trifactorscaling@gmail.com?subject=Growth%20Audit%20Request">trifactorscaling@gmail.com</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ -->
+<section id="apply-faq">
+<div class="container">
+<div class="faq-grid">
+<div class="faq-left reveal-left">
+<span class="eyebrow"><span class="eline"></span>FAQ</span>
+<h2>Questions about applying.</h2>
+<p>Still unsure? Book the call — we'll answer everything in person with zero pressure.</p>
+<a class="btn-outline" href="mailto:trifactorscaling@gmail.com" style="display:inline-flex;margin-top:4px;">Email Us Instead →</a>
+</div>
+<div class="faq-list reveal-right">
+<div class="faq-item">
+<button class="faq-q" onclick="toggleFAQ(this)">
+              Is the Growth Audit really free?
+              <span class="faq-icon">+</span>
+</button>
+<div class="faq-a"><div class="faq-a-inner">Yes, completely. A 45-minute strategy session where we map your current lead flow, find your top 3 revenue leaks, and outline a custom growth roadmap. You keep the blueprint whether or not you hire us. No card required, no hidden pitch.</div></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" onclick="toggleFAQ(this)">
+              What if I'm not sure I'm ready?
+              <span class="faq-icon">+</span>
+</button>
+<div class="faq-a"><div class="faq-a-inner">The audit is specifically designed for that situation. If after the call we both agree the timing isn't right, we say so honestly. You walk away with clarity on what you need — and we stay in touch for when the time is right.</div></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" onclick="toggleFAQ(this)">
+              How long does the application take?
+              <span class="faq-icon">+</span>
+</button>
+<div class="faq-a"><div class="faq-a-inner">About 3 minutes. The more specific you are about your current challenges, the more we can prepare for the audit call. But even a rough answer is enough to start the conversation.</div></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" onclick="toggleFAQ(this)">
+              Do you work with businesses outside of Canada?
+              <span class="faq-icon">+</span>
+</button>
+<div class="faq-a"><div class="faq-a-inner">Yes. All our work is done remotely. We have clients in Toronto and work with businesses across North America. Location is never a barrier — the systems we build work anywhere GHL is available (which is everywhere).</div></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" onclick="toggleFAQ(this)">
+              What if my business is very early stage?
+              <span class="faq-icon">+</span>
+</button>
+<div class="faq-a"><div class="faq-a-inner">We work best with businesses that already have paying clients and some revenue — even if it's inconsistent. If you're pre-revenue, we'll be honest on the call about whether the timing is right for the kind of system we build.</div></div>
+</div>
+<div class="faq-item">
+<button class="faq-q" onclick="toggleFAQ(this)">
+              You're young — should I be concerned about that?
+              <span class="faq-icon">+</span>
+</button>
+<div class="faq-a"><div class="faq-a-inner">The only concern that should matter is whether the work is excellent and the results are real. Both founders work on every project personally, our clients are actively growing, and we stand behind every build. The age question tends to disappear after the first call.</div></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FOOTER -->
+<footer>
+<img alt="" aria-hidden="true" class="footer-watermark" src="./TFS-Logo-Transparent.png"/>
+<div class="container footer-inner">
+<div class="footer-top">
+<div class="footer-brand">
+<img alt="TriFactor Scaling" class="footer-logo-img" src="./TFS-Logo-Transparent.png"/>
+<p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
+<a class="footer-contact-link" href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com →</a>
+</div>
+<div>
+<div class="footer-col-label">Pages</div>
+<div class="footer-col-links">
+<a href="/">Overview</a>
+<a href="/services">Services</a>
+<a href="/results">Results</a>
+<a href="/about">About</a>
+<a href="/apply">Apply Now</a>
+</div>
+</div>
+<div>
+<div class="footer-col-label">Work With Us</div>
+<div class="footer-col-links">
+<a href="/apply">Apply for Growth Ops</a>
+<a href="/results">See Client Results</a>
+<a href="/services">What We Build</a>
+<a href="mailto:trifactorscaling@gmail.com">Send Us an Email</a>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<span class="footer-copy">© 2026 TriFactor Scaling. All rights reserved.</span>
+<span class="footer-built">Built by <span>teens</span>. Powered by results.</span>
+</div>
+</div>
+</footer>
 `;
 
 const Apply = () => {
@@ -808,24 +740,20 @@ const Apply = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Force black body background for full-bleed dark pages
     const prevBg = document.body.style.background;
     const prevColor = document.body.style.color;
-    document.body.style.background = "#000000";
-    document.body.style.color = "#FFFFFF";
+    document.body.style.background = "#040404";
+    document.body.style.color = "#f0ece0";
 
-    // Inject scoped CSS once per page
     const styleEl = document.createElement("style");
     styleEl.setAttribute("data-tri-page", "tri-apply");
     styleEl.innerHTML = CSS;
     document.head.appendChild(styleEl);
 
-    // Run page scripts after DOM is mounted
     let scriptEl: HTMLScriptElement | null = null;
     const t = window.setTimeout(() => {
       try {
         scriptEl = document.createElement("script");
-        // Wrap user script in IIFE+try so a single null deref doesn't blank the page
         scriptEl.text = "(function(){try{\n" + SCRIPT + "\n}catch(e){console.error('tri page script error',e);}})();";
         document.body.appendChild(scriptEl);
       } catch (e) { console.error("page script error", e); }
@@ -840,7 +768,6 @@ const Apply = () => {
     };
   }, []);
 
-  // Intercept internal link clicks for smooth SPA routing
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const a = (e.target as HTMLElement).closest("a");
     if (!a) return;

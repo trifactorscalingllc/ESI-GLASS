@@ -2,10 +2,11 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CSS = `
+
     /* ======================== RESET & VARIABLES ======================== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .tri-results {
+    :root {
       color-scheme: dark;
       --gold:        #D4AF37;
       --gold-light:  #E2C860;
@@ -27,13 +28,17 @@ const CSS = `
       --gray-light:  #9CA3AF;
       --fh: 'Plus Jakarta Sans', sans-serif;
       --fb: 'Inter', sans-serif;
-    } .tri-results { scroll-behavior: smooth; }
+    }
+
+    html { scroll-behavior: smooth; }
 
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--black); }
     ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--gold-light); }
-    * { scrollbar-width: thin; scrollbar-color: var(--gold) var(--black); } .tri-results {
+    * { scrollbar-width: thin; scrollbar-color: var(--gold) var(--black); }
+
+    body {
       background: var(--black);
       color: var(--white);
       font-family: var(--fb);
@@ -188,7 +193,7 @@ const CSS = `
 
     /* ======================== PAGE HERO ======================== */
     .page-hero {
-      padding: 64px 0 100px;
+      padding: 160px 0 100px;
       background: var(--black);
       text-align: center;
       position: relative;
@@ -688,11 +693,11 @@ const CSS = `
     @media (max-width: 900px) {
       section { padding: 72px 0; }
       #featured-case, #client-grid, #testimonials, #final-cta { padding: 72px 0; }
-      .page-hero { padding: 40px 0 72px; }
+      .page-hero { padding: 130px 0 72px; }
     }
     @media (max-width: 768px) {
       section { padding: 72px 0; }
-      .page-hero { padding: 40px 0 72px; }
+      .page-hero { padding: 130px 0 72px; }
     }
     @media (max-width: 600px) {
       .container { padding: 0 18px; }
@@ -702,390 +707,14 @@ const CSS = `
       .footer-top { flex-direction: column; gap: 28px; }
     }
     @media (max-width: 480px) {
-      .page-hero { padding: 24px 0 56px; }
+      .page-hero { padding: 110px 0 56px; }
       .cta-headline { font-size: 1.9rem; }
     }
   
-
-.tri-page-hero-canvas {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  pointer-events: none; z-index: 0;
-}
-.page-hero { position: relative; overflow: hidden; }
-.page-hero > .container, .page-hero > .page-hero-inner { position: relative; z-index: 2; }
 `;
-const HTML = `
 
-<!-- ======================== NAV ======================== -->
-<nav id="navbar">
-  <div class="container">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo"><img src="/tfs-logo.png" alt="TriFactor Scaling"></a>
-      <ul class="nav-links">
-        <li><a href="/" class="nav-link">Overview</a></li>
-        <li><a href="/services" class="nav-link">Services</a></li>
-        <li><a href="/results" class="nav-link active-nav" id="results-link">Results</a></li>
-        <li><a href="/about" class="nav-link" id="about-link">About</a></li>
-      </ul>
-      <div class="nav-cta-wrap">
-        <a href="/apply" class="btn-gold nav-cta" style="padding:11px 22px;font-size:0.8rem;">Apply Now →</a>
-        <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
-      </div>
-    </div>
-  </div>
-</nav>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="/">Overview</a>
-  <a href="/services">Services</a>
-  <a href="/results" class="active-nav">Results</a>
-  <a href="/about">About</a>
-  <a href="/apply">Apply Now →</a>
-</div>
-
-<!-- ======================== STICKY BAR ======================== -->
-<div id="stickyBar">
-  <span class="sticky-text">
-    <span class="sticky-dot"></span>
-    We open 3 client spots per month. Currently accepting applications.
-  </span>
-  <a href="/apply" class="btn-gold" style="padding:10px 22px;font-size:0.78rem;flex-shrink:0;">Apply Now →</a>
-</div>
-
-<!-- ======================== SECTION 1: PAGE HERO ======================== -->
-<section class="page-hero" style="text-align:left;padding:160px 0 80px;">
-  <canvas class="tri-page-hero-canvas" aria-hidden="true"></canvas>
-  <div class="page-hero-glow"></div>
-  <div class="container">
-    <div class="page-hero-inner">
-      <h1 style="max-width:780px;margin:0 0 22px;text-align:center;">Built for real businesses.<br><span class="gold-shimmer">Running right now.</span></h1>
-      <p class="page-hero-sub" style="margin:0 0 52px;">Every system below is live and operational inside a client's business. These are the problems we walked into, the systems we built, and what happened after.</p>
-
-      <!-- Left-aligned horizontal stats strip -->
-      <div style="display:flex;gap:0;border:1px solid var(--border);border-radius:2px;overflow:hidden;max-width:700px;opacity:0;animation:fadeUp 0.7s ease 0.55s forwards;">
-        <div style="padding:20px 32px;border-right:1px solid var(--border);flex:1;">
-          <div style="font-family:var(--fh);font-size:1.9rem;font-weight:800;color:var(--gold);letter-spacing:-0.03em;line-height:1;">6</div>
-          <div style="font-size:0.72rem;color:var(--gray);margin-top:4px;font-weight:500;">Active Clients</div>
-        </div>
-        <div style="padding:20px 32px;border-right:1px solid var(--border);flex:1;">
-          <div style="font-family:var(--fh);font-size:1.9rem;font-weight:800;color:var(--gold);letter-spacing:-0.03em;line-height:1;">4</div>
-          <div style="font-size:0.72rem;color:var(--gray);margin-top:4px;font-weight:500;">Industries</div>
-        </div>
-        <div style="padding:20px 32px;border-right:1px solid var(--border);flex:1;">
-          <div style="font-family:var(--fh);font-size:1.9rem;font-weight:800;color:var(--gold);letter-spacing:-0.03em;line-height:1;">100%</div>
-          <div style="font-size:0.72rem;color:var(--gray);margin-top:4px;font-weight:500;">Systems Live</div>
-        </div>
-        <div style="padding:20px 32px;flex:1;">
-          <div style="font-family:var(--fh);font-size:1.1rem;font-weight:800;color:var(--gold);letter-spacing:-0.02em;line-height:1.2;">From<br>scratch</div>
-          <div style="font-size:0.72rem;color:var(--gray);margin-top:4px;font-weight:500;">No templates</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ======================== SECTION 2: FEATURED CASE — CUTBYDACK ======================== -->
-<section id="featured-case">
-  <div class="container">
-    <div class="section-header-left reveal">
-      <span class="eyebrow"><span class="eline"></span>Featured Case Study</span>
-      <h2>The deep dive: CutByDack</h2>
-    </div>
-
-    <div class="featured-case-split reveal">
-
-      <!-- Left: story + context -->
-      <div class="featured-story">
-        <div class="featured-meta">
-          <span class="featured-badge">Featured Client</span>
-          <span class="featured-separator"></span>
-          <span class="featured-business-name">CutByDack</span>
-          <span class="featured-separator"></span>
-          <span class="featured-business-type">Barbershop · Toronto, ON</span>
-        </div>
-
-        <div class="case-story-block">
-          <div class="case-block-label">The Problem</div>
-          <p class="case-block-text">Bookings were managed through Instagram DMs and phone calls. Leads from social media went cold within hours. No reminder system, constant no-shows, and the owner was spending 2+ hours per day on manual scheduling — time that should have been spent behind the chair.</p>
-        </div>
-
-        <div class="case-story-block">
-          <div class="case-block-label">What We Built</div>
-          <ul class="built-list">
-            <li><span class="built-check">✦</span>Automated booking system built on GHL</li>
-            <li><span class="built-check">✦</span>Instagram DM trigger — booking link sent instantly on inquiry</li>
-            <li><span class="built-check">✦</span>Instant confirmation SMS fires on every booking</li>
-            <li><span class="built-check">✦</span>24-hour reminder sequence — cuts no-show rate significantly</li>
-            <li><span class="built-check">✦</span>Full appointment pipeline tracked in GHL</li>
-          </ul>
-        </div>
-
-        <div class="tag-row">
-          <span class="tag-badge">GHL CRM</span>
-          <span class="tag-badge">Booking System</span>
-          <span class="tag-badge">SMS Automation</span>
-          <span class="tag-badge">Instagram Integration</span>
-        </div>
-      </div>
-
-      <!-- Right: outcomes/metrics box -->
-      <div class="featured-metrics">
-        <div style="font-family:var(--fb);font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Outcomes</div>
-
-        <div class="outcome-metric">
-          <div class="outcome-metric-val">~0</div>
-          <div class="outcome-metric-label">Manual booking effort</div>
-          <div class="outcome-metric-sub">From 2+ hours/day to near-zero. System handles every step automatically.</div>
-        </div>
-
-        <div class="outcome-metric">
-          <div class="outcome-metric-val">60%+</div>
-          <div class="outcome-metric-label">No-show reduction</div>
-          <div class="outcome-metric-sub">Automated reminder sequence fires 24 hours before every appointment.</div>
-        </div>
-
-        <div class="outcome-metric">
-          <div class="outcome-metric-val">Instant</div>
-          <div class="outcome-metric-label">Lead response time</div>
-          <div class="outcome-metric-sub">Every Instagram DM triggers a booking link within seconds — not hours.</div>
-        </div>
-
-        <div class="outcome-summary">
-          "Consistent chair utilization. Every appointment tracked in one place. The system runs without me touching it."
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ======================== SECTION 3: CLIENT GRID ======================== -->
-<section id="client-grid">
-  <div class="container">
-    <div class="section-header reveal">
-      <span class="eyebrow"><span class="eline"></span>All Active Clients<span class="eline"></span></span>
-      <h2>Five more systems. Five more businesses.</h2>
-    </div>
-
-    <!-- Row 1: 2 wider cards -->
-    <div class="client-cards-row-2">
-
-      <!-- RAMPAL RESTORES -->
-      <div class="client-card reveal">
-        <div class="client-card-top">
-          <div class="client-type-label">Home Restoration · Toronto, ON</div>
-          <div class="client-name">Rampal Restores</div>
-        </div>
-        <div class="client-problem-label">The Problem</div>
-        <p class="client-problem-text">Leads came in at all hours. By morning, cold. Manual follow-up inconsistent — owner was doing everything himself, missing jobs he'd already paid to acquire.</p>
-        <div class="client-built-label">What We Built</div>
-        <ul class="client-built-list">
-          <li>24/7 lead capture form + GHL CRM</li>
-          <li>7-touch automated SMS follow-up sequence</li>
-          <li>Full pipeline tracking</li>
-        </ul>
-        <div class="client-outcome">
-          <div class="client-outcome-label">Outcome</div>
-          <p class="client-outcome-text">"Every lead gets a response in under 2 minutes. Pipeline visible for the first time. No more lost jobs from slow follow-up."</p>
-        </div>
-      </div>
-
-      <!-- PROFITABLE BARBERS -->
-      <div class="client-card reveal" style="transition-delay:0.07s">
-        <div class="client-card-top">
-          <div class="client-type-label">Barber Business Coaching</div>
-          <div class="client-name">Profitable Barbers</div>
-        </div>
-        <div class="client-problem-label">The Problem</div>
-        <p class="client-problem-text">Student enrollment was fully manual — direct DMs, back-and-forth, no system. Revenue was unpredictable month-to-month.</p>
-        <div class="client-built-label">What We Built</div>
-        <ul class="client-built-list">
-          <li>Automated enrollment funnel</li>
-          <li>Email/SMS nurture sequence</li>
-          <li>GHL pipeline for student tracking</li>
-        </ul>
-        <div class="client-outcome">
-          <div class="client-outcome-label">Outcome</div>
-          <p class="client-outcome-text">"Consistent monthly enrollment. Owner pitches less, the funnel does the qualifying."</p>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Row 2: 3 normal cards -->
-    <div class="client-cards-row-3">
-
-      <!-- DIONET ACADEMY -->
-      <div class="client-card reveal">
-        <div class="client-card-top">
-          <div class="client-type-label">Online Education</div>
-          <div class="client-name">Dionet Academy</div>
-        </div>
-        <div class="client-problem-label">The Problem</div>
-        <p class="client-problem-text">Traffic existed but there was no real conversion system. Visitors arrived and left with no follow-up. No visibility into what was working.</p>
-        <div class="client-built-label">What We Built</div>
-        <ul class="client-built-list">
-          <li>Traffic-to-enrollment funnel</li>
-          <li>AppSheet dashboard for lead tracking</li>
-          <li>Automated nurture sequence</li>
-        </ul>
-        <div class="client-outcome">
-          <div class="client-outcome-label">Outcome</div>
-          <p class="client-outcome-text">"Every lead tracked from first click to enrollment. Conversion data visible in real time."</p>
-        </div>
-      </div>
-
-      <!-- LEADCOMPASS -->
-      <div class="client-card reveal" style="transition-delay:0.07s">
-        <div class="client-card-top">
-          <div class="client-type-label">Lead Generation Agency</div>
-          <div class="client-name">LeadCompass</div>
-        </div>
-        <div class="client-problem-label">The Problem</div>
-        <p class="client-problem-text">As lead volume grew, the manual routing process couldn't keep up. Scaling meant hiring, which ate into margin.</p>
-        <div class="client-built-label">What We Built</div>
-        <ul class="client-built-list">
-          <li>Full GHL funnel ecosystem</li>
-          <li>Automated lead routing + distribution</li>
-          <li>Pipeline management system</li>
-        </ul>
-        <div class="client-outcome">
-          <div class="client-outcome-label">Outcome</div>
-          <p class="client-outcome-text">"Higher volume processed without adding headcount. Every lead routed and tracked automatically."</p>
-        </div>
-      </div>
-
-      <!-- MECTRIX MEDIA -->
-      <div class="client-card reveal" style="transition-delay:0.14s">
-        <div class="client-card-top">
-          <div class="client-type-label">Media &amp; Content</div>
-          <div class="client-name">Mectrix Media</div>
-        </div>
-        <div class="client-problem-label">The Problem</div>
-        <p class="client-problem-text">Large, engaged audience with no monetization system. Content was driving attention but not revenue.</p>
-        <div class="client-built-label">What We Built</div>
-        <ul class="client-built-list">
-          <li>Monetization funnel</li>
-          <li>Lead capture system</li>
-          <li>GHL pipeline: audience → paying clients</li>
-        </ul>
-        <div class="client-outcome">
-          <div class="client-outcome-label">Outcome</div>
-          <p class="client-outcome-text">"Revenue pipeline built on top of existing audience. Structured conversion where none existed."</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ======================== SECTION 4: TESTIMONIALS ======================== -->
-<section id="testimonials">
-  <div class="container">
-
-    <!-- Large quote leads — no separate section header -->
-    <div class="testi-lead-quote reveal">
-      <p class="testi-lead-text">"I was very impressed with the pricing and the simple process of working with him and his team. The website is absolutely amazing — we will be using their services again."</p>
-      <div class="testi-author">
-        <div class="testi-avatar">JD</div>
-        <div>
-          <div class="testi-stars">★★★★★</div>
-          <div class="testi-author-name">Jordan — Mectrix Media</div>
-          <div class="testi-author-biz">Media &amp; Content</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2 supporting cards -->
-    <div class="testi-row reveal">
-      <div class="testi-card">
-        <p class="testi-card-quote">"Evan and Gavin helped me scale my product into a brand. I can't thank them enough for the help they gave!"</p>
-        <div class="testi-author">
-          <div class="testi-avatar">AA</div>
-          <div>
-            <div class="testi-stars">★★★★★</div>
-            <div class="testi-author-name">Aiden A.</div>
-            <div class="testi-author-biz">Lumina Sphere</div>
-          </div>
-        </div>
-      </div>
-      <div class="testi-card">
-        <p class="testi-card-quote">"Good service, scaled my brand up from nothing."</p>
-        <div class="testi-author">
-          <div class="testi-avatar">VW</div>
-          <div>
-            <div class="testi-stars">★★★★★</div>
-            <div class="testi-author-name">Vultus Worldwide</div>
-            <div class="testi-author-biz">Brand &amp; Identity</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ======================== SECTION 5: FINAL CTA ======================== -->
-<section id="final-cta">
-  <div class="container">
-    <div class="cta-inner">
-      <h2 class="cta-headline reveal">
-        Every client above<br>
-        started with one<br>
-        <span class="gold-shimmer">free call.</span>
-      </h2>
-
-      <p class="cta-body reveal">45 minutes. No pitch. No pressure. We show you exactly what system you need and hand you a blueprint — whether you hire us or not.</p>
-
-      <div class="cta-actions reveal">
-        <a href="/apply" class="btn-gold">Book Your Free Growth Audit →</a>
-      </div>
-
-      <p class="cta-sub reveal">Or email us at <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a></p>
-    </div>
-  </div>
-</section>
-
-<!-- ======================== FOOTER ======================== -->
-<footer>
-  <img src="/tfs-logo.png" alt="" class="footer-watermark" aria-hidden="true">
-  <div class="container footer-inner">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <img src="/tfs-logo.png" alt="TriFactor Scaling" class="footer-logo-img">
-        <p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
-        <a href="mailto:trifactorscaling@gmail.com" class="footer-contact-link">trifactorscaling@gmail.com →</a>
-      </div>
-      <div>
-        <div class="footer-col-label">Pages</div>
-        <div class="footer-col-links">
-          <a href="/">Overview</a>
-          <a href="/services">Services</a>
-          <a href="/results">Results</a>
-          <a href="/about">About</a>
-          <a href="/apply">Apply Now</a>
-        </div>
-      </div>
-      <div>
-        <div class="footer-col-label">Work With Us</div>
-        <div class="footer-col-links">
-          <a href="/apply">Apply for Growth Ops</a>
-          <a href="/results">See Client Results</a>
-          <a href="/services">What We Build</a>
-          <a href="mailto:trifactorscaling@gmail.com">Send Us an Email</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span class="footer-copy">© 2026 TriFactor Scaling. All rights reserved.</span>
-      <span class="footer-built">Built by <span>teens</span>. Powered by results.</span>
-    </div>
-  </div>
-</footer>
-
-<!-- ======================== SCRIPTS ======================== -->
-
-`;
 const SCRIPT = `
+
   const nav = document.getElementById('navbar');
   window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 50));
   function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
@@ -1107,33 +736,340 @@ const SCRIPT = `
     }
   }
 
-;
+`;
 
-(function(){
-  var canvas = document.querySelector('.tri-page-hero-canvas');
-  if (!canvas || !canvas.getContext) return;
-  var hero = canvas.closest('.page-hero, #hero'); if (!hero) return;
-  var ctx = canvas.getContext('2d');
-  var W=0, H=0, particles=[];
-  function resize(){ W = canvas.width = hero.offsetWidth; H = canvas.height = hero.offsetHeight; }
-  function mk(){ return { x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.5+0.4,
-    alpha:Math.random()*0.35+0.05, vx:(Math.random()-0.5)*0.18, vy:(Math.random()-0.5)*0.18,
-    life:Math.random()*200+100, age:0 }; }
-  function init(){ resize(); particles = Array.from({length:65}, mk); }
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    particles.forEach(function(p,i){
-      p.x+=p.vx; p.y+=p.vy; p.age+=1;
-      var t=p.age/p.life, fade = t<0.2 ? t/0.2 : t>0.8 ? (1-t)/0.2 : 1;
-      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle='rgba(212,175,55,'+(p.alpha*fade)+')'; ctx.fill();
-      if(p.age>=p.life||p.x<0||p.x>W||p.y<0||p.y>H) particles[i]=mk();
-    });
-    requestAnimationFrame(draw);
-  }
-  window.addEventListener('resize', resize, {passive:true});
-  init(); draw();
-})();
+const HTML = `
+<!-- ======================== NAV ======================== -->
+<nav id="navbar">
+<div class="container">
+<div class="nav-inner">
+<a class="nav-logo" href="/"><img alt="TriFactor Scaling" height="40" src="./TFS-Logo-Transparent.png"/></a>
+<ul class="nav-links">
+<li><a class="nav-link" href="/">Overview</a></li>
+<li><a class="nav-link" href="/services">Services</a></li>
+<li><a class="nav-link active-nav" href="/results" id="results-link">Results</a></li>
+<li><a class="nav-link" href="/about" id="about-link">About</a></li>
+</ul>
+<div class="nav-cta-wrap">
+<a class="btn-gold nav-cta" href="/apply" style="padding:11px 22px;font-size:0.8rem;">Apply Now →</a>
+<button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</div>
+</div>
+</div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+<a href="/">Overview</a>
+<a href="/services">Services</a>
+<a class="active-nav" href="/results">Results</a>
+<a href="/about">About</a>
+<a href="/apply">Apply Now →</a>
+</div>
+<!-- ======================== STICKY BAR ======================== -->
+<div id="stickyBar">
+<span class="sticky-text">
+<span class="sticky-dot"></span>
+    We open 3 client spots per month. Currently accepting applications.
+  </span>
+<a class="btn-gold" href="/apply" style="padding:10px 22px;font-size:0.78rem;flex-shrink:0;">Apply Now →</a>
+</div>
+<!-- ======================== SECTION 1: PAGE HERO ======================== -->
+<section class="page-hero" style="text-align:left;padding:160px 0 80px;">
+<div class="page-hero-glow"></div>
+<div class="container">
+<div class="page-hero-inner">
+<h1 style="max-width:780px;margin:0 0 22px;text-align:center;">Built for real businesses.<br/><span class="gold-shimmer">Running right now.</span></h1>
+<p class="page-hero-sub" style="margin:0 0 52px;">Every system below is live and operational inside a client's business. These are the problems we walked into, the systems we built, and what happened after.</p>
+<!-- Left-aligned horizontal stats strip -->
+<div style="display:flex;gap:0;border:1px solid var(--border);border-radius:2px;overflow:hidden;max-width:700px;opacity:0;animation:fadeUp 0.7s ease 0.55s forwards;">
+<div style="padding:20px 32px;border-right:1px solid var(--border);flex:1;">
+<div style="font-family:var(--fh);font-size:1.9rem;font-weight:800;color:var(--gold);letter-spacing:-0.03em;line-height:1;">6</div>
+<div style="font-size:0.72rem;color:var(--gray);margin-top:4px;font-weight:500;">Active Clients</div>
+</div>
+<div style="padding:20px 32px;border-right:1px solid var(--border);flex:1;">
+<div style="font-family:var(--fh);font-size:1.9rem;font-weight:800;color:var(--gold);letter-spacing:-0.03em;line-height:1;">4</div>
+<div style="font-size:0.72rem;color:var(--gray);margin-top:4px;font-weight:500;">Industries</div>
+</div>
+<div style="padding:20px 32px;border-right:1px solid var(--border);flex:1;">
+<div style="font-family:var(--fh);font-size:1.9rem;font-weight:800;color:var(--gold);letter-spacing:-0.03em;line-height:1;">100%</div>
+<div style="font-size:0.72rem;color:var(--gray);margin-top:4px;font-weight:500;">Systems Live</div>
+</div>
+<div style="padding:20px 32px;flex:1;">
+<div style="font-family:var(--fh);font-size:1.1rem;font-weight:800;color:var(--gold);letter-spacing:-0.02em;line-height:1.2;">From<br/>scratch</div>
+<div style="font-size:0.72rem;color:var(--gray);margin-top:4px;font-weight:500;">No templates</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== SECTION 2: FEATURED CASE — CUTBYDACK ======================== -->
+<section id="featured-case">
+<div class="container">
+<div class="section-header-left reveal">
+<span class="eyebrow"><span class="eline"></span>Featured Case Study</span>
+<h2>The deep dive: CutByDack</h2>
+</div>
+<div class="featured-case-split reveal">
+<!-- Left: story + context -->
+<div class="featured-story">
+<div class="featured-meta">
+<span class="featured-badge">Featured Client</span>
+<span class="featured-separator"></span>
+<span class="featured-business-name">CutByDack</span>
+<span class="featured-separator"></span>
+<span class="featured-business-type">Barbershop · Toronto, ON</span>
+</div>
+<div class="case-story-block">
+<div class="case-block-label">The Problem</div>
+<p class="case-block-text">Bookings were managed through Instagram DMs and phone calls. Leads from social media went cold within hours. No reminder system, constant no-shows, and the owner was spending 2+ hours per day on manual scheduling — time that should have been spent behind the chair.</p>
+</div>
+<div class="case-story-block">
+<div class="case-block-label">What We Built</div>
+<ul class="built-list">
+<li><span class="built-check">✦</span>Automated booking system built on GHL</li>
+<li><span class="built-check">✦</span>Instagram DM trigger — booking link sent instantly on inquiry</li>
+<li><span class="built-check">✦</span>Instant confirmation SMS fires on every booking</li>
+<li><span class="built-check">✦</span>24-hour reminder sequence — cuts no-show rate significantly</li>
+<li><span class="built-check">✦</span>Full appointment pipeline tracked in GHL</li>
+</ul>
+</div>
+<div class="tag-row">
+<span class="tag-badge">GHL CRM</span>
+<span class="tag-badge">Booking System</span>
+<span class="tag-badge">SMS Automation</span>
+<span class="tag-badge">Instagram Integration</span>
+</div>
+</div>
+<!-- Right: outcomes/metrics box -->
+<div class="featured-metrics">
+<div style="font-family:var(--fb);font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Outcomes</div>
+<div class="outcome-metric">
+<div class="outcome-metric-val">~0</div>
+<div class="outcome-metric-label">Manual booking effort</div>
+<div class="outcome-metric-sub">From 2+ hours/day to near-zero. System handles every step automatically.</div>
+</div>
+<div class="outcome-metric">
+<div class="outcome-metric-val">60%+</div>
+<div class="outcome-metric-label">No-show reduction</div>
+<div class="outcome-metric-sub">Automated reminder sequence fires 24 hours before every appointment.</div>
+</div>
+<div class="outcome-metric">
+<div class="outcome-metric-val">Instant</div>
+<div class="outcome-metric-label">Lead response time</div>
+<div class="outcome-metric-sub">Every Instagram DM triggers a booking link within seconds — not hours.</div>
+</div>
+<div class="outcome-summary">
+          "Consistent chair utilization. Every appointment tracked in one place. The system runs without me touching it."
+        </div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== SECTION 3: CLIENT GRID ======================== -->
+<section id="client-grid">
+<div class="container">
+<div class="section-header reveal">
+<span class="eyebrow"><span class="eline"></span>All Active Clients<span class="eline"></span></span>
+<h2>Five more systems. Five more businesses.</h2>
+</div>
+<!-- Row 1: 2 wider cards -->
+<div class="client-cards-row-2">
+<!-- RAMPAL RESTORES -->
+<div class="client-card reveal">
+<div class="client-card-top">
+<div class="client-type-label">Home Restoration · Toronto, ON</div>
+<div class="client-name">Rampal Restores</div>
+</div>
+<div class="client-problem-label">The Problem</div>
+<p class="client-problem-text">Leads came in at all hours. By morning, cold. Manual follow-up inconsistent — owner was doing everything himself, missing jobs he'd already paid to acquire.</p>
+<div class="client-built-label">What We Built</div>
+<ul class="client-built-list">
+<li>24/7 lead capture form + GHL CRM</li>
+<li>7-touch automated SMS follow-up sequence</li>
+<li>Full pipeline tracking</li>
+</ul>
+<div class="client-outcome">
+<div class="client-outcome-label">Outcome</div>
+<p class="client-outcome-text">"Every lead gets a response in under 2 minutes. Pipeline visible for the first time. No more lost jobs from slow follow-up."</p>
+</div>
+</div>
+<!-- PROFITABLE BARBERS -->
+<div class="client-card reveal" style="transition-delay:0.07s">
+<div class="client-card-top">
+<div class="client-type-label">Barber Business Coaching</div>
+<div class="client-name">Profitable Barbers</div>
+</div>
+<div class="client-problem-label">The Problem</div>
+<p class="client-problem-text">Student enrollment was fully manual — direct DMs, back-and-forth, no system. Revenue was unpredictable month-to-month.</p>
+<div class="client-built-label">What We Built</div>
+<ul class="client-built-list">
+<li>Automated enrollment funnel</li>
+<li>Email/SMS nurture sequence</li>
+<li>GHL pipeline for student tracking</li>
+</ul>
+<div class="client-outcome">
+<div class="client-outcome-label">Outcome</div>
+<p class="client-outcome-text">"Consistent monthly enrollment. Owner pitches less, the funnel does the qualifying."</p>
+</div>
+</div>
+</div>
+<!-- Row 2: 3 normal cards -->
+<div class="client-cards-row-3">
+<!-- DIONET ACADEMY -->
+<div class="client-card reveal">
+<div class="client-card-top">
+<div class="client-type-label">Online Education</div>
+<div class="client-name">Dionet Academy</div>
+</div>
+<div class="client-problem-label">The Problem</div>
+<p class="client-problem-text">Traffic existed but there was no real conversion system. Visitors arrived and left with no follow-up. No visibility into what was working.</p>
+<div class="client-built-label">What We Built</div>
+<ul class="client-built-list">
+<li>Traffic-to-enrollment funnel</li>
+<li>AppSheet dashboard for lead tracking</li>
+<li>Automated nurture sequence</li>
+</ul>
+<div class="client-outcome">
+<div class="client-outcome-label">Outcome</div>
+<p class="client-outcome-text">"Every lead tracked from first click to enrollment. Conversion data visible in real time."</p>
+</div>
+</div>
+<!-- LEADCOMPASS -->
+<div class="client-card reveal" style="transition-delay:0.07s">
+<div class="client-card-top">
+<div class="client-type-label">Lead Generation Agency</div>
+<div class="client-name">LeadCompass</div>
+</div>
+<div class="client-problem-label">The Problem</div>
+<p class="client-problem-text">As lead volume grew, the manual routing process couldn't keep up. Scaling meant hiring, which ate into margin.</p>
+<div class="client-built-label">What We Built</div>
+<ul class="client-built-list">
+<li>Full GHL funnel ecosystem</li>
+<li>Automated lead routing + distribution</li>
+<li>Pipeline management system</li>
+</ul>
+<div class="client-outcome">
+<div class="client-outcome-label">Outcome</div>
+<p class="client-outcome-text">"Higher volume processed without adding headcount. Every lead routed and tracked automatically."</p>
+</div>
+</div>
+<!-- MECTRIX MEDIA -->
+<div class="client-card reveal" style="transition-delay:0.14s">
+<div class="client-card-top">
+<div class="client-type-label">Media &amp; Content</div>
+<div class="client-name">Mectrix Media</div>
+</div>
+<div class="client-problem-label">The Problem</div>
+<p class="client-problem-text">Large, engaged audience with no monetization system. Content was driving attention but not revenue.</p>
+<div class="client-built-label">What We Built</div>
+<ul class="client-built-list">
+<li>Monetization funnel</li>
+<li>Lead capture system</li>
+<li>GHL pipeline: audience → paying clients</li>
+</ul>
+<div class="client-outcome">
+<div class="client-outcome-label">Outcome</div>
+<p class="client-outcome-text">"Revenue pipeline built on top of existing audience. Structured conversion where none existed."</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== SECTION 4: TESTIMONIALS ======================== -->
+<section id="testimonials">
+<div class="container">
+<!-- Large quote leads — no separate section header -->
+<div class="testi-lead-quote reveal">
+<p class="testi-lead-text">"I was very impressed with the pricing and the simple process of working with him and his team. The website is absolutely amazing — we will be using their services again."</p>
+<div class="testi-author">
+<div class="testi-avatar">JD</div>
+<div>
+<div class="testi-stars">★★★★★</div>
+<div class="testi-author-name">Jordan — Mectrix Media</div>
+<div class="testi-author-biz">Media &amp; Content</div>
+</div>
+</div>
+</div>
+<!-- 2 supporting cards -->
+<div class="testi-row reveal">
+<div class="testi-card">
+<p class="testi-card-quote">"Evan and Gavin helped me scale my product into a brand. I can't thank them enough for the help they gave!"</p>
+<div class="testi-author">
+<div class="testi-avatar">AA</div>
+<div>
+<div class="testi-stars">★★★★★</div>
+<div class="testi-author-name">Aiden A.</div>
+<div class="testi-author-biz">Lumina Sphere</div>
+</div>
+</div>
+</div>
+<div class="testi-card">
+<p class="testi-card-quote">"Good service, scaled my brand up from nothing."</p>
+<div class="testi-author">
+<div class="testi-avatar">VW</div>
+<div>
+<div class="testi-stars">★★★★★</div>
+<div class="testi-author-name">Vultus Worldwide</div>
+<div class="testi-author-biz">Brand &amp; Identity</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== SECTION 5: FINAL CTA ======================== -->
+<section id="final-cta">
+<div class="container">
+<div class="cta-inner">
+<h2 class="cta-headline reveal">
+        Every client above<br/>
+        started with one<br/>
+<span class="gold-shimmer">free call.</span>
+</h2>
+<p class="cta-body reveal">45 minutes. No pitch. No pressure. We show you exactly what system you need and hand you a blueprint — whether you hire us or not.</p>
+<div class="cta-actions reveal">
+<a class="btn-gold" href="/apply">Book Your Free Growth Audit →</a>
+</div>
+<p class="cta-sub reveal">Or email us at <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a></p>
+</div>
+</div>
+</section>
+<!-- ======================== FOOTER ======================== -->
+<footer>
+<img alt="" aria-hidden="true" class="footer-watermark" src="./TFS-Logo-Transparent.png"/>
+<div class="container footer-inner">
+<div class="footer-top">
+<div class="footer-brand">
+<img alt="TriFactor Scaling" class="footer-logo-img" src="./TFS-Logo-Transparent.png"/>
+<p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
+<a class="footer-contact-link" href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com →</a>
+</div>
+<div>
+<div class="footer-col-label">Pages</div>
+<div class="footer-col-links">
+<a href="/">Overview</a>
+<a href="/services">Services</a>
+<a href="/results">Results</a>
+<a href="/about">About</a>
+<a href="/apply">Apply Now</a>
+</div>
+</div>
+<div>
+<div class="footer-col-label">Work With Us</div>
+<div class="footer-col-links">
+<a href="/apply">Apply for Growth Ops</a>
+<a href="/results">See Client Results</a>
+<a href="/services">What We Build</a>
+<a href="mailto:trifactorscaling@gmail.com">Send Us an Email</a>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<span class="footer-copy">© 2026 TriFactor Scaling. All rights reserved.</span>
+<span class="footer-built">Built by <span>teens</span>. Powered by results.</span>
+</div>
+</div>
+</footer>
+<!-- ======================== SCRIPTS ======================== -->
 `;
 
 const Results = () => {
@@ -1141,24 +1077,20 @@ const Results = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Force black body background for full-bleed dark pages
     const prevBg = document.body.style.background;
     const prevColor = document.body.style.color;
-    document.body.style.background = "#000000";
-    document.body.style.color = "#FFFFFF";
+    document.body.style.background = "#040404";
+    document.body.style.color = "#f0ece0";
 
-    // Inject scoped CSS once per page
     const styleEl = document.createElement("style");
     styleEl.setAttribute("data-tri-page", "tri-results");
     styleEl.innerHTML = CSS;
     document.head.appendChild(styleEl);
 
-    // Run page scripts after DOM is mounted
     let scriptEl: HTMLScriptElement | null = null;
     const t = window.setTimeout(() => {
       try {
         scriptEl = document.createElement("script");
-        // Wrap user script in IIFE+try so a single null deref doesn't blank the page
         scriptEl.text = "(function(){try{\n" + SCRIPT + "\n}catch(e){console.error('tri page script error',e);}})();";
         document.body.appendChild(scriptEl);
       } catch (e) { console.error("page script error", e); }
@@ -1173,7 +1105,6 @@ const Results = () => {
     };
   }, []);
 
-  // Intercept internal link clicks for smooth SPA routing
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const a = (e.target as HTMLElement).closest("a");
     if (!a) return;

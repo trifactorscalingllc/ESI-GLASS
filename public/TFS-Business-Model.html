@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TriFactor Scaling — Full Business Model</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #040404;
+      --bg-card:    #0d0d0d;
+      --bg-section: #080808;
+      --gold:       #d4af37;
+      --gold-light: #f0cf6a;
+      --gold-dim:   rgba(212,175,55,0.12);
+      --gold-border:rgba(212,175,55,0.35);
+      --text:       #f0ece0;
+      --text-muted: rgba(240,236,224,0.50);
+      --border:     rgba(255,255,255,0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ─── HERO HEADER ─── */
+    .bm-header {
+      position: relative;
+      overflow: hidden;
+      padding: 90px 40px 80px;
+      text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(212,175,55,0.10) 0%, transparent 70%);
+      border-bottom: 1px solid var(--gold-border);
+    }
+    .bm-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><defs><radialGradient id="g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.06"/><stop offset="100%" stop-color="%23d4af37" stop-opacity="0"/></radialGradient></defs><rect width="400" height="400" fill="url(%23g)"/></svg>') center/600px;
+      pointer-events: none;
+    }
+    .bm-header-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      border-radius: 40px;
+      padding: 6px 20px;
+      margin-bottom: 28px;
+    }
+    .bm-header h1 {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      line-height: 1.05;
+      margin-bottom: 18px;
+    }
+    .bm-header h1 span { color: var(--gold); }
+    .bm-header p {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto 36px;
+    }
+    .bm-header-stats {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+    .bm-hstat {
+      padding: 0 40px;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .bm-hstat:last-child { border-right: none; }
+    .bm-hstat .val {
+      display: block;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: -0.5px;
+    }
+    .bm-hstat .lbl {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ─── SECTION WRAPPER ─── */
+    .bm-section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 70px 40px;
+    }
+    .bm-section:nth-child(even) {
+      background: var(--bg-section);
+    }
+    .bm-section-full {
+      width: 100%;
+      padding: 70px 40px;
+    }
+    .bm-section-full:nth-child(even) {
+      background: var(--bg-section);
+    }
+
+    /* ─── SECTION LABEL ─── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .section-label-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+    .section-label-text h2 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      line-height: 1.2;
+    }
+    .section-label-text p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ─── DIAGRAM IMAGE BLOCK ─── */
+    .diagram-wrap {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+    .diagram-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ─── CONNECTOR ARROW ─── */
+    .connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+      gap: 6px;
+      position: relative;
+    }
+    .connector-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      border-radius: 20px;
+      padding: 5px 16px;
+    }
+    .connector-line {
+      width: 2px;
+      height: 36px;
+      background: linear-gradient(180deg, var(--gold-border) 0%, rgba(212,175,55,0.05) 100%);
+    }
+    .connector-arrow {
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 10px solid rgba(212,175,55,0.5);
+    }
+
+    /* ─── FULL CONNECTOR (between sections) ─── */
+    .section-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0 0;
+      gap: 4px;
+    }
+    .section-connector .line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(180deg, var(--gold-border), transparent);
+    }
+    .section-connector .arrow {
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 9px solid var(--gold-border);
+    }
+    .section-connector .tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* ─── INSIGHTS STRIP ─── */
+    .insight-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .insight-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .insight-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+    .insight-card .ic-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .insight-card .ic-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ─── FLOW SUMMARY ─── */
+    .flow-summary {
+      background: var(--bg-card);
+      border: 1px solid var(--gold-border);
+      border-radius: 16px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 24px;
+    }
+    .flow-summary::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .flow-summary-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    .flow-summary-title span { color: var(--gold); }
+    .flow-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+    .flow-step {
+      flex: 1;
+      min-width: 160px;
+      text-align: center;
+      padding: 0 10px;
+    }
+    .flow-step-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      font-size: 20px;
+    }
+    .flow-step-name {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .flow-step-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .flow-arrow {
+      font-size: 20px;
+      color: var(--gold-border);
+      flex-shrink: 0;
+    }
+
+    /* ─── CTA FOOTER ─── */
+    .bm-footer {
+      text-align: center;
+      padding: 80px 40px 100px;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(ellipse 60% 50% at 50% 100%, rgba(212,175,55,0.08) 0%, transparent 70%);
+      border-top: 1px solid var(--gold-border);
+    }
+    .bm-footer h2 {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 14px;
+    }
+    .bm-footer h2 span { color: var(--gold); }
+    .bm-footer p {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 480px;
+      margin: 0 auto 36px;
+    }
+    .bm-footer-cta {
+      display: inline-block;
+      background: var(--gold);
+      color: #040404;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 16px 40px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .bm-footer-cta:hover { opacity: 0.85; }
+    .bm-footer-note {
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ─── PRINT / EXPORT ─── */
+    .print-btn {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: var(--gold);
+      color: #040404;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 24px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(212,175,55,0.35);
+      z-index: 999;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .print-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(212,175,55,0.45);
+    }
+    @media print {
+      .print-btn { display: none; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+    }
+
+    @media (max-width: 640px) {
+      .bm-section, .bm-section-full { padding: 50px 20px; }
+      .bm-hstat { padding: 0 20px; }
+      .flow-steps { flex-direction: column; gap: 16px; }
+      .flow-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════ -->
+<div class="bm-header">
+  <div class="bm-header-eyebrow">Complete Business Model Overview</div>
+  <h1>How <span>TriFactor Scaling</span><br>Works End-to-End</h1>
+  <p>From the problem we solve, to who we serve, to the systems we build — every layer of the Growth Ops model, visualized.</p>
+  <div class="bm-header-stats">
+    <div class="bm-hstat"><span class="val">6</span><span class="lbl">Clients Active</span></div>
+    <div class="bm-hstat"><span class="val">3</span><span class="lbl">Core Pillars</span></div>
+    <div class="bm-hstat"><span class="val">4</span><span class="lbl">Systems Built</span></div>
+    <div class="bm-hstat"><span class="val">$0</span><span class="lbl">Upfront Risk</span></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 1 — THE PROBLEM
+═══════════════════════════════════════════ -->
+<div style="background: var(--bg);">
+  <div class="bm-section">
+    <div class="section-label">
+      <div class="section-label-num">01</div>
+      <div class="section-label-text">
+        <h2>The Problem We Solve</h2>
+        <p>Why most local businesses are bleeding revenue — and how we fix it</p>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <img src="diag-1-problem.png" alt="Problem vs Solution" loading="lazy" />
+    </div>
+    <div class="insight-strip">
+      <div class="insight-card">
+        <div class="ic-label">The Gap</div>
+        <div class="ic-text">Most business owners are the best at their craft — not at running a system. They lose leads, miss follow-ups, and rely entirely on referrals.</div>
+      </div>
+      <div class="insight-card">
+        <div class="ic-label">The Cost</div>
+        <div class="ic-text">The average local service business loses 40–60% of inbound leads simply by failing to respond within 5 minutes. That's compounding lost revenue every single day.</div>
+      </div>
+      <div class="insight-card">
+        <div class="ic-label">Our Answer</div>
+        <div class="ic-text">A fully automated Growth Ops system that captures every lead, follows up instantly, books appointments, and builds reputation on autopilot.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- connector -->
+<div class="section-connector">
+  <div class="line"></div>
+  <div class="arrow"></div>
+  <div class="tag">Who we serve</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 2 — WHO WE SERVE
+═══════════════════════════════════════════ -->
+<div style="background: var(--bg-section);">
+  <div class="bm-section">
+    <div class="section-label">
+      <div class="section-label-num">02</div>
+      <div class="section-label-text">
+        <h2>Who We Serve</h2>
+        <p>Local service businesses that are ready to stop manually chasing leads</p>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <img src="diag-2-who-we-serve.png" alt="Who We Serve — 6 Business Types" loading="lazy" />
+    </div>
+    <div class="insight-strip">
+      <div class="insight-card">
+        <div class="ic-label">Ideal Profile</div>
+        <div class="ic-text">Owner-operated, $10K–$100K/mo revenue, service-based, with inbound leads but no system to handle them consistently.</div>
+      </div>
+      <div class="insight-card">
+        <div class="ic-label">What They Have</div>
+        <div class="ic-text">A quality service and some demand — but they're running entirely on memory, text messages, and manual follow-up.</div>
+      </div>
+      <div class="insight-card">
+        <div class="ic-label">What They Need</div>
+        <div class="ic-text">A system that works while they work — automated intake, instant responses, and a pipeline they can actually see and trust.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- connector -->
+<div class="section-connector">
+  <div class="line"></div>
+  <div class="arrow"></div>
+  <div class="tag">Our methodology</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 3 — THREE PILLARS
+═══════════════════════════════════════════ -->
+<div style="background: var(--bg);">
+  <div class="bm-section">
+    <div class="section-label">
+      <div class="section-label-num">03</div>
+      <div class="section-label-text">
+        <h2>The Three-Pillar System</h2>
+        <p>Every engagement is built on the same three compounding layers</p>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <img src="diag-3-three-pillars.png" alt="Three Pillars: Capture, Automate, Compound" loading="lazy" />
+    </div>
+    <div class="flow-summary">
+      <div class="flow-summary-title">How the <span>pillars stack</span> over time</div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-step-icon">🎯</div>
+          <div class="flow-step-name">Capture</div>
+          <div class="flow-step-desc">Every lead source connected and tracked. Nothing falls through.</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">⚡</div>
+          <div class="flow-step-name">Automate</div>
+          <div class="flow-step-desc">Follow-up, booking, and communication run without the owner.</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">📈</div>
+          <div class="flow-step-name">Compound</div>
+          <div class="flow-step-desc">Reviews, referrals, and retention build a self-sustaining flywheel.</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">💰</div>
+          <div class="flow-step-name">Result</div>
+          <div class="flow-step-desc">More revenue, less manual work. Month after month.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- connector -->
+<div class="section-connector">
+  <div class="line"></div>
+  <div class="arrow"></div>
+  <div class="tag">What we build</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 4 — FOUR SYSTEMS
+═══════════════════════════════════════════ -->
+<div style="background: var(--bg-section);">
+  <div class="bm-section">
+    <div class="section-label">
+      <div class="section-label-num">04</div>
+      <div class="section-label-text">
+        <h2>The Four Core Systems</h2>
+        <p>What gets built in every Growth Ops engagement</p>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <img src="diag-4-four-systems.png" alt="Four Core Systems" loading="lazy" />
+    </div>
+    <div class="insight-strip">
+      <div class="insight-card">
+        <div class="ic-label">GHL Revenue System</div>
+        <div class="ic-text">The command center. CRM, pipeline, and communications all unified — the business finally has a single source of truth.</div>
+      </div>
+      <div class="insight-card">
+        <div class="ic-label">Lead Capture & Funnel</div>
+        <div class="ic-text">Every touchpoint — website, ads, GMB, social — routes into one managed funnel with instant response automation.</div>
+      </div>
+      <div class="insight-card">
+        <div class="ic-label">Automated Booking</div>
+        <div class="ic-text">Calendar sync, confirmations, reminders, and rescheduling handled without a single manual step from the owner.</div>
+      </div>
+      <div class="insight-card">
+        <div class="ic-label">Review Engine</div>
+        <div class="ic-text">Post-service review requests, responses, and reputation monitoring — turning every happy client into a public asset.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- connector -->
+<div class="section-connector">
+  <div class="line"></div>
+  <div class="arrow"></div>
+  <div class="tag">The tools powering it</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 5 — TECH STACK
+═══════════════════════════════════════════ -->
+<div style="background: var(--bg);">
+  <div class="bm-section">
+    <div class="section-label">
+      <div class="section-label-num">05</div>
+      <div class="section-label-text">
+        <h2>The Tech Stack</h2>
+        <p>Best-in-class tools, assembled into one unified operating system</p>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <img src="diag-5-tech-stack.png" alt="Tech Stack" loading="lazy" />
+    </div>
+    <div class="insight-strip">
+      <div class="insight-card">
+        <div class="ic-label">Why This Stack</div>
+        <div class="ic-text">Every tool was chosen for reliability, integration depth, and the ability to operate with minimal technical maintenance from the client.</div>
+      </div>
+      <div class="insight-card">
+        <div class="ic-label">No Frankenstack</div>
+        <div class="ic-text">These tools are purpose-built to work together. We don't bolt on random software — every integration serves a specific system function.</div>
+      </div>
+      <div class="insight-card">
+        <div class="ic-label">Client Portals</div>
+        <div class="ic-text">Glide/Softr gives every client a clean, custom-branded dashboard — so they see pipeline and performance without needing to log into anything complex.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- connector -->
+<div class="section-connector">
+  <div class="line"></div>
+  <div class="arrow"></div>
+  <div class="tag">How we deliver</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 6 — PROCESS
+═══════════════════════════════════════════ -->
+<div style="background: var(--bg-section);">
+  <div class="bm-section">
+    <div class="section-label">
+      <div class="section-label-num">06</div>
+      <div class="section-label-text">
+        <h2>The Engagement Process</h2>
+        <p>From first conversation to fully running system — exactly what to expect</p>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <img src="diag-6-process.png" alt="Engagement Process" loading="lazy" />
+    </div>
+    <div class="flow-summary">
+      <div class="flow-summary-title">The <span>zero-risk</span> model</div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-step-icon">🔍</div>
+          <div class="flow-step-name">Free Audit</div>
+          <div class="flow-step-desc">45-minute Growth Audit. No pitch, just diagnosis.</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">🔧</div>
+          <div class="flow-step-name">Build</div>
+          <div class="flow-step-desc">4–6 weeks to a fully live Growth Ops system.</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">🔁</div>
+          <div class="flow-step-name">Optimize</div>
+          <div class="flow-step-desc">Ongoing retainer. We improve based on real data.</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">📊</div>
+          <div class="flow-step-name">Scale</div>
+          <div class="flow-step-desc">Layer paid ads, new funnels, and deeper automation.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     CTA FOOTER
+═══════════════════════════════════════════ -->
+<div class="bm-footer">
+  <div class="bm-header-eyebrow" style="margin-bottom:24px;">Ready to see this in action?</div>
+  <h2>Your business.<br><span>Your system. Built in weeks.</span></h2>
+  <p>We start with a free 45-minute Growth Audit — no pitch, no pressure. Just clarity on exactly where you're losing revenue and how to fix it.</p>
+  <a href="apply.html" class="bm-footer-cta">Book Your Free Growth Audit →</a>
+  <div class="bm-footer-note">6 spots available per month · No upfront cost · Results or we work for free</div>
+</div>
+
+
+<!-- Print / Save button -->
+<button class="print-btn" onclick="window.print()">⬇ Save as PDF</button>
+
+</body>
+</html>

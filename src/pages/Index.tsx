@@ -2,10 +2,11 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CSS = `
+
     /* ======================== VARIABLES ======================== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .tri-home {
+    :root {
       color-scheme: dark;
       --gold:        #D4AF37;
       --gold-light:  #E2C860;
@@ -27,14 +28,18 @@ const CSS = `
       --gray-light:  #9CA3AF;
       --fh: 'Plus Jakarta Sans', sans-serif;
       --fb: 'Inter', sans-serif;
-    } .tri-home { scroll-behavior: smooth; }
+    }
+
+    html { scroll-behavior: smooth; }
 
     /* Golden scrollbar */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--black); }
     ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--gold-light); }
-    * { scrollbar-width: thin; scrollbar-color: var(--gold) var(--black); } .tri-home {
+    * { scrollbar-width: thin; scrollbar-color: var(--gold) var(--black); }
+
+    body {
       background: var(--black);
       color: var(--white);
       font-family: var(--fb);
@@ -174,7 +179,7 @@ const CSS = `
 
     /* ======================== HERO ======================== */
     #hero {
-      min-height: 88vh; display: flex; align-items: flex-start;
+      min-height: 88vh; display: flex; align-items: center;
       padding-top: 90px; position: relative; overflow: hidden;
     }
 
@@ -209,7 +214,7 @@ const CSS = `
       mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 15%, transparent 72%);
     }
 
-    .hero-inner { position: relative; z-index: 2; padding: 20px 0 110px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .hero-inner { position: relative; z-index: 2; padding: 60px 0 110px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
     #hero .container { max-width: 100%; padding: 0 25vw; text-align: center; }
     @media (max-width: 900px) { #hero .container { padding: 0 8vw; } }
     @media (max-width: 600px) { #hero .container { padding: 0 5vw; } }
@@ -1488,968 +1493,11 @@ const CSS = `
     }
 
 
-  `;
-const HTML = `
-
-  <!-- ======================== STICKY CTA BAR ======================== -->
-  <div class="sticky-bar" id="stickyBar">
-    <p class="sticky-bar-text">We open <span>3 client spots per month.</span> Currently accepting applications.</p>
-    <a href="/apply" class="btn-gold" style="padding:11px 24px;font-size:0.8rem;white-space:nowrap;">Book Your Free Audit →</a>
-  </div>
-
-  <!-- ======================== NAV ======================== -->
-  <nav id="navbar">
-    <div class="container">
-      <div class="nav-inner">
-        <a href="/" class="nav-logo" aria-label="TriFactor Scaling">
-          <img src="/tfs-logo.png" alt="TriFactor Scaling">
-        </a>
-        <ul class="nav-links">
-          <li><a href="/" class="nav-link active-nav">Overview</a></li>
-          <li><a href="/services" class="nav-link">Services</a></li>
-          <li><a href="/results" class="nav-link">Results</a></li>
-          <li><a href="/about" class="nav-link">About</a></li>
-        </ul>
-        <div class="nav-cta-wrap">
-          <a href="/apply" class="btn-gold nav-cta" style="padding:11px 22px;font-size:0.8rem;">Apply Now →</a>
-          <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
-            <span></span><span></span><span></span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="/"    onclick="toggleMenu()" class="active-nav">Overview</a>
-    <a href="/services" onclick="toggleMenu()">Services</a>
-    <a href="/results"  onclick="toggleMenu()">Results</a>
-    <a href="/about"    onclick="toggleMenu()">About</a>
-    <a href="/apply"    onclick="toggleMenu()">Apply Now →</a>
-  </div>
-
-
-
-  <!-- ======================== HERO ======================== -->
-  <section id="hero">
-    <canvas id="hero-canvas"></canvas>
-    <div class="hero-glow-a"></div>
-    <div class="hero-glow-b"></div>
-    <div class="hero-lines"></div>
-    <div class="container">
-      <div class="hero-inner">
-
-        <h1 class="hero-headline">
-          We Build the<br>
-          System That<br>
-          <span class="rotate-wrap">
-            <span class="rotate-word show gold-shimmer" id="rotWord">Books You.</span>
-          </span>
-        </h1>
-
-        <p class="hero-sub">
-          We automate your intake, follow-up, and pipeline so every lead gets handled — while you stay focused on the work.
-        </p>
-
-        <div class="hero-actions">
-          <a href="#cta" class="btn-gold">Book Your Free Growth Audit →</a>
-          <a href="#how-it-works" class="btn-outline">See the Process</a>
-        </div>
-
-        <div class="hero-stats">
-          <div class="hstat">
-            <span class="hstat-val" data-target="12" data-suffix="+">12+</span>
-            <span class="hstat-lbl">Businesses Grown</span>
-          </div>
-          <div class="hstat">
-            <span class="hstat-val" data-prefix="$" data-target="250" data-suffix="K+">$250K+</span>
-            <span class="hstat-lbl">Client Revenue Built</span>
-          </div>
-          <div class="hstat">
-            <span class="hstat-val">100%</span>
-            <span class="hstat-lbl">Local Service Focused</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================== MARQUEE ======================== -->
-  <div class="marquee-wrap" aria-hidden="true">
-    <div class="marquee-track">
-      <!-- Set 1 -->
-      <div class="marquee-item"><span>LeadCompass</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>CutByDack</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Profitable Barbers</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Dionet Academy</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Mectrix Media</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Rampal Restores</span><div class="marquee-gem"></div></div>
-      <!-- Set 2 -->
-      <div class="marquee-item"><span>LeadCompass</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>CutByDack</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Profitable Barbers</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Dionet Academy</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Mectrix Media</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Rampal Restores</span><div class="marquee-gem"></div></div>
-      <!-- Set 3 -->
-      <div class="marquee-item"><span>LeadCompass</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>CutByDack</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Profitable Barbers</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Dionet Academy</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Mectrix Media</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Rampal Restores</span><div class="marquee-gem"></div></div>
-      <!-- Set 4 -->
-      <div class="marquee-item"><span>LeadCompass</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>CutByDack</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Profitable Barbers</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Dionet Academy</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Mectrix Media</span><div class="marquee-gem"></div></div>
-      <div class="marquee-item"><span>Rampal Restores</span><div class="marquee-gem"></div></div>
-    </div>
-  </div>
-
-  <!-- ======================== WHAT WE DO ======================== -->
-  <section id="what-we-do">
-    <div class="container">
-      <div class="wwd-grid">
-        <div class="wwd-left reveal-left">
-          <span class="eyebrow"><span class="eline"></span>What We Do</span>
-          <h2>We don't run campaigns.<br>We build pipelines.</h2>
-          <p>Most service business owners don't have a marketing problem — they have a systems problem. Leads come in and fall through the cracks. Follow-up never happens. There's no way to see what's actually working.</p>
-          <p>We fix that. TriFactor integrates automated intake, follow-up, and tracking directly into your operations — so every lead is captured, every inquiry is followed up automatically, and you can see in real time exactly where your revenue is coming from.</p>
-          <p>Three founders. No courses. No outside money. Just operators who learned by doing — client by client — what actually moves the needle for local service businesses.</p>
-        </div>
-        <div class="wwd-pillars reveal-right">
-          <div class="pillar">
-            <div class="pillar-num">01</div>
-            <div class="pillar-content">
-              <h4>Systems First</h4>
-              <p>We build infrastructure before campaigns. Every engagement starts with a complete growth architecture designed around your specific business model.</p>
-            </div>
-          </div>
-          <div class="pillar">
-            <div class="pillar-num">02</div>
-            <div class="pillar-content">
-              <h4>Automated Revenue</h4>
-              <p>GHL funnels, automated follow-up sequences, and CRM pipelines that capture, nurture, and close leads around the clock without you lifting a finger.</p>
-            </div>
-          </div>
-          <div class="pillar">
-            <div class="pillar-num">03</div>
-            <div class="pillar-content">
-              <h4>Operators, Not Marketers</h4>
-              <p>We think in business outcomes and revenue. Vanity metrics don't pay your bills — we optimize for the numbers that do.</p>
-            </div>
-          </div>
-          <div class="pillar">
-            <div class="pillar-num">04</div>
-            <div class="pillar-content">
-              <h4>AppSheet Intelligence</h4>
-              <p>Custom tracking dashboards so you always see in real time exactly what's working, what's not, and where to put more fuel on the fire.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================== SYSTEMS DEMO ======================== -->
-  <section id="systems-demo">
-    <div class="sdemo-vignette" aria-hidden="true"></div>
-    <div class="container">
-
-      <div class="sdemo-header reveal">
-        <span class="eyebrow"><span class="eline"></span>Systems In Action</span>
-        <h2>Click any system. Watch it<br><span class="gold-shimmer">run in real time.</span></h2>
-        <p>Every automation below is live inside a client's business right now. This is exactly what we build.</p>
-      </div>
-
-      <!-- TAB NAVIGATION — centered inline -->
-      <div class="demo-nav reveal" style="transition-delay:0.1s">
-        <div class="demo-tabs-wrap" id="demoTabsWrap">
-          <!-- Sliding indicator -->
-          <div class="demo-tab-indicator" id="demoTabIndicator"></div>
-          <div class="demo-tabs">
-            <button class="demo-tab active" onclick="switchDemo('lead',this)" id="dtab-lead">
-              <span class="demo-tab-num">01</span>
-              <span class="demo-tab-label">Lead Alert</span>
-            </button>
-            <button class="demo-tab" onclick="switchDemo('followup',this)" id="dtab-followup">
-              <span class="demo-tab-num">02</span>
-              <span class="demo-tab-label">Follow-Up Chain</span>
-            </button>
-            <button class="demo-tab" onclick="switchDemo('crm',this)" id="dtab-crm">
-              <span class="demo-tab-num">03</span>
-              <span class="demo-tab-label">CRM Pipeline</span>
-            </button>
-            <button class="demo-tab" onclick="switchDemo('booking',this)" id="dtab-booking">
-              <span class="demo-tab-num">04</span>
-              <span class="demo-tab-label">Booking System</span>
-            </button>
-            <button class="demo-tab" onclick="switchDemo('review',this)" id="dtab-review">
-              <span class="demo-tab-num">05</span>
-              <span class="demo-tab-label">Review Request</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="demo-panel-wrap reveal" style="transition-delay:0.15s">
-        <!-- Loop progress bar -->
-        <div class="demo-loop-bar" id="demoLoopBar"></div>
-        <!-- STATUS BAR -->
-        <div class="demo-panel-status">
-          <div class="demo-status-dot"></div>
-          <span class="demo-status-text">System Active — <span class="demo-status-name" id="demoStatusLabel">Lead Alert</span></span>
-          <span class="demo-status-live">● Live</span>
-        </div>
-
-        <!-- ==================== PANEL 1: LEAD ALERT ==================== -->
-        <div class="demo-panel active" id="panel-lead">
-          <div class="la-grid">
-            <!-- Form -->
-            <div class="la-form">
-              <div class="la-form-label"><div class="la-dot"></div>Service Request Form</div>
-              <div class="la-field"><div class="la-field-lbl">Full Name</div><div class="la-field-val">James Harrington</div></div>
-              <div class="la-field"><div class="la-field-lbl">Phone</div><div class="la-field-val">(647) 391-2844</div></div>
-              <div class="la-field"><div class="la-field-lbl">Service</div><div class="la-field-val">Vehicle Inspection + Oil Change</div></div>
-              <div class="la-field"><div class="la-field-lbl">Vehicle</div><div class="la-field-val">2021 Honda Accord</div></div>
-              <button class="la-btn">Submit Request ✓</button>
-            </div>
-            <!-- Connector -->
-            <div class="la-connector">
-              <div class="la-timing">&lt;&nbsp;1s</div>
-              <div class="la-arrow">
-                <div class="la-arrow-line"></div>
-                <div class="la-arrow-head"></div>
-              </div>
-            </div>
-            <!-- Phone -->
-            <div class="dp-phone-wrap">
-              <div class="dp-phone">
-                <div class="dp-screen">
-                  <div class="dp-status"><span>9:41</span><span>●●●</span></div>
-                  <div class="dp-body">
-                    <div class="la-notif">
-                      <div class="la-notif-top">
-                        <div class="la-notif-icon">TF</div>
-                        <div class="la-notif-src">Messages · TriFactor Alert</div>
-                        <div class="la-notif-ts">now</div>
-                      </div>
-                      <div class="la-notif-body">
-                        🔔 <span class="gh">New Lead</span><br>
-                        <span class="gh">James Harrington</span><br>
-                        (647) 391-2844<br>
-                        Service: Inspection + Oil Change
-                      </div>
-                    </div>
-                    <div class="la-read">Delivered ✓</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== PANEL 2: FOLLOW-UP CHAIN ==================== -->
-        <div class="demo-panel" id="panel-followup">
-          <div class="fu-layout">
-            <!-- Timeline -->
-            <div class="fu-steps">
-              <div class="fu-step" id="fu1">
-                <div class="fu-step-time">Immediate</div>
-                <div class="fu-step-info">
-                  <h4>First Touch SMS</h4>
-                  <p>Auto-text fires the moment a lead comes in — personalized, booking link included.</p>
-                </div>
-              </div>
-              <div class="fu-step" id="fu2">
-                <div class="fu-step-time">2 Hours</div>
-                <div class="fu-step-info">
-                  <h4>Value Follow-Up</h4>
-                  <p>If no reply, a second message asks a specific question to restart the conversation.</p>
-                </div>
-              </div>
-              <div class="fu-step" id="fu3">
-                <div class="fu-step-time">Day 3</div>
-                <div class="fu-step-info">
-                  <h4>Social Proof Message</h4>
-                  <p>Sends a client result to build trust — zero effort from the owner.</p>
-                </div>
-              </div>
-              <div class="fu-step" id="fu4">
-                <div class="fu-step-time">Day 7</div>
-                <div class="fu-step-info">
-                  <h4>Last Chance + Offer</h4>
-                  <p>Final message creates urgency. Most leads convert by this point.</p>
-                </div>
-              </div>
-            </div>
-            <!-- Phone SMS conversation -->
-            <div class="dp-phone-wrap">
-              <div class="dp-phone">
-                <div class="dp-screen">
-                  <div class="dp-status"><span>9:41</span><span>●●●</span></div>
-                  <div class="dp-body" style="display:flex;flex-direction:column;gap:4px;overflow:hidden;">
-                    <div class="fu-msg" id="fum0"><span class="sms-label">Rampal Restores Automated</span></div>
-                    <div class="fu-msg" id="fum1"><span class="sms-in">"Hey Marcus! It's Yash from Rampal Restores. We got your request — book your free estimate:<br><span class="sms-gold">rampalrestores.as.me</span> 👇"</span></div>
-                    <div class="fu-msg" id="fum2"><span class="sms-in">"Quick question — is it water damage or mold? We handle both same week 🙌"</span></div>
-                    <div class="fu-msg" id="fum3"><span class="sms-in">"Just finished a full basement restore nearby — 3 days ✅ Want before/after photos?"</span></div>
-                    <div class="fu-msg" id="fum4"><span class="sms-in">"Last message Marcus — spots filling up this week. Grab yours now 👇"</span></div>
-                    <div class="fu-reply" id="fureply"><span class="sms-out">"Let's book it!"</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== PANEL 3: CRM PIPELINE ==================== -->
-        <div class="demo-panel" id="panel-crm">
-          <div class="crm-layout">
-            <div class="crm-lead-info">
-              <div class="crm-lead-avatar">JH</div>
-              <div>
-                <div class="crm-lead-name">James Harrington</div>
-                <div class="crm-lead-sub">Vehicle Inspection · (647) 391-2844</div>
-              </div>
-              <div class="crm-progress">
-                <div class="crm-progress-fill" id="crmProgress"></div>
-              </div>
-            </div>
-            <div class="crm-board-wrap">
-              <div class="crm-board">
-                <div class="crm-stage" id="crm-0">
-                  <div class="crm-stage-head"><div class="crm-stage-name">New Lead</div><div class="crm-stage-dot"></div></div>
-                  <div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Submitted form</div><div class="crm-card-badge">🔔 New</div></div>
-                </div>
-                <div class="crm-stage" id="crm-1">
-                  <div class="crm-stage-head"><div class="crm-stage-name">Contacted</div><div class="crm-stage-dot"></div></div>
-                  <div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">SMS sent</div><div class="crm-card-badge">📱 Texted</div></div>
-                </div>
-                <div class="crm-stage" id="crm-2">
-                  <div class="crm-stage-head"><div class="crm-stage-name">Qualified</div><div class="crm-stage-dot"></div></div>
-                  <div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Replied &amp; interested</div><div class="crm-card-badge">✅ Warm</div></div>
-                </div>
-                <div class="crm-stage" id="crm-3">
-                  <div class="crm-stage-head"><div class="crm-stage-name">Booked</div><div class="crm-stage-dot"></div></div>
-                  <div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Appointment set</div><div class="crm-card-badge">📅 Booked</div></div>
-                </div>
-                <div class="crm-stage" id="crm-4">
-                  <div class="crm-stage-head"><div class="crm-stage-name">Won</div><div class="crm-stage-dot"></div></div>
-                  <div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Job complete</div><div class="crm-card-badge">🏆 Closed</div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== PANEL 4: BOOKING SYSTEM ==================== -->
-        <div class="demo-panel" id="panel-booking">
-          <div class="bk-layout">
-            <!-- Steps -->
-            <div class="bk-steps">
-              <div class="bk-step" id="bk1">
-                <div class="bk-step-num">1</div>
-                <div class="bk-step-content">
-                  <h4>Booking Link Sent</h4>
-                  <p>Fires the moment a lead replies. Personalized link goes out instantly.</p>
-                </div>
-              </div>
-              <div class="bk-step" id="bk2">
-                <div class="bk-step-num">2</div>
-                <div class="bk-step-content">
-                  <h4>Appointment Confirmed</h4>
-                  <p>Client picks a slot. Confirmation SMS fires. Calendar blocks automatically.</p>
-                </div>
-              </div>
-              <div class="bk-step" id="bk3">
-                <div class="bk-step-num">3</div>
-                <div class="bk-step-content">
-                  <h4>24-Hour Reminder Sent</h4>
-                  <p>Auto-reminder reduces no-shows by 60%+. Zero effort from you.</p>
-                </div>
-              </div>
-            </div>
-            <!-- Phone -->
-            <div class="dp-phone-wrap">
-              <div class="dp-phone">
-                <div class="dp-screen">
-                  <div class="dp-status"><span>9:41</span><span>●●●</span></div>
-                  <div class="dp-body" style="display:flex;flex-direction:column;gap:5px;overflow:hidden;">
-                    <span class="sms-label">CutByDack Bookings</span>
-                    <div class="bk-msg" id="bkm1"><span class="sms-in">"Marcus, book your spot here 👇<br><span class="sms-gold">cutbydack.as.me</span><br>Takes 60 seconds ⚡"</span></div>
-                    <div class="bk-msg" id="bkm2"><span class="sms-in" style="background:rgba(62,207,110,0.18);color:#3ecf6e;">✅ Booked!<br>Thu May 2 @ 3:00 PM<br>CutByDack — 214 King St W</span></div>
-                    <div class="bk-msg" id="bkm3"><span class="sms-in">"⏰ Reminder: Tomorrow @ 3:00 PM with Dack. Reply CANCEL if plans change."</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== PANEL 5: REVIEW REQUEST ==================== -->
-        <div class="demo-panel" id="panel-review">
-          <div class="rv-layout">
-            <!-- Left: trigger + stars + result -->
-            <div class="rv-left">
-              <div class="rv-trigger" id="rvTrigger">
-                <div class="rv-trigger-icon">✅</div>
-                <div class="rv-trigger-text">
-                  <h4>Job Marked Complete</h4>
-                  <p>Owner taps "Complete" in GHL — review request fires in seconds.</p>
-                </div>
-              </div>
-              <div class="rv-stars-wrap" id="rvStarsWrap">
-                <span class="rv-stars-label">Client rates their experience</span>
-                <div class="rv-stars">
-                  <span class="rv-star" id="rs1">★</span>
-                  <span class="rv-star" id="rs2">★</span>
-                  <span class="rv-star" id="rs3">★</span>
-                  <span class="rv-star" id="rs4">★</span>
-                  <span class="rv-star" id="rs5">★</span>
-                </div>
-              </div>
-              <div class="rv-result" id="rvResult">
-                <div class="rv-result-stars">★★★★★</div>
-                <div class="rv-result-quote">"Rampal Restores did an incredible job on our basement. Fast, professional, spotless. Would 100% recommend."</div>
-                <div class="rv-result-name">— Sarah T. · Google Review</div>
-              </div>
-            </div>
-            <!-- Phone -->
-            <div class="dp-phone-wrap">
-              <div class="dp-phone">
-                <div class="dp-screen">
-                  <div class="dp-status"><span>9:41</span><span>●●●</span></div>
-                  <div class="dp-body" style="display:flex;flex-direction:column;gap:5px;overflow:hidden;">
-                    <span class="sms-label">Rampal Restores</span>
-                    <div class="rv-msg" id="rvm1"><span class="sms-in">"Hi Sarah! Happy with your restore? 👋<br><br>Leave us a quick Google review:<br><span class="sms-gold">g.page/rampal ⭐</span><br><br>— Yash @ Rampal Restores"</span></div>
-                    <div class="rv-msg" id="rvm2"><span class="sms-out">"Absolutely! Just left you 5 stars 🙌"</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- end demo-panel-wrap -->
-
-      <p class="sdemo-caption reveal" style="transition-delay:0.25s">
-        Every system above runs in a real client's business. <strong>Built once. Runs forever. Compounds monthly.</strong>
-      </p>
-
-    </div>
-  </section>
-
-  <!-- ======================== HOW IT WORKS ======================== -->
-  <section id="how-it-works">
-    <div class="container">
-      <div class="hiw-head reveal">
-        <span class="eyebrow"><span class="eline"></span>The Process</span>
-        <h2>From audit to automated revenue<br>in three moves.</h2>
-      </div>
-      <div class="hiw-steps">
-
-        <div class="hiw-step reveal" style="transition-delay:0.05s">
-          <span class="hiw-num-ghost">01</span>
-          <h3>Growth Audit</h3>
-          <p>We map your entire business — lead flow, conversion points, revenue leaks, and missed opportunities. You leave with a custom Growth System Blueprint whether you work with us or not. No pitch. No pressure.</p>
-          <span class="step-badge">Free — 45 Minutes</span>
-        </div>
-
-        <div class="hiw-connector" aria-hidden="true">
-          <div class="hiw-conn-line"></div>
-          <div class="hiw-conn-dot"></div>
-          <div class="hiw-conn-line"></div>
-        </div>
-
-        <div class="hiw-step reveal" style="transition-delay:0.18s">
-          <span class="hiw-num-ghost">02</span>
-          <h3>System Integration</h3>
-          <p>We build and install your full growth stack: GHL funnel ecosystem, automated lead sequences, CRM pipeline, and AppSheet tracking dashboard — wired directly into your operations from day one.</p>
-          <span class="step-badge">4–6 Week Build</span>
-        </div>
-
-        <div class="hiw-connector" aria-hidden="true">
-          <div class="hiw-conn-line"></div>
-          <div class="hiw-conn-dot"></div>
-          <div class="hiw-conn-line"></div>
-        </div>
-
-        <div class="hiw-step reveal" style="transition-delay:0.31s">
-          <span class="hiw-num-ghost">03</span>
-          <h3>Optimize &amp; Scale</h3>
-          <p>Monthly strategy calls, performance reviews, and continuous iteration. We don't set it and forget it — we stay in the trenches until your system is compounding revenue consistently, month over month.</p>
-          <span class="step-badge">Ongoing — Monthly</span>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================== SERVICES ======================== -->
-  <section id="services">
-    <div class="container">
-      <div class="svc-header reveal">
-        <span class="eyebrow"><span class="eline"></span>Services</span>
-        <h2>Three ways to build your growth system.</h2>
-        <p>Every tier starts with a custom audit and a system built around your business specifically — not a template. We take on 3 new clients per month across all tiers.</p>
-      </div>
-      <div class="svc-grid">
-
-        <div class="svc-card reveal" style="transition-delay:0.08s">
-          <div class="svc-tier">Starter</div>
-          <div class="svc-name">Foundation</div>
-          <p class="svc-target">For businesses ready to stop losing leads and build a reliable, automated follow-up system for the first time.</p>
-          <ul class="svc-features">
-            <li><span class="svc-check">&#9670;</span>GHL CRM setup and full configuration</li>
-            <li><span class="svc-check">&#9670;</span>1 high-converting lead capture funnel</li>
-            <li><span class="svc-check">&#9670;</span>Automated follow-up sequences (x5)</li>
-            <li><span class="svc-check">&#9670;</span>Monthly performance report</li>
-            <li><span class="svc-check">&#9670;</span>Email support</li>
-          </ul>
-          <a href="mailto:trifactorscaling@gmail.com?subject=Foundation%20Service%20Application" class="btn-apply">Apply for Foundation →</a>
-        </div>
-
-        <div class="svc-card featured reveal" style="transition-delay:0.2s">
-          <div class="svc-badge">MOST SELECTED</div>
-          <div class="svc-tier">Growth</div>
-          <div class="svc-name">Growth Engine</div>
-          <p class="svc-target">For established businesses ready to stack paid traffic on top of a proven organic lead system and see compounding results.</p>
-          <ul class="svc-features">
-            <li><span class="svc-check">&#9670;</span>Everything in Foundation</li>
-            <li><span class="svc-check">&#9670;</span>Paid ads management (Facebook and Google)</li>
-            <li><span class="svc-check">&#9670;</span>AppSheet tracking dashboard</li>
-            <li><span class="svc-check">&#9670;</span>Bi-weekly strategy calls</li>
-            <li><span class="svc-check">&#9670;</span>Lead optimization and A/B testing</li>
-            <li><span class="svc-check">&#9670;</span>Priority support</li>
-          </ul>
-          <a href="mailto:trifactorscaling@gmail.com?subject=Growth%20Engine%20Application" class="btn-apply btn-apply-fill">Apply for Growth Engine →</a>
-        </div>
-
-        <div class="svc-card reveal" style="transition-delay:0.32s">
-          <div class="svc-tier">Scale</div>
-          <div class="svc-name">Full Scale</div>
-          <p class="svc-target">For high-revenue operations ready for a fully dedicated growth ops team with complete accountability and revenue alignment.</p>
-          <ul class="svc-features">
-            <li><span class="svc-check">&#9670;</span>Everything in Growth Engine</li>
-            <li><span class="svc-check">&#9670;</span>Multi-funnel ecosystem build</li>
-            <li><span class="svc-check">&#9670;</span>Revenue share model — aligned incentives</li>
-            <li><span class="svc-check">&#9670;</span>Dedicated ops specialist</li>
-            <li><span class="svc-check">&#9670;</span>Weekly optimization reviews</li>
-            <li><span class="svc-check">&#9670;</span>24-hour response support</li>
-          </ul>
-          <a href="mailto:trifactorscaling@gmail.com?subject=Full%20Scale%20Application" class="btn-apply">Apply for Full Scale →</a>
-        </div>
-
-      </div>
-      <p class="svc-note reveal" style="transition-delay:0.44s">
-        Unsure which tier fits your stage? <a href="#qualify">Check if you qualify</a> below or <a href="#cta">book a free Growth Audit</a> — we'll map it out together.
-      </p>
-    </div>
-  </section>
-
-  <!-- ======================== WHY TRIFACTOR ======================== -->
-  <section id="why-tfs">
-    <div class="container">
-
-      <div class="why-statement reveal">
-        <span class="eyebrow" style="justify-content:center;"><span class="eline"></span>Why TriFactor</span>
-        <h2>Built by operators.<br>Paid on results.</h2>
-        <p>Three founders. No courses. No outside money. Built client by client, figuring out what actually moves the needle for service businesses. No overhead, no bureaucracy, no account handoffs — you get the founders building your system from day one. Our Full Scale model runs on revenue share. We only win when you win.</p>
-      </div>
-
-      <div class="why-proof reveal" style="transition-delay:0.1s">
-        <div class="wstat">
-          <span class="wstat-val" data-target="12" data-suffix="+">12+</span>
-          <span class="wstat-lbl">Businesses Grown</span>
-        </div>
-        <div class="wstat">
-          <span class="wstat-val" data-prefix="$" data-target="250" data-suffix="K+">$250K+</span>
-          <span class="wstat-lbl">Client Revenue Built</span>
-        </div>
-        <div class="wstat">
-          <span class="wstat-val">100%</span>
-          <span class="wstat-lbl">Local Service Focused</span>
-        </div>
-      </div>
-
-      <div class="why-items reveal" style="transition-delay:0.2s">
-
-          <!-- 1: Lightning — We Move Fast -->
-          <div class="why-item">
-            <div class="wi-icon icon-bolt">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.5 2L4 11.5H10L8.5 18L16 8.5H10L11.5 2Z" fill="#D4AF37" stroke="#D4AF37" stroke-width="0.5" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <div>
-              <div class="wi-title">We Move Fast</div>
-              <div class="wi-desc">No agency bureaucracy. You work directly with the founders building your system — not an account manager reading off a script.</div>
-            </div>
-          </div>
-
-          <!-- 2: Target rings — Skin in the Game -->
-          <div class="why-item">
-            <div class="wi-icon icon-target">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="11" cy="11" r="3" fill="#D4AF37"/>
-                <circle class="ring1" cx="11" cy="11" r="6" stroke="#D4AF37" stroke-width="1.2" fill="none" opacity="0.5"/>
-                <circle class="ring2" cx="11" cy="11" r="10" stroke="#D4AF37" stroke-width="0.8" fill="none" opacity="0.2"/>
-              </svg>
-            </div>
-            <div>
-              <div class="wi-title">Skin in the Game</div>
-              <div class="wi-desc">Our Full Scale tier is built on revenue share. We only win when your business wins — total alignment, no exceptions.</div>
-            </div>
-          </div>
-
-          <!-- 3: Stacked layers — Enterprise Stack -->
-          <div class="why-item">
-            <div class="wi-icon icon-stack">
-              <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect class="layer3" x="0" y="11" width="22" height="4" rx="1" fill="#D4AF37" opacity="0.35"/>
-                <rect class="layer2" x="0" y="6"  width="22" height="4" rx="1" fill="#D4AF37" opacity="0.62"/>
-                <rect class="layer1" x="0" y="1"  width="22" height="4" rx="1" fill="#D4AF37" opacity="1"/>
-              </svg>
-            </div>
-            <div>
-              <div class="wi-title">Enterprise Stack, Accessible</div>
-              <div class="wi-desc">GHL + AppSheet gives your business the same infrastructure Fortune 500 companies use — without the Fortune 500 price tag.</div>
-            </div>
-          </div>
-
-          <!-- 4: Bar chart — Full Transparency -->
-          <div class="why-item">
-            <div class="wi-icon icon-chart">
-              <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect class="bar1" x="0"  y="8"  width="5" height="10" rx="1" fill="#D4AF37" opacity="0.45"/>
-                <rect class="bar2" x="8"  y="4"  width="5" height="14" rx="1" fill="#D4AF37" opacity="0.7"/>
-                <rect class="bar3" x="16" y="1"  width="5" height="17" rx="1" fill="#D4AF37" opacity="1"/>
-              </svg>
-            </div>
-            <div>
-              <div class="wi-title">Full Transparency</div>
-              <div class="wi-desc">Custom dashboards mean you see exactly what we're doing and what it's producing in real numbers, in real time.</div>
-            </div>
-          </div>
-
-          <!-- 5: Circular arrows — Systems Compound -->
-          <div class="why-item">
-            <div class="wi-icon icon-cycle">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g class="spin-group">
-                  <path d="M11 3C7.13 3 4 6.13 4 10" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round"/>
-                  <path d="M4 6L4 10L8 10" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M11 19C14.87 19 18 15.87 18 12" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round"/>
-                  <path d="M18 16L18 12L14 12" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                </g>
-              </svg>
-            </div>
-            <div>
-              <div class="wi-title">Systems That Compound</div>
-              <div class="wi-desc">We build once, optimize monthly. The longer the system runs, the more efficient and profitable it becomes — automatically.</div>
-            </div>
-          </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================== CLIENTS ======================== -->
-  <section id="clients">
-    <div class="container">
-      <div class="cl-header reveal">
-        <span class="eyebrow"><span class="eline"></span>Client Results</span>
-        <h2>The systems we built.<br>The problems they solved.</h2>
-        <p>Every client below has a live operation running right now.</p>
-      </div>
-      <!-- Featured wide card: CutByDack -->
-      <div class="cl-featured reveal">
-        <div class="clf-tag">Featured Client</div>
-        <div class="clf-body">
-          <div class="clf-name">CutByDack</div>
-          <div class="clf-type">Barbershop · Toronto, ON</div>
-          <p class="clf-desc">Built a complete booking funnel and automated rebooking SMS system. Repeat clients now get rebooked without a single manual follow-up from Dack — the system runs 24/7 and fires the moment a job is marked complete.</p>
-          <a href="/results" class="clf-link">See all client results →</a>
-        </div>
-      </div>
-
-      <!-- 5-col compact row: remaining clients -->
-      <div class="cl-row reveal" style="transition-delay:0.1s">
-        <div class="cl-card">
-          <div class="cl-name">Rampal Restores</div>
-          <div class="cl-type">Home Services</div>
-          <div class="cl-desc">GHL lead capture + 7-touch follow-up. Every inquiry answered in under 2 minutes.</div>
-        </div>
-        <div class="cl-card">
-          <div class="cl-name">Profitable Barbers</div>
-          <div class="cl-type">Coaching</div>
-          <div class="cl-desc">Automated enrollment pipeline. Consistent monthly revenue without manual outreach.</div>
-        </div>
-        <div class="cl-card">
-          <div class="cl-name">Dionet Academy</div>
-          <div class="cl-type">Education</div>
-          <div class="cl-desc">Traffic-to-enrollment funnel + AppSheet dashboard. Every lead tracked in real time.</div>
-        </div>
-        <div class="cl-card">
-          <div class="cl-name">LeadCompass</div>
-          <div class="cl-type">Lead Generation</div>
-          <div class="cl-desc">Full GHL funnel + automated routing. Scales volume without adding headcount.</div>
-        </div>
-        <div class="cl-card">
-          <div class="cl-name">Mectrix Media</div>
-          <div class="cl-type">Media &amp; Content</div>
-          <div class="cl-desc">Monetization funnel converting audience into a structured revenue pipeline.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================== TESTIMONIALS ======================== -->
-  <section id="testimonials">
-    <div class="container">
-
-      <!-- Featured large quote — eyebrow inline, no separate header -->
-      <div class="testi-featured reveal">
-        <span class="eyebrow" style="margin-bottom:24px;display:inline-flex;"><span class="eline"></span>What Clients Say</span>
-        <p class="testi-quote-large">"I reached out to Evan to get him to build our website. I was very impressed with the pricing and the simple process of working with him and his team. The website is absolutely amazing — we will be using their services again. Thanks Evan for the great experience!"</p>
-        <div class="testi-divider"></div>
-        <div class="testi-author-name">Jordan</div>
-        <div class="testi-author-company">Mectrix Media</div>
-      </div>
-
-      <!-- Two smaller cards -->
-      <div class="testi-row">
-        <div class="testi-card reveal" style="transition-delay:0.16s">
-          <span class="testi-mark">&ldquo;</span>
-          <p class="testi-quote">Evan and Gavin helped me scale my product into a brand. I can't thank them enough for the help they gave!</p>
-          <div class="testi-divider"></div>
-          <div class="testi-author-name">Aiden A.</div>
-          <div class="testi-author-company">Lumina Sphere</div>
-        </div>
-
-        <div class="testi-card reveal" style="transition-delay:0.24s">
-          <span class="testi-mark">&ldquo;</span>
-          <p class="testi-quote">Good service, scaled my brand up from nothing.</p>
-          <div class="testi-divider"></div>
-          <div class="testi-author-name">Vultus Worldwide</div>
-          <div class="testi-author-company"></div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ======================== QUALIFY ======================== -->
-  <section id="qualify">
-    <div class="container">
-      <div class="qualify-split">
-
-        <!-- LEFT: criteria list -->
-        <div class="qualify-criteria reveal-left">
-          <span class="eyebrow"><span class="eline"></span>Who We Work With</span>
-          <h2>Built for one type of business.</h2>
-          <p>Local service businesses — trades, barbershops, restoration, coaching, home services — with real clients but no real system behind lead capture or follow-up.</p>
-          <div class="qualify-list">
-            <div class="qualify-item">
-              <div class="qualify-check"><div class="qualify-check-mark"></div></div>
-              <p>You run a local service business with existing, paying clients</p>
-            </div>
-            <div class="qualify-item">
-              <div class="qualify-check"><div class="qualify-check-mark"></div></div>
-              <p>You're generating revenue but know you're leaving money on the table</p>
-            </div>
-            <div class="qualify-item">
-              <div class="qualify-check"><div class="qualify-check-mark"></div></div>
-              <p>You don't have time to build and manage systems yourself</p>
-            </div>
-            <div class="qualify-item">
-              <div class="qualify-check"><div class="qualify-check-mark"></div></div>
-              <p>You want your lead flow predictable and automated</p>
-            </div>
-            <div class="qualify-item">
-              <div class="qualify-check"><div class="qualify-check-mark"></div></div>
-              <p>You're ready to invest seriously in a proven growth system</p>
-            </div>
-            <div class="qualify-item">
-              <div class="qualify-check"><div class="qualify-check-mark"></div></div>
-              <p>You want full transparency on where your revenue is coming from</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- RIGHT: CTA box -->
-        <div class="qualify-action reveal-right" style="transition-delay:0.15s">
-          <div class="qa-box">
-            <h3>If 4 or more of these are you—</h3>
-            <p>Every week without a system is leads going cold. One call, 45 minutes. You walk away with a custom growth blueprint whether you hire us or not.</p>
-            <a href="/apply" class="btn-gold">Book Your Free Audit →</a>
-            <p class="qa-note"><strong>No pitch. No pressure.</strong> We map your gaps and hand you the plan. That's it.</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================== FAQ ======================== -->
-  <section id="faq">
-    <div class="container">
-      <div class="faq-grid">
-        <div class="faq-left reveal-left">
-          <span class="eyebrow"><span class="eline"></span>FAQ</span>
-          <h2>Common questions, straight answers.</h2>
-          <p>Still have questions? Book a free Growth Audit — we'll walk through everything on the call with zero pressure.</p>
-          <a href="#cta" class="btn-gold" style="display:inline-flex;margin-top:4px;">Book a Call →</a>
-        </div>
-        <div class="faq-list reveal-right">
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFAQ(this)">
-              What kind of businesses do you work with?
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-a">
-              <div class="faq-a-inner">We work with local service businesses — barbershops, restoration companies, trades, coaching programs, and home service operations. Specifically: businesses that have real paying clients but no real system behind how they capture and follow up on leads. If your revenue is inconsistent or you know you're losing leads because of slow follow-up, that's exactly the problem we solve.</div>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFAQ(this)">
-              What happens in the free Growth Audit?
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-a">
-              <div class="faq-a-inner">A 45-minute strategy session where we map your current lead flow, identify your top 3 revenue leaks, and outline a custom growth system roadmap. You walk away with real clarity and a concrete plan — whether you hire us or not. No pitch, no pressure.</div>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFAQ(this)">
-              Do I need to know tech to work with you?
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-a">
-              <div class="faq-a-inner">Not at all. We handle the entire build, integration, and ongoing management. You show up for strategy calls and review the results. We take care of everything technical end-to-end.</div>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFAQ(this)">
-              How is TriFactor different from a marketing agency?
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-a">
-              <div class="faq-a-inner">Marketing agencies sell deliverables. We build infrastructure. Think of us as the operations team running inside your business — we build the funnels, automate the follow-up, track every lead, and optimize monthly. The goal is never a pretty deliverable. It's compounding revenue.</div>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFAQ(this)">
-              How long until I see results?
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-a">
-              <div class="faq-a-inner">The initial system build takes 4–6 weeks. Most clients see lead flow improvements within the first 30 days of going live. Compounding results show clearly by month 3. We set specific benchmarks during your Growth Audit so you always know what to expect and when.</div>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFAQ(this)">
-              You're a young team — does that affect the quality of work?
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-a">
-              <div class="faq-a-inner">Yes — and in your favor. No account managers. No junior staff running your project while a senior takes the credit. You work directly with the founders on every build. That means faster decisions, tighter feedback loops, and people personally invested in your results because their name is on it. Our clients choose us because of that edge, not despite it.</div>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFAQ(this)">
-              How does the revenue share model work?
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-a">
-              <div class="faq-a-inner">On our Full Scale service, we participate in revenue share on leads generated through the systems we build and manage. This aligns our incentives completely with yours — we only win when you win. The exact structure is agreed upfront based on your business model and projections before we begin.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================== FINAL CTA ======================== -->
-  <section id="cta">
-    <div class="cta-glow"></div>
-    <div class="cta-glow-b"></div>
-    <div class="container">
-      <div class="reveal">
-        <span class="eyebrow"><span class="eline"></span>3 Spots Open This Month</span>
-      </div>
-      <h2 class="reveal" style="transition-delay:0.1s;">
-        Stop losing jobs to<br>slow <span style="background:linear-gradient(90deg,var(--gold) 0%,var(--gold-light) 50%,var(--gold) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite;">follow-up.</span>
-      </h2>
-      <p class="reveal" style="transition-delay:0.2s;">
-        One free 45-minute call. We map your gaps, show you exactly what system needs to be built, and hand you a full Growth Blueprint — whether you work with us or not. No pitch. No pressure.
-      </p>
-      <div class="cta-actions reveal" style="transition-delay:0.3s;">
-        <a href="mailto:trifactorscaling@gmail.com?subject=Book%20Free%20Growth%20Audit" class="btn-gold" style="font-size:0.95rem;padding:18px 40px;">
-          Book Your Free Growth Audit →
-        </a>
-      </div>
-      <p class="cta-sub reveal" style="transition-delay:0.4s;">
-        Or reach us directly at <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a>
-      </p>
-    </div>
-  </section>
-
-  <!-- ======================== FOOTER ======================== -->
-  <footer>
-    <img src="/tfs-logo.png" alt="" class="footer-watermark" aria-hidden="true">
-    <div class="container footer-inner">
-
-      <div class="footer-top">
-
-        <!-- Brand -->
-        <div class="footer-brand">
-          <img src="/tfs-logo.png" alt="TriFactor Scaling" class="footer-logo-img">
-          <p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
-          <a href="mailto:trifactorscaling@gmail.com" class="footer-contact-link">
-            trifactorscaling@gmail.com →
-          </a>
-        </div>
-
-        <!-- Pages -->
-        <div>
-          <div class="footer-col-label">Pages</div>
-          <div class="footer-col-links">
-            <a href="/">Overview</a>
-            <a href="/services">Services</a>
-            <a href="/results">Results</a>
-            <a href="/about">About</a>
-            <a href="/apply">Apply Now</a>
-          </div>
-        </div>
-
-        <!-- Work with us -->
-        <div>
-          <div class="footer-col-label">Work With Us</div>
-          <div class="footer-col-links">
-            <a href="/apply">Apply for Growth Ops</a>
-            <a href="/results">See Client Results</a>
-            <a href="/services">What We Build</a>
-            <a href="mailto:trifactorscaling@gmail.com">Send Us an Email</a>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="footer-bottom">
-        <span class="footer-copy">© 2026 TriFactor Scaling. All rights reserved.</span>
-        <span class="footer-built">Built by <span>teens</span>. Powered by results.</span>
-      </div>
-
-    </div>
-  </footer>
-
   
 `;
+
 const SCRIPT = `
+
     /* ============================================================
        NAV SCROLL
     ============================================================ */
@@ -2784,31 +1832,919 @@ const SCRIPT = `
       draw();
     })();
 
-  `;
+  
+`;
+
+const HTML = `
+<!-- ======================== STICKY CTA BAR ======================== -->
+<div class="sticky-bar" id="stickyBar">
+<p class="sticky-bar-text">We open <span>3 client spots per month.</span> Currently accepting applications.</p>
+<a class="btn-gold" href="/apply" style="padding:11px 24px;font-size:0.8rem;white-space:nowrap;">Book Your Free Audit →</a>
+</div>
+<!-- ======================== NAV ======================== -->
+<nav id="navbar">
+<div class="container">
+<div class="nav-inner">
+<a aria-label="TriFactor Scaling" class="nav-logo" href="/">
+<img alt="TriFactor Scaling" height="40" src="./TFS-Logo-Transparent.png"/>
+</a>
+<ul class="nav-links">
+<li><a class="nav-link active-nav" href="/">Overview</a></li>
+<li><a class="nav-link" href="/services">Services</a></li>
+<li><a class="nav-link" href="/results">Results</a></li>
+<li><a class="nav-link" href="/about">About</a></li>
+</ul>
+<div class="nav-cta-wrap">
+<a class="btn-gold nav-cta" href="/apply" style="padding:11px 22px;font-size:0.8rem;">Apply Now →</a>
+<button aria-label="Menu" class="hamburger" onclick="toggleMenu()">
+<span></span><span></span><span></span>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+<a class="active-nav" href="/" onclick="toggleMenu()">Overview</a>
+<a href="/services" onclick="toggleMenu()">Services</a>
+<a href="/results" onclick="toggleMenu()">Results</a>
+<a href="/about" onclick="toggleMenu()">About</a>
+<a href="/apply" onclick="toggleMenu()">Apply Now →</a>
+</div>
+<!-- ======================== HERO ======================== -->
+<section id="hero">
+<canvas id="hero-canvas"></canvas>
+<div class="hero-glow-a"></div>
+<div class="hero-glow-b"></div>
+<div class="hero-lines"></div>
+<div class="container">
+<div class="hero-inner">
+<h1 class="hero-headline">
+          We Build the<br/>
+          System That<br/>
+<span class="rotate-wrap">
+<span class="rotate-word show gold-shimmer" id="rotWord">Books You.</span>
+</span>
+</h1>
+<p class="hero-sub">
+          We automate your intake, follow-up, and pipeline so every lead gets handled — while you stay focused on the work.
+        </p>
+<div class="hero-actions">
+<a class="btn-gold" href="#cta">Book Your Free Growth Audit →</a>
+<a class="btn-outline" href="#how-it-works">See the Process</a>
+</div>
+<div class="hero-stats">
+<div class="hstat">
+<span class="hstat-val" data-suffix="+" data-target="12">12+</span>
+<span class="hstat-lbl">Businesses Grown</span>
+</div>
+<div class="hstat">
+<span class="hstat-val" data-prefix="$" data-suffix="K+" data-target="250">$250K+</span>
+<span class="hstat-lbl">Client Revenue Built</span>
+</div>
+<div class="hstat">
+<span class="hstat-val">100%</span>
+<span class="hstat-lbl">Local Service Focused</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== MARQUEE ======================== -->
+<div aria-hidden="true" class="marquee-wrap">
+<div class="marquee-track">
+<!-- Set 1 -->
+<div class="marquee-item"><span>LeadCompass</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>CutByDack</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Profitable Barbers</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Dionet Academy</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Mectrix Media</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Rampal Restores</span><div class="marquee-gem"></div></div>
+<!-- Set 2 -->
+<div class="marquee-item"><span>LeadCompass</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>CutByDack</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Profitable Barbers</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Dionet Academy</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Mectrix Media</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Rampal Restores</span><div class="marquee-gem"></div></div>
+<!-- Set 3 -->
+<div class="marquee-item"><span>LeadCompass</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>CutByDack</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Profitable Barbers</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Dionet Academy</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Mectrix Media</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Rampal Restores</span><div class="marquee-gem"></div></div>
+<!-- Set 4 -->
+<div class="marquee-item"><span>LeadCompass</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>CutByDack</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Profitable Barbers</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Dionet Academy</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Mectrix Media</span><div class="marquee-gem"></div></div>
+<div class="marquee-item"><span>Rampal Restores</span><div class="marquee-gem"></div></div>
+</div>
+</div>
+<!-- ======================== WHAT WE DO ======================== -->
+<section id="what-we-do">
+<div class="container">
+<div class="wwd-grid">
+<div class="wwd-left reveal-left">
+<span class="eyebrow"><span class="eline"></span>What We Do</span>
+<h2>We don't run campaigns.<br/>We build pipelines.</h2>
+<p>Most service business owners don't have a marketing problem — they have a systems problem. Leads come in and fall through the cracks. Follow-up never happens. There's no way to see what's actually working.</p>
+<p>We fix that. TriFactor integrates automated intake, follow-up, and tracking directly into your operations — so every lead is captured, every inquiry is followed up automatically, and you can see in real time exactly where your revenue is coming from.</p>
+<p>Three founders. No courses. No outside money. Just operators who learned by doing — client by client — what actually moves the needle for local service businesses.</p>
+</div>
+<div class="wwd-pillars reveal-right">
+<div class="pillar">
+<div class="pillar-num">01</div>
+<div class="pillar-content">
+<h4>Systems First</h4>
+<p>We build infrastructure before campaigns. Every engagement starts with a complete growth architecture designed around your specific business model.</p>
+</div>
+</div>
+<div class="pillar">
+<div class="pillar-num">02</div>
+<div class="pillar-content">
+<h4>Automated Revenue</h4>
+<p>GHL funnels, automated follow-up sequences, and CRM pipelines that capture, nurture, and close leads around the clock without you lifting a finger.</p>
+</div>
+</div>
+<div class="pillar">
+<div class="pillar-num">03</div>
+<div class="pillar-content">
+<h4>Operators, Not Marketers</h4>
+<p>We think in business outcomes and revenue. Vanity metrics don't pay your bills — we optimize for the numbers that do.</p>
+</div>
+</div>
+<div class="pillar">
+<div class="pillar-num">04</div>
+<div class="pillar-content">
+<h4>AppSheet Intelligence</h4>
+<p>Custom tracking dashboards so you always see in real time exactly what's working, what's not, and where to put more fuel on the fire.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== SYSTEMS DEMO ======================== -->
+<section id="systems-demo">
+<div aria-hidden="true" class="sdemo-vignette"></div>
+<div class="container">
+<div class="sdemo-header reveal">
+<span class="eyebrow"><span class="eline"></span>Systems In Action</span>
+<h2>Click any system. Watch it<br/><span class="gold-shimmer">run in real time.</span></h2>
+<p>Every automation below is live inside a client's business right now. This is exactly what we build.</p>
+</div>
+<!-- TAB NAVIGATION — centered inline -->
+<div class="demo-nav reveal" style="transition-delay:0.1s">
+<div class="demo-tabs-wrap" id="demoTabsWrap">
+<!-- Sliding indicator -->
+<div class="demo-tab-indicator" id="demoTabIndicator"></div>
+<div class="demo-tabs">
+<button class="demo-tab active" id="dtab-lead" onclick="switchDemo('lead',this)">
+<span class="demo-tab-num">01</span>
+<span class="demo-tab-label">Lead Alert</span>
+</button>
+<button class="demo-tab" id="dtab-followup" onclick="switchDemo('followup',this)">
+<span class="demo-tab-num">02</span>
+<span class="demo-tab-label">Follow-Up Chain</span>
+</button>
+<button class="demo-tab" id="dtab-crm" onclick="switchDemo('crm',this)">
+<span class="demo-tab-num">03</span>
+<span class="demo-tab-label">CRM Pipeline</span>
+</button>
+<button class="demo-tab" id="dtab-booking" onclick="switchDemo('booking',this)">
+<span class="demo-tab-num">04</span>
+<span class="demo-tab-label">Booking System</span>
+</button>
+<button class="demo-tab" id="dtab-review" onclick="switchDemo('review',this)">
+<span class="demo-tab-num">05</span>
+<span class="demo-tab-label">Review Request</span>
+</button>
+</div>
+</div>
+</div>
+<div class="demo-panel-wrap reveal" style="transition-delay:0.15s">
+<!-- Loop progress bar -->
+<div class="demo-loop-bar" id="demoLoopBar"></div>
+<!-- STATUS BAR -->
+<div class="demo-panel-status">
+<div class="demo-status-dot"></div>
+<span class="demo-status-text">System Active — <span class="demo-status-name" id="demoStatusLabel">Lead Alert</span></span>
+<span class="demo-status-live">● Live</span>
+</div>
+<!-- ==================== PANEL 1: LEAD ALERT ==================== -->
+<div class="demo-panel active" id="panel-lead">
+<div class="la-grid">
+<!-- Form -->
+<div class="la-form">
+<div class="la-form-label"><div class="la-dot"></div>Service Request Form</div>
+<div class="la-field"><div class="la-field-lbl">Full Name</div><div class="la-field-val">James Harrington</div></div>
+<div class="la-field"><div class="la-field-lbl">Phone</div><div class="la-field-val">(647) 391-2844</div></div>
+<div class="la-field"><div class="la-field-lbl">Service</div><div class="la-field-val">Vehicle Inspection + Oil Change</div></div>
+<div class="la-field"><div class="la-field-lbl">Vehicle</div><div class="la-field-val">2021 Honda Accord</div></div>
+<button class="la-btn">Submit Request ✓</button>
+</div>
+<!-- Connector -->
+<div class="la-connector">
+<div class="la-timing">&lt; 1s</div>
+<div class="la-arrow">
+<div class="la-arrow-line"></div>
+<div class="la-arrow-head"></div>
+</div>
+</div>
+<!-- Phone -->
+<div class="dp-phone-wrap">
+<div class="dp-phone">
+<div class="dp-screen">
+<div class="dp-status"><span>9:41</span><span>●●●</span></div>
+<div class="dp-body">
+<div class="la-notif">
+<div class="la-notif-top">
+<div class="la-notif-icon">TF</div>
+<div class="la-notif-src">Messages · TriFactor Alert</div>
+<div class="la-notif-ts">now</div>
+</div>
+<div class="la-notif-body">
+                        🔔 <span class="gh">New Lead</span><br/>
+<span class="gh">James Harrington</span><br/>
+                        (647) 391-2844<br/>
+                        Service: Inspection + Oil Change
+                      </div>
+</div>
+<div class="la-read">Delivered ✓</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ==================== PANEL 2: FOLLOW-UP CHAIN ==================== -->
+<div class="demo-panel" id="panel-followup">
+<div class="fu-layout">
+<!-- Timeline -->
+<div class="fu-steps">
+<div class="fu-step" id="fu1">
+<div class="fu-step-time">Immediate</div>
+<div class="fu-step-info">
+<h4>First Touch SMS</h4>
+<p>Auto-text fires the moment a lead comes in — personalized, booking link included.</p>
+</div>
+</div>
+<div class="fu-step" id="fu2">
+<div class="fu-step-time">2 Hours</div>
+<div class="fu-step-info">
+<h4>Value Follow-Up</h4>
+<p>If no reply, a second message asks a specific question to restart the conversation.</p>
+</div>
+</div>
+<div class="fu-step" id="fu3">
+<div class="fu-step-time">Day 3</div>
+<div class="fu-step-info">
+<h4>Social Proof Message</h4>
+<p>Sends a client result to build trust — zero effort from the owner.</p>
+</div>
+</div>
+<div class="fu-step" id="fu4">
+<div class="fu-step-time">Day 7</div>
+<div class="fu-step-info">
+<h4>Last Chance + Offer</h4>
+<p>Final message creates urgency. Most leads convert by this point.</p>
+</div>
+</div>
+</div>
+<!-- Phone SMS conversation -->
+<div class="dp-phone-wrap">
+<div class="dp-phone">
+<div class="dp-screen">
+<div class="dp-status"><span>9:41</span><span>●●●</span></div>
+<div class="dp-body" style="display:flex;flex-direction:column;gap:4px;overflow:hidden;">
+<div class="fu-msg" id="fum0"><span class="sms-label">Rampal Restores Automated</span></div>
+<div class="fu-msg" id="fum1"><span class="sms-in">"Hey Marcus! It's Yash from Rampal Restores. We got your request — book your free estimate:<br/><span class="sms-gold">rampalrestores.as.me</span> 👇"</span></div>
+<div class="fu-msg" id="fum2"><span class="sms-in">"Quick question — is it water damage or mold? We handle both same week 🙌"</span></div>
+<div class="fu-msg" id="fum3"><span class="sms-in">"Just finished a full basement restore nearby — 3 days ✅ Want before/after photos?"</span></div>
+<div class="fu-msg" id="fum4"><span class="sms-in">"Last message Marcus — spots filling up this week. Grab yours now 👇"</span></div>
+<div class="fu-reply" id="fureply"><span class="sms-out">"Let's book it!"</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ==================== PANEL 3: CRM PIPELINE ==================== -->
+<div class="demo-panel" id="panel-crm">
+<div class="crm-layout">
+<div class="crm-lead-info">
+<div class="crm-lead-avatar">JH</div>
+<div>
+<div class="crm-lead-name">James Harrington</div>
+<div class="crm-lead-sub">Vehicle Inspection · (647) 391-2844</div>
+</div>
+<div class="crm-progress">
+<div class="crm-progress-fill" id="crmProgress"></div>
+</div>
+</div>
+<div class="crm-board-wrap">
+<div class="crm-board">
+<div class="crm-stage" id="crm-0">
+<div class="crm-stage-head"><div class="crm-stage-name">New Lead</div><div class="crm-stage-dot"></div></div>
+<div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Submitted form</div><div class="crm-card-badge">🔔 New</div></div>
+</div>
+<div class="crm-stage" id="crm-1">
+<div class="crm-stage-head"><div class="crm-stage-name">Contacted</div><div class="crm-stage-dot"></div></div>
+<div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">SMS sent</div><div class="crm-card-badge">📱 Texted</div></div>
+</div>
+<div class="crm-stage" id="crm-2">
+<div class="crm-stage-head"><div class="crm-stage-name">Qualified</div><div class="crm-stage-dot"></div></div>
+<div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Replied &amp; interested</div><div class="crm-card-badge">✅ Warm</div></div>
+</div>
+<div class="crm-stage" id="crm-3">
+<div class="crm-stage-head"><div class="crm-stage-name">Booked</div><div class="crm-stage-dot"></div></div>
+<div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Appointment set</div><div class="crm-card-badge">📅 Booked</div></div>
+</div>
+<div class="crm-stage" id="crm-4">
+<div class="crm-stage-head"><div class="crm-stage-name">Won</div><div class="crm-stage-dot"></div></div>
+<div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Job complete</div><div class="crm-card-badge">🏆 Closed</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ==================== PANEL 4: BOOKING SYSTEM ==================== -->
+<div class="demo-panel" id="panel-booking">
+<div class="bk-layout">
+<!-- Steps -->
+<div class="bk-steps">
+<div class="bk-step" id="bk1">
+<div class="bk-step-num">1</div>
+<div class="bk-step-content">
+<h4>Booking Link Sent</h4>
+<p>Fires the moment a lead replies. Personalized link goes out instantly.</p>
+</div>
+</div>
+<div class="bk-step" id="bk2">
+<div class="bk-step-num">2</div>
+<div class="bk-step-content">
+<h4>Appointment Confirmed</h4>
+<p>Client picks a slot. Confirmation SMS fires. Calendar blocks automatically.</p>
+</div>
+</div>
+<div class="bk-step" id="bk3">
+<div class="bk-step-num">3</div>
+<div class="bk-step-content">
+<h4>24-Hour Reminder Sent</h4>
+<p>Auto-reminder reduces no-shows by 60%+. Zero effort from you.</p>
+</div>
+</div>
+</div>
+<!-- Phone -->
+<div class="dp-phone-wrap">
+<div class="dp-phone">
+<div class="dp-screen">
+<div class="dp-status"><span>9:41</span><span>●●●</span></div>
+<div class="dp-body" style="display:flex;flex-direction:column;gap:5px;overflow:hidden;">
+<span class="sms-label">CutByDack Bookings</span>
+<div class="bk-msg" id="bkm1"><span class="sms-in">"Marcus, book your spot here 👇<br/><span class="sms-gold">cutbydack.as.me</span><br/>Takes 60 seconds ⚡"</span></div>
+<div class="bk-msg" id="bkm2"><span class="sms-in" style="background:rgba(62,207,110,0.18);color:#3ecf6e;">✅ Booked!<br/>Thu May 2 @ 3:00 PM<br/>CutByDack — 214 King St W</span></div>
+<div class="bk-msg" id="bkm3"><span class="sms-in">"⏰ Reminder: Tomorrow @ 3:00 PM with Dack. Reply CANCEL if plans change."</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ==================== PANEL 5: REVIEW REQUEST ==================== -->
+<div class="demo-panel" id="panel-review">
+<div class="rv-layout">
+<!-- Left: trigger + stars + result -->
+<div class="rv-left">
+<div class="rv-trigger" id="rvTrigger">
+<div class="rv-trigger-icon">✅</div>
+<div class="rv-trigger-text">
+<h4>Job Marked Complete</h4>
+<p>Owner taps "Complete" in GHL — review request fires in seconds.</p>
+</div>
+</div>
+<div class="rv-stars-wrap" id="rvStarsWrap">
+<span class="rv-stars-label">Client rates their experience</span>
+<div class="rv-stars">
+<span class="rv-star" id="rs1">★</span>
+<span class="rv-star" id="rs2">★</span>
+<span class="rv-star" id="rs3">★</span>
+<span class="rv-star" id="rs4">★</span>
+<span class="rv-star" id="rs5">★</span>
+</div>
+</div>
+<div class="rv-result" id="rvResult">
+<div class="rv-result-stars">★★★★★</div>
+<div class="rv-result-quote">"Rampal Restores did an incredible job on our basement. Fast, professional, spotless. Would 100% recommend."</div>
+<div class="rv-result-name">— Sarah T. · Google Review</div>
+</div>
+</div>
+<!-- Phone -->
+<div class="dp-phone-wrap">
+<div class="dp-phone">
+<div class="dp-screen">
+<div class="dp-status"><span>9:41</span><span>●●●</span></div>
+<div class="dp-body" style="display:flex;flex-direction:column;gap:5px;overflow:hidden;">
+<span class="sms-label">Rampal Restores</span>
+<div class="rv-msg" id="rvm1"><span class="sms-in">"Hi Sarah! Happy with your restore? 👋<br/><br/>Leave us a quick Google review:<br/><span class="sms-gold">g.page/rampal ⭐</span><br/><br/>— Yash @ Rampal Restores"</span></div>
+<div class="rv-msg" id="rvm2"><span class="sms-out">"Absolutely! Just left you 5 stars 🙌"</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><!-- end demo-panel-wrap -->
+<p class="sdemo-caption reveal" style="transition-delay:0.25s">
+        Every system above runs in a real client's business. <strong>Built once. Runs forever. Compounds monthly.</strong>
+</p>
+</div>
+</section>
+<!-- ======================== HOW IT WORKS ======================== -->
+<section id="how-it-works">
+<div class="container">
+<div class="hiw-head reveal">
+<span class="eyebrow"><span class="eline"></span>The Process</span>
+<h2>From audit to automated revenue<br/>in three moves.</h2>
+</div>
+<div class="hiw-steps">
+<div class="hiw-step reveal" style="transition-delay:0.05s">
+<span class="hiw-num-ghost">01</span>
+<h3>Growth Audit</h3>
+<p>We map your entire business — lead flow, conversion points, revenue leaks, and missed opportunities. You leave with a custom Growth System Blueprint whether you work with us or not. No pitch. No pressure.</p>
+<span class="step-badge">Free — 45 Minutes</span>
+</div>
+<div aria-hidden="true" class="hiw-connector">
+<div class="hiw-conn-line"></div>
+<div class="hiw-conn-dot"></div>
+<div class="hiw-conn-line"></div>
+</div>
+<div class="hiw-step reveal" style="transition-delay:0.18s">
+<span class="hiw-num-ghost">02</span>
+<h3>System Integration</h3>
+<p>We build and install your full growth stack: GHL funnel ecosystem, automated lead sequences, CRM pipeline, and AppSheet tracking dashboard — wired directly into your operations from day one.</p>
+<span class="step-badge">4–6 Week Build</span>
+</div>
+<div aria-hidden="true" class="hiw-connector">
+<div class="hiw-conn-line"></div>
+<div class="hiw-conn-dot"></div>
+<div class="hiw-conn-line"></div>
+</div>
+<div class="hiw-step reveal" style="transition-delay:0.31s">
+<span class="hiw-num-ghost">03</span>
+<h3>Optimize &amp; Scale</h3>
+<p>Monthly strategy calls, performance reviews, and continuous iteration. We don't set it and forget it — we stay in the trenches until your system is compounding revenue consistently, month over month.</p>
+<span class="step-badge">Ongoing — Monthly</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== SERVICES ======================== -->
+<section id="services">
+<div class="container">
+<div class="svc-header reveal">
+<span class="eyebrow"><span class="eline"></span>Services</span>
+<h2>Three ways to build your growth system.</h2>
+<p>Every tier starts with a custom audit and a system built around your business specifically — not a template. We take on 3 new clients per month across all tiers.</p>
+</div>
+<div class="svc-grid">
+<div class="svc-card reveal" style="transition-delay:0.08s">
+<div class="svc-tier">Starter</div>
+<div class="svc-name">Foundation</div>
+<p class="svc-target">For businesses ready to stop losing leads and build a reliable, automated follow-up system for the first time.</p>
+<ul class="svc-features">
+<li><span class="svc-check">◆</span>GHL CRM setup and full configuration</li>
+<li><span class="svc-check">◆</span>1 high-converting lead capture funnel</li>
+<li><span class="svc-check">◆</span>Automated follow-up sequences (x5)</li>
+<li><span class="svc-check">◆</span>Monthly performance report</li>
+<li><span class="svc-check">◆</span>Email support</li>
+</ul>
+<a class="btn-apply" href="mailto:trifactorscaling@gmail.com?subject=Foundation%20Service%20Application">Apply for Foundation →</a>
+</div>
+<div class="svc-card featured reveal" style="transition-delay:0.2s">
+<div class="svc-badge">MOST SELECTED</div>
+<div class="svc-tier">Growth</div>
+<div class="svc-name">Growth Engine</div>
+<p class="svc-target">For established businesses ready to stack paid traffic on top of a proven organic lead system and see compounding results.</p>
+<ul class="svc-features">
+<li><span class="svc-check">◆</span>Everything in Foundation</li>
+<li><span class="svc-check">◆</span>Paid ads management (Facebook and Google)</li>
+<li><span class="svc-check">◆</span>AppSheet tracking dashboard</li>
+<li><span class="svc-check">◆</span>Bi-weekly strategy calls</li>
+<li><span class="svc-check">◆</span>Lead optimization and A/B testing</li>
+<li><span class="svc-check">◆</span>Priority support</li>
+</ul>
+<a class="btn-apply btn-apply-fill" href="mailto:trifactorscaling@gmail.com?subject=Growth%20Engine%20Application">Apply for Growth Engine →</a>
+</div>
+<div class="svc-card reveal" style="transition-delay:0.32s">
+<div class="svc-tier">Scale</div>
+<div class="svc-name">Full Scale</div>
+<p class="svc-target">For high-revenue operations ready for a fully dedicated growth ops team with complete accountability and revenue alignment.</p>
+<ul class="svc-features">
+<li><span class="svc-check">◆</span>Everything in Growth Engine</li>
+<li><span class="svc-check">◆</span>Multi-funnel ecosystem build</li>
+<li><span class="svc-check">◆</span>Revenue share model — aligned incentives</li>
+<li><span class="svc-check">◆</span>Dedicated ops specialist</li>
+<li><span class="svc-check">◆</span>Weekly optimization reviews</li>
+<li><span class="svc-check">◆</span>24-hour response support</li>
+</ul>
+<a class="btn-apply" href="mailto:trifactorscaling@gmail.com?subject=Full%20Scale%20Application">Apply for Full Scale →</a>
+</div>
+</div>
+<p class="svc-note reveal" style="transition-delay:0.44s">
+        Unsure which tier fits your stage? <a href="#qualify">Check if you qualify</a> below or <a href="#cta">book a free Growth Audit</a> — we'll map it out together.
+      </p>
+</div>
+</section>
+<!-- ======================== WHY TRIFACTOR ======================== -->
+<section id="why-tfs">
+<div class="container">
+<div class="why-statement reveal">
+<span class="eyebrow" style="justify-content:center;"><span class="eline"></span>Why TriFactor</span>
+<h2>Built by operators.<br/>Paid on results.</h2>
+<p>Three founders. No courses. No outside money. Built client by client, figuring out what actually moves the needle for service businesses. No overhead, no bureaucracy, no account handoffs — you get the founders building your system from day one. Our Full Scale model runs on revenue share. We only win when you win.</p>
+</div>
+<div class="why-proof reveal" style="transition-delay:0.1s">
+<div class="wstat">
+<span class="wstat-val" data-suffix="+" data-target="12">12+</span>
+<span class="wstat-lbl">Businesses Grown</span>
+</div>
+<div class="wstat">
+<span class="wstat-val" data-prefix="$" data-suffix="K+" data-target="250">$250K+</span>
+<span class="wstat-lbl">Client Revenue Built</span>
+</div>
+<div class="wstat">
+<span class="wstat-val">100%</span>
+<span class="wstat-lbl">Local Service Focused</span>
+</div>
+</div>
+<div class="why-items reveal" style="transition-delay:0.2s">
+<!-- 1: Lightning — We Move Fast -->
+<div class="why-item">
+<div class="wi-icon icon-bolt">
+<svg fill="none" height="20" viewbox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.5 2L4 11.5H10L8.5 18L16 8.5H10L11.5 2Z" fill="#D4AF37" stroke="#D4AF37" stroke-linejoin="round" stroke-width="0.5"></path>
+</svg>
+</div>
+<div>
+<div class="wi-title">We Move Fast</div>
+<div class="wi-desc">No agency bureaucracy. You work directly with the founders building your system — not an account manager reading off a script.</div>
+</div>
+</div>
+<!-- 2: Target rings — Skin in the Game -->
+<div class="why-item">
+<div class="wi-icon icon-target">
+<svg fill="none" height="22" viewbox="0 0 22 22" width="22" xmlns="http://www.w3.org/2000/svg">
+<circle cx="11" cy="11" fill="#D4AF37" r="3"></circle>
+<circle class="ring1" cx="11" cy="11" fill="none" opacity="0.5" r="6" stroke="#D4AF37" stroke-width="1.2"></circle>
+<circle class="ring2" cx="11" cy="11" fill="none" opacity="0.2" r="10" stroke="#D4AF37" stroke-width="0.8"></circle>
+</svg>
+</div>
+<div>
+<div class="wi-title">Skin in the Game</div>
+<div class="wi-desc">Our Full Scale tier is built on revenue share. We only win when your business wins — total alignment, no exceptions.</div>
+</div>
+</div>
+<!-- 3: Stacked layers — Enterprise Stack -->
+<div class="why-item">
+<div class="wi-icon icon-stack">
+<svg fill="none" height="16" viewbox="0 0 22 16" width="22" xmlns="http://www.w3.org/2000/svg">
+<rect class="layer3" fill="#D4AF37" height="4" opacity="0.35" rx="1" width="22" x="0" y="11"></rect>
+<rect class="layer2" fill="#D4AF37" height="4" opacity="0.62" rx="1" width="22" x="0" y="6"></rect>
+<rect class="layer1" fill="#D4AF37" height="4" opacity="1" rx="1" width="22" x="0" y="1"></rect>
+</svg>
+</div>
+<div>
+<div class="wi-title">Enterprise Stack, Accessible</div>
+<div class="wi-desc">GHL + AppSheet gives your business the same infrastructure Fortune 500 companies use — without the Fortune 500 price tag.</div>
+</div>
+</div>
+<!-- 4: Bar chart — Full Transparency -->
+<div class="why-item">
+<div class="wi-icon icon-chart">
+<svg fill="none" height="18" viewbox="0 0 22 18" width="22" xmlns="http://www.w3.org/2000/svg">
+<rect class="bar1" fill="#D4AF37" height="10" opacity="0.45" rx="1" width="5" x="0" y="8"></rect>
+<rect class="bar2" fill="#D4AF37" height="14" opacity="0.7" rx="1" width="5" x="8" y="4"></rect>
+<rect class="bar3" fill="#D4AF37" height="17" opacity="1" rx="1" width="5" x="16" y="1"></rect>
+</svg>
+</div>
+<div>
+<div class="wi-title">Full Transparency</div>
+<div class="wi-desc">Custom dashboards mean you see exactly what we're doing and what it's producing in real numbers, in real time.</div>
+</div>
+</div>
+<!-- 5: Circular arrows — Systems Compound -->
+<div class="why-item">
+<div class="wi-icon icon-cycle">
+<svg fill="none" height="22" viewbox="0 0 22 22" width="22" xmlns="http://www.w3.org/2000/svg">
+<g class="spin-group">
+<path d="M11 3C7.13 3 4 6.13 4 10" stroke="#D4AF37" stroke-linecap="round" stroke-width="1.8"></path>
+<path d="M4 6L4 10L8 10" stroke="#D4AF37" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+<path d="M11 19C14.87 19 18 15.87 18 12" stroke="#D4AF37" stroke-linecap="round" stroke-width="1.8"></path>
+<path d="M18 16L18 12L14 12" stroke="#D4AF37" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</g>
+</svg>
+</div>
+<div>
+<div class="wi-title">Systems That Compound</div>
+<div class="wi-desc">We build once, optimize monthly. The longer the system runs, the more efficient and profitable it becomes — automatically.</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== CLIENTS ======================== -->
+<section id="clients">
+<div class="container">
+<div class="cl-header reveal">
+<span class="eyebrow"><span class="eline"></span>Client Results</span>
+<h2>The systems we built.<br/>The problems they solved.</h2>
+<p>Every client below has a live operation running right now.</p>
+</div>
+<!-- Featured wide card: CutByDack -->
+<div class="cl-featured reveal">
+<div class="clf-tag">Featured Client</div>
+<div class="clf-body">
+<div class="clf-name">CutByDack</div>
+<div class="clf-type">Barbershop · Toronto, ON</div>
+<p class="clf-desc">Built a complete booking funnel and automated rebooking SMS system. Repeat clients now get rebooked without a single manual follow-up from Dack — the system runs 24/7 and fires the moment a job is marked complete.</p>
+<a class="clf-link" href="/results">See all client results →</a>
+</div>
+</div>
+<!-- 5-col compact row: remaining clients -->
+<div class="cl-row reveal" style="transition-delay:0.1s">
+<div class="cl-card">
+<div class="cl-name">Rampal Restores</div>
+<div class="cl-type">Home Services</div>
+<div class="cl-desc">GHL lead capture + 7-touch follow-up. Every inquiry answered in under 2 minutes.</div>
+</div>
+<div class="cl-card">
+<div class="cl-name">Profitable Barbers</div>
+<div class="cl-type">Coaching</div>
+<div class="cl-desc">Automated enrollment pipeline. Consistent monthly revenue without manual outreach.</div>
+</div>
+<div class="cl-card">
+<div class="cl-name">Dionet Academy</div>
+<div class="cl-type">Education</div>
+<div class="cl-desc">Traffic-to-enrollment funnel + AppSheet dashboard. Every lead tracked in real time.</div>
+</div>
+<div class="cl-card">
+<div class="cl-name">LeadCompass</div>
+<div class="cl-type">Lead Generation</div>
+<div class="cl-desc">Full GHL funnel + automated routing. Scales volume without adding headcount.</div>
+</div>
+<div class="cl-card">
+<div class="cl-name">Mectrix Media</div>
+<div class="cl-type">Media &amp; Content</div>
+<div class="cl-desc">Monetization funnel converting audience into a structured revenue pipeline.</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== TESTIMONIALS ======================== -->
+<section id="testimonials">
+<div class="container">
+<!-- Featured large quote — eyebrow inline, no separate header -->
+<div class="testi-featured reveal">
+<span class="eyebrow" style="margin-bottom:24px;display:inline-flex;"><span class="eline"></span>What Clients Say</span>
+<p class="testi-quote-large">"I reached out to Evan to get him to build our website. I was very impressed with the pricing and the simple process of working with him and his team. The website is absolutely amazing — we will be using their services again. Thanks Evan for the great experience!"</p>
+<div class="testi-divider"></div>
+<div class="testi-author-name">Jordan</div>
+<div class="testi-author-company">Mectrix Media</div>
+</div>
+<!-- Two smaller cards -->
+<div class="testi-row">
+<div class="testi-card reveal" style="transition-delay:0.16s">
+<span class="testi-mark">“</span>
+<p class="testi-quote">Evan and Gavin helped me scale my product into a brand. I can't thank them enough for the help they gave!</p>
+<div class="testi-divider"></div>
+<div class="testi-author-name">Aiden A.</div>
+<div class="testi-author-company">Lumina Sphere</div>
+</div>
+<div class="testi-card reveal" style="transition-delay:0.24s">
+<span class="testi-mark">“</span>
+<p class="testi-quote">Good service, scaled my brand up from nothing.</p>
+<div class="testi-divider"></div>
+<div class="testi-author-name">Vultus Worldwide</div>
+<div class="testi-author-company"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== QUALIFY ======================== -->
+<section id="qualify">
+<div class="container">
+<div class="qualify-split">
+<!-- LEFT: criteria list -->
+<div class="qualify-criteria reveal-left">
+<span class="eyebrow"><span class="eline"></span>Who We Work With</span>
+<h2>Built for one type of business.</h2>
+<p>Local service businesses — trades, barbershops, restoration, coaching, home services — with real clients but no real system behind lead capture or follow-up.</p>
+<div class="qualify-list">
+<div class="qualify-item">
+<div class="qualify-check"><div class="qualify-check-mark"></div></div>
+<p>You run a local service business with existing, paying clients</p>
+</div>
+<div class="qualify-item">
+<div class="qualify-check"><div class="qualify-check-mark"></div></div>
+<p>You're generating revenue but know you're leaving money on the table</p>
+</div>
+<div class="qualify-item">
+<div class="qualify-check"><div class="qualify-check-mark"></div></div>
+<p>You don't have time to build and manage systems yourself</p>
+</div>
+<div class="qualify-item">
+<div class="qualify-check"><div class="qualify-check-mark"></div></div>
+<p>You want your lead flow predictable and automated</p>
+</div>
+<div class="qualify-item">
+<div class="qualify-check"><div class="qualify-check-mark"></div></div>
+<p>You're ready to invest seriously in a proven growth system</p>
+</div>
+<div class="qualify-item">
+<div class="qualify-check"><div class="qualify-check-mark"></div></div>
+<p>You want full transparency on where your revenue is coming from</p>
+</div>
+</div>
+</div>
+<!-- RIGHT: CTA box -->
+<div class="qualify-action reveal-right" style="transition-delay:0.15s">
+<div class="qa-box">
+<h3>If 4 or more of these are you—</h3>
+<p>Every week without a system is leads going cold. One call, 45 minutes. You walk away with a custom growth blueprint whether you hire us or not.</p>
+<a class="btn-gold" href="/apply">Book Your Free Audit →</a>
+<p class="qa-note"><strong>No pitch. No pressure.</strong> We map your gaps and hand you the plan. That's it.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== FAQ ======================== -->
+<section id="faq">
+<div class="container">
+<div class="faq-grid">
+<div class="faq-left reveal-left">
+<span class="eyebrow"><span class="eline"></span>FAQ</span>
+<h2>Common questions, straight answers.</h2>
+<p>Still have questions? Book a free Growth Audit — we'll walk through everything on the call with zero pressure.</p>
+<a class="btn-gold" href="#cta" style="display:inline-flex;margin-top:4px;">Book a Call →</a>
+</div>
+<div class="faq-list reveal-right">
+<div class="faq-item">
+<button class="faq-q" onclick="toggleFAQ(this)">
+              What kind of businesses do you work with?
+              <span class="faq-icon">+</span>
+</button>
+<div class="faq-a">
+<div class="faq-a-inner">We work with local service businesses — barbershops, restoration companies, trades, coaching programs, and home service operations. Specifically: businesses that have real paying clients but no real system behind how they capture and follow up on leads. If your revenue is inconsistent or you know you're losing leads because of slow follow-up, that's exactly the problem we solve.</div>
+</div>
+</div>
+<div class="faq-item">
+<button class="faq-q" onclick="toggleFAQ(this)">
+              What happens in the free Growth Audit?
+              <span class="faq-icon">+</span>
+</button>
+<div class="faq-a">
+<div class="faq-a-inner">A 45-minute strategy session where we map your current lead flow, identify your top 3 revenue leaks, and outline a custom growth system roadmap. You walk away with real clarity and a concrete plan — whether you hire us or not. No pitch, no pressure.</div>
+</div>
+</div>
+<div class="faq-item">
+<button class="faq-q" onclick="toggleFAQ(this)">
+              Do I need to know tech to work with you?
+              <span class="faq-icon">+</span>
+</button>
+<div class="faq-a">
+<div class="faq-a-inner">Not at all. We handle the entire build, integration, and ongoing management. You show up for strategy calls and review the results. We take care of everything technical end-to-end.</div>
+</div>
+</div>
+<div class="faq-item">
+<button class="faq-q" onclick="toggleFAQ(this)">
+              How is TriFactor different from a marketing agency?
+              <span class="faq-icon">+</span>
+</button>
+<div class="faq-a">
+<div class="faq-a-inner">Marketing agencies sell deliverables. We build infrastructure. Think of us as the operations team running inside your business — we build the funnels, automate the follow-up, track every lead, and optimize monthly. The goal is never a pretty deliverable. It's compounding revenue.</div>
+</div>
+</div>
+<div class="faq-item">
+<button class="faq-q" onclick="toggleFAQ(this)">
+              How long until I see results?
+              <span class="faq-icon">+</span>
+</button>
+<div class="faq-a">
+<div class="faq-a-inner">The initial system build takes 4–6 weeks. Most clients see lead flow improvements within the first 30 days of going live. Compounding results show clearly by month 3. We set specific benchmarks during your Growth Audit so you always know what to expect and when.</div>
+</div>
+</div>
+<div class="faq-item">
+<button class="faq-q" onclick="toggleFAQ(this)">
+              You're a young team — does that affect the quality of work?
+              <span class="faq-icon">+</span>
+</button>
+<div class="faq-a">
+<div class="faq-a-inner">Yes — and in your favor. No account managers. No junior staff running your project while a senior takes the credit. You work directly with the founders on every build. That means faster decisions, tighter feedback loops, and people personally invested in your results because their name is on it. Our clients choose us because of that edge, not despite it.</div>
+</div>
+</div>
+<div class="faq-item">
+<button class="faq-q" onclick="toggleFAQ(this)">
+              How does the revenue share model work?
+              <span class="faq-icon">+</span>
+</button>
+<div class="faq-a">
+<div class="faq-a-inner">On our Full Scale service, we participate in revenue share on leads generated through the systems we build and manage. This aligns our incentives completely with yours — we only win when you win. The exact structure is agreed upfront based on your business model and projections before we begin.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== FINAL CTA ======================== -->
+<section id="cta">
+<div class="cta-glow"></div>
+<div class="cta-glow-b"></div>
+<div class="container">
+<div class="reveal">
+<span class="eyebrow"><span class="eline"></span>3 Spots Open This Month</span>
+</div>
+<h2 class="reveal" style="transition-delay:0.1s;">
+        Stop losing jobs to<br/>slow <span style="background:linear-gradient(90deg,var(--gold) 0%,var(--gold-light) 50%,var(--gold) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite;">follow-up.</span>
+</h2>
+<p class="reveal" style="transition-delay:0.2s;">
+        One free 45-minute call. We map your gaps, show you exactly what system needs to be built, and hand you a full Growth Blueprint — whether you work with us or not. No pitch. No pressure.
+      </p>
+<div class="cta-actions reveal" style="transition-delay:0.3s;">
+<a class="btn-gold" href="mailto:trifactorscaling@gmail.com?subject=Book%20Free%20Growth%20Audit" style="font-size:0.95rem;padding:18px 40px;">
+          Book Your Free Growth Audit →
+        </a>
+</div>
+<p class="cta-sub reveal" style="transition-delay:0.4s;">
+        Or reach us directly at <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a>
+</p>
+</div>
+</section>
+<!-- ======================== FOOTER ======================== -->
+<footer>
+<img alt="" aria-hidden="true" class="footer-watermark" src="./TFS-Logo-Transparent.png"/>
+<div class="container footer-inner">
+<div class="footer-top">
+<!-- Brand -->
+<div class="footer-brand">
+<img alt="TriFactor Scaling" class="footer-logo-img" src="./TFS-Logo-Transparent.png"/>
+<p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
+<a class="footer-contact-link" href="mailto:trifactorscaling@gmail.com">
+            trifactorscaling@gmail.com →
+          </a>
+</div>
+<!-- Pages -->
+<div>
+<div class="footer-col-label">Pages</div>
+<div class="footer-col-links">
+<a href="/">Overview</a>
+<a href="/services">Services</a>
+<a href="/results">Results</a>
+<a href="/about">About</a>
+<a href="/apply">Apply Now</a>
+</div>
+</div>
+<!-- Work with us -->
+<div>
+<div class="footer-col-label">Work With Us</div>
+<div class="footer-col-links">
+<a href="/apply">Apply for Growth Ops</a>
+<a href="/results">See Client Results</a>
+<a href="/services">What We Build</a>
+<a href="mailto:trifactorscaling@gmail.com">Send Us an Email</a>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<span class="footer-copy">© 2026 TriFactor Scaling. All rights reserved.</span>
+<span class="footer-built">Built by <span>teens</span>. Powered by results.</span>
+</div>
+</div>
+</footer>
+`;
 
 const Index = () => {
   const rootRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Force black body background for full-bleed dark pages
     const prevBg = document.body.style.background;
     const prevColor = document.body.style.color;
-    document.body.style.background = "#000000";
-    document.body.style.color = "#FFFFFF";
+    document.body.style.background = "#040404";
+    document.body.style.color = "#f0ece0";
 
-    // Inject scoped CSS once per page
     const styleEl = document.createElement("style");
     styleEl.setAttribute("data-tri-page", "tri-home");
     styleEl.innerHTML = CSS;
     document.head.appendChild(styleEl);
 
-    // Run page scripts after DOM is mounted
     let scriptEl: HTMLScriptElement | null = null;
     const t = window.setTimeout(() => {
       try {
         scriptEl = document.createElement("script");
-        // Wrap user script in IIFE+try so a single null deref doesn't blank the page
         scriptEl.text = "(function(){try{\n" + SCRIPT + "\n}catch(e){console.error('tri page script error',e);}})();";
         document.body.appendChild(scriptEl);
       } catch (e) { console.error("page script error", e); }
@@ -2823,7 +2759,6 @@ const Index = () => {
     };
   }, []);
 
-  // Intercept internal link clicks for smooth SPA routing
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const a = (e.target as HTMLElement).closest("a");
     if (!a) return;

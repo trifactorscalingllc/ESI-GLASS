@@ -2,10 +2,11 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CSS = `
+
     /* ======================== RESET & VARIABLES ======================== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .tri-about {
+    :root {
       color-scheme: dark;
       --gold:        #D4AF37;
       --gold-light:  #E2C860;
@@ -27,13 +28,17 @@ const CSS = `
       --gray-light:  #9CA3AF;
       --fh: 'Plus Jakarta Sans', sans-serif;
       --fb: 'Inter', sans-serif;
-    } .tri-about { scroll-behavior: smooth; }
+    }
+
+    html { scroll-behavior: smooth; }
 
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--black); }
     ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--gold-light); }
-    * { scrollbar-width: thin; scrollbar-color: var(--gold) var(--black); } .tri-about {
+    * { scrollbar-width: thin; scrollbar-color: var(--gold) var(--black); }
+
+    body {
       background: var(--black);
       color: var(--white);
       font-family: var(--fb);
@@ -188,7 +193,7 @@ const CSS = `
 
     /* ======================== PAGE HERO ======================== */
     .page-hero {
-      padding: 64px 0 100px;
+      padding: 160px 0 100px;
       background: var(--black);
       text-align: center;
       position: relative;
@@ -590,11 +595,11 @@ const CSS = `
     @media (max-width: 900px) {
       section { padding: 72px 0; }
       #origin, #founders, #approach, #why-growth-ops, #final-cta { padding: 72px 0; }
-      .page-hero { padding: 40px 0 72px; }
+      .page-hero { padding: 130px 0 72px; }
     }
     @media (max-width: 768px) {
       section { padding: 72px 0; }
-      .page-hero { padding: 40px 0 72px; }
+      .page-hero { padding: 130px 0 72px; }
     }
     @media (max-width: 600px) {
       .container { padding: 0 18px; }
@@ -605,287 +610,15 @@ const CSS = `
       .compare-card { padding: 28px 22px; }
     }
     @media (max-width: 480px) {
-      .page-hero { padding: 24px 0 56px; }
+      .page-hero { padding: 110px 0 56px; }
       .cta-headline { font-size: 1.9rem; }
       .founder-card { padding: 28px 22px; }
     }
   
-
-.tri-page-hero-canvas {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  pointer-events: none; z-index: 0;
-}
-.page-hero { position: relative; overflow: hidden; }
-.page-hero > .container, .page-hero > .page-hero-inner { position: relative; z-index: 2; }
 `;
-const HTML = `
 
-<!-- ======================== NAV ======================== -->
-<nav id="navbar">
-  <div class="container">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo"><img src="/tfs-logo.png" alt="TriFactor Scaling"></a>
-      <ul class="nav-links">
-        <li><a href="/" class="nav-link">Overview</a></li>
-        <li><a href="/services" class="nav-link">Services</a></li>
-        <li><a href="/results" class="nav-link" id="results-link">Results</a></li>
-        <li><a href="/about" class="nav-link active-nav" id="about-link">About</a></li>
-      </ul>
-      <div class="nav-cta-wrap">
-        <a href="/apply" class="btn-gold nav-cta" style="padding:11px 22px;font-size:0.8rem;">Apply Now →</a>
-        <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
-      </div>
-    </div>
-  </div>
-</nav>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="/">Overview</a>
-  <a href="/services">Services</a>
-  <a href="/results">Results</a>
-  <a href="/about" class="active-nav">About</a>
-  <a href="/apply">Apply Now →</a>
-</div>
-
-<!-- ======================== STICKY BAR ======================== -->
-<div id="stickyBar">
-  <span class="sticky-text">
-    <span class="sticky-dot"></span>
-    We open 3 client spots per month. Currently accepting applications.
-  </span>
-  <a href="/apply" class="btn-gold" style="padding:10px 22px;font-size:0.78rem;flex-shrink:0;">Apply Now →</a>
-</div>
-
-<!-- ======================== SECTION 1: PAGE HERO ======================== -->
-<section class="page-hero">
-  <canvas class="tri-page-hero-canvas" aria-hidden="true"></canvas>
-  <div class="page-hero-glow"></div>
-  <div class="container">
-    <div class="page-hero-inner">
-      <h1>Three teenagers.<br>No agency playbook.<br><span class="gold-shimmer">Real clients.</span></h1>
-      <p class="page-hero-sub">TriFactor Scaling was built from scratch — no courses, no agency templates, no shortcuts. Just a clear-eyed read on what local businesses actually needed, and the willingness to go build it.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ======================== SECTION 2: ORIGIN STORY ======================== -->
-<section id="origin" class="section-divider-top">
-  <div class="container">
-    <div class="origin-grid">
-
-      <div class="reveal-left">
-        <div class="origin-eyebrow-row">
-          <span class="eyebrow"><span class="eline"></span>How It Started</span>
-        </div>
-        <div class="origin-paragraphs">
-          <p>We started by asking a simple question: why do so many skilled local business owners struggle to grow? <strong>Not because they're bad at their craft — they're excellent.</strong> It's because they have no system. Leads come in through texts and DMs, get followed up on inconsistently, and die quietly in someone's inbox. We decided to fix that.</p>
-          <p>TriFactor Scaling started as an experiment — could we take enterprise-grade growth systems and make them work for a barbershop or a restoration company? The answer, as it turned out, was yes. The tools existed. The integrations were possible. <strong>What was missing was someone willing to actually do the work</strong> of building and connecting it all for a small business.</p>
-          <p>We taught ourselves GoHighLevel, AppSheet, and automation engineering by building real systems for real clients. We didn't learn from a course — we learned from the client's dashboard numbers. <strong>That education is irreplaceable,</strong> and it's what makes every system we build actually work in the real world.</p>
-        </div>
-      </div>
-
-      <div class="origin-stats reveal-right">
-        <div class="origin-stat-card">
-          <div class="origin-stat-val">6+</div>
-          <div class="origin-stat-label">Active client systems running</div>
-          <div class="origin-stat-sub">Every one of them live and operational right now.</div>
-        </div>
-        <div class="origin-stat-card">
-          <div class="origin-stat-val">100%</div>
-          <div class="origin-stat-label">Builds completed on time</div>
-          <div class="origin-stat-sub">Every project delivered. Every deadline met.</div>
-        </div>
-        <div class="origin-stat-card">
-          <div class="origin-stat-val">2026</div>
-          <div class="origin-stat-label">Year founded</div>
-          <div class="origin-stat-sub">We're new. That's the point.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ======================== SECTION 3: THE FOUNDERS ======================== -->
-<section id="founders" class="section-divider-top">
-  <div class="container">
-    <div class="section-header reveal" style="margin-bottom:44px;">
-      <span class="eyebrow"><span class="eline"></span>The Founders<span class="eline"></span></span>
-      <h2>The people doing the work</h2>
-    </div>
-
-    <!-- Side-by-side half-panel layout -->
-    <div class="founders-panel">
-
-      <!-- EVAN — left panel -->
-      <div class="founder-half reveal-left">
-        <div class="founder-placeholder">
-          <span class="founder-initials">EV</span>
-        </div>
-        <div class="founder-name">Evan</div>
-        <div class="founder-title">Co-Founder — Growth Strategy &amp; Client Operations</div>
-        <p class="founder-quote">"What does your pipeline actually look like right now?"</p>
-        <p class="founder-bio">Evan leads client strategy, system architecture, and new business. He's the one on every intro call asking the question most consultants are afraid to ask — then building the answer. Direct, fast, and allergic to anything that doesn't move a needle.</p>
-        <p class="founder-photo-note">Photo coming soon</p>
-      </div>
-
-      <!-- GAVIN — right panel -->
-      <div class="founder-half reveal-right">
-        <div class="founder-placeholder">
-          <span class="founder-initials">GV</span>
-        </div>
-        <div class="founder-name">Gavin</div>
-        <div class="founder-title">Co-Founder — Technical Build &amp; Automation Engineering</div>
-        <p class="founder-quote">"If it runs inside a client's business, Gavin built it."</p>
-        <p class="founder-bio">Gavin builds the systems. GHL configuration, workflow automations, AppSheet dashboards, SMS sequences — every client deployment has Gavin's fingerprints on it. He solves problems by going deeper into the tool than most people know is possible.</p>
-        <p class="founder-photo-note">Photo coming soon</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ======================== SECTION 4: THE APPROACH ======================== -->
-<section id="approach" class="section-divider-top">
-  <div class="container">
-    <div style="margin-bottom:56px;" class="reveal">
-      <span class="eyebrow"><span class="eline"></span>Our Philosophy</span>
-      <h2 style="font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;margin-top:18px;">How we think about the work</h2>
-    </div>
-
-    <div class="approach-row reveal">
-
-      <div class="approach-pillar">
-        <span class="approach-ghost-num">01</span>
-        <div class="approach-title">Systems before campaigns</div>
-        <p class="approach-body">We build infrastructure, not deliverables. A campaign ends. A system compounds.</p>
-      </div>
-
-      <div class="approach-pillar">
-        <span class="approach-ghost-num">02</span>
-        <div class="approach-title">Radical candor, always</div>
-        <p class="approach-body">If your funnel has three problems, we tell you all three. No sugar-coating, no protecting the project scope.</p>
-      </div>
-
-      <div class="approach-pillar">
-        <span class="approach-ghost-num">03</span>
-        <div class="approach-title">Skin in the game</div>
-        <p class="approach-body">On our Full Scale plans, we participate in revenue share. We only win when you win.</p>
-      </div>
-
-      <div class="approach-pillar">
-        <span class="approach-ghost-num">04</span>
-        <div class="approach-title">Founders do the work</div>
-        <p class="approach-body">You're not getting handed to a junior. Evan and Gavin are on every build, every optimization call, every result.</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ======================== SECTION 5: WHY GROWTH OPS ======================== -->
-<section id="why-growth-ops" class="section-divider-top">
-
-  <!-- No container — full-width dramatic split -->
-  <div class="compare-dramatic reveal">
-
-    <!-- Left: dark/red-tinted — "What we're not" -->
-    <div class="compare-side compare-side-not">
-      <span class="compare-side-label label-not">What we're not</span>
-      <h2 class="compare-side-headline">Marketing agencies sell campaigns.<br>Campaigns end.</h2>
-      <ul class="compare-list agency-list">
-        <li><span class="compare-icon icon-x">✕</span>Campaigns with an expiry date</li>
-        <li><span class="compare-icon icon-x">✕</span>Deliverables that stop working the moment the retainer does</li>
-        <li><span class="compare-icon icon-x">✕</span>Traffic that hits your homepage and bounces</li>
-        <li><span class="compare-icon icon-x">✕</span>Monthly reports that look good but can't explain your revenue</li>
-        <li><span class="compare-icon icon-x">✕</span>Junior account managers handling your account</li>
-        <li><span class="compare-icon icon-x">✕</span>Unclear ROI because attribution is always "murky"</li>
-      </ul>
-    </div>
-
-    <!-- Right: warm-gold-tinted — "What we are" -->
-    <div class="compare-side compare-side-tfs">
-      <span class="compare-side-label label-is">What we are</span>
-      <h2 class="compare-side-headline">We build operations.<br>Operations run forever.</h2>
-      <p class="compare-side-intro">When we build your CRM, your booking system, and your follow-up automation — it keeps running. Every lead captured, every job booked, every review generated happens without your involvement.</p>
-      <ul class="compare-list tfs-list">
-        <li><span class="compare-icon icon-check">✦</span>Infrastructure with no expiry date</li>
-        <li><span class="compare-icon icon-check">✦</span>Systems that compound in value every month</li>
-        <li><span class="compare-icon icon-check">✦</span>Lead-to-revenue pipelines — fully automated</li>
-        <li><span class="compare-icon icon-check">✦</span>Dashboards showing exactly what's working</li>
-        <li><span class="compare-icon icon-check">✦</span>Both founders on every build and every call</li>
-        <li><span class="compare-icon icon-check">✦</span>Revenue you can trace back to a specific system</li>
-      </ul>
-    </div>
-
-  </div>
-</section>
-
-<!-- ======================== SECTION 6: FINAL CTA ======================== -->
-<section id="final-cta">
-  <div class="container">
-    <div class="cta-inner">
-      <div class="cta-availability reveal">
-        <span class="cta-avail-dot"></span>
-        <span class="cta-avail-text">Work with the founders directly</span>
-      </div>
-
-      <h2 class="cta-headline reveal">
-        Two people. Your business.<br>
-        <span class="gold-shimmer">Full attention.</span>
-      </h2>
-
-      <p class="cta-body reveal">We take 3 clients per month. Not because of capacity — because of quality. If we take your project, you get both founders on every call and every build.</p>
-
-      <div class="cta-actions reveal">
-        <a href="/apply" class="btn-gold">Apply for a Spot →</a>
-      </div>
-
-      <p class="cta-sub reveal">Or email <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a></p>
-    </div>
-  </div>
-</section>
-
-<!-- ======================== FOOTER ======================== -->
-<footer>
-  <img src="/tfs-logo.png" alt="" class="footer-watermark" aria-hidden="true">
-  <div class="container footer-inner">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <img src="/tfs-logo.png" alt="TriFactor Scaling" class="footer-logo-img">
-        <p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
-        <a href="mailto:trifactorscaling@gmail.com" class="footer-contact-link">trifactorscaling@gmail.com →</a>
-      </div>
-      <div>
-        <div class="footer-col-label">Pages</div>
-        <div class="footer-col-links">
-          <a href="/">Overview</a>
-          <a href="/services">Services</a>
-          <a href="/results">Results</a>
-          <a href="/about">About</a>
-          <a href="/apply">Apply Now</a>
-        </div>
-      </div>
-      <div>
-        <div class="footer-col-label">Work With Us</div>
-        <div class="footer-col-links">
-          <a href="/apply">Apply for Growth Ops</a>
-          <a href="/results">See Client Results</a>
-          <a href="/services">What We Build</a>
-          <a href="mailto:trifactorscaling@gmail.com">Send Us an Email</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span class="footer-copy">© 2026 TriFactor Scaling. All rights reserved.</span>
-      <span class="footer-built">Built by <span>teens</span>. Powered by results.</span>
-    </div>
-  </div>
-</footer>
-
-<!-- ======================== SCRIPTS ======================== -->
-
-`;
 const SCRIPT = `
+
   const nav = document.getElementById('navbar');
   window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 50));
   function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
@@ -907,33 +640,241 @@ const SCRIPT = `
     }
   }
 
-;
+`;
 
-(function(){
-  var canvas = document.querySelector('.tri-page-hero-canvas');
-  if (!canvas || !canvas.getContext) return;
-  var hero = canvas.closest('.page-hero, #hero'); if (!hero) return;
-  var ctx = canvas.getContext('2d');
-  var W=0, H=0, particles=[];
-  function resize(){ W = canvas.width = hero.offsetWidth; H = canvas.height = hero.offsetHeight; }
-  function mk(){ return { x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.5+0.4,
-    alpha:Math.random()*0.35+0.05, vx:(Math.random()-0.5)*0.18, vy:(Math.random()-0.5)*0.18,
-    life:Math.random()*200+100, age:0 }; }
-  function init(){ resize(); particles = Array.from({length:65}, mk); }
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    particles.forEach(function(p,i){
-      p.x+=p.vx; p.y+=p.vy; p.age+=1;
-      var t=p.age/p.life, fade = t<0.2 ? t/0.2 : t>0.8 ? (1-t)/0.2 : 1;
-      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle='rgba(212,175,55,'+(p.alpha*fade)+')'; ctx.fill();
-      if(p.age>=p.life||p.x<0||p.x>W||p.y<0||p.y>H) particles[i]=mk();
-    });
-    requestAnimationFrame(draw);
-  }
-  window.addEventListener('resize', resize, {passive:true});
-  init(); draw();
-})();
+const HTML = `
+<!-- ======================== NAV ======================== -->
+<nav id="navbar">
+<div class="container">
+<div class="nav-inner">
+<a class="nav-logo" href="/"><img alt="TriFactor Scaling" height="40" src="./TFS-Logo-Transparent.png"/></a>
+<ul class="nav-links">
+<li><a class="nav-link" href="/">Overview</a></li>
+<li><a class="nav-link" href="/services">Services</a></li>
+<li><a class="nav-link" href="/results" id="results-link">Results</a></li>
+<li><a class="nav-link active-nav" href="/about" id="about-link">About</a></li>
+</ul>
+<div class="nav-cta-wrap">
+<a class="btn-gold nav-cta" href="/apply" style="padding:11px 22px;font-size:0.8rem;">Apply Now →</a>
+<button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</div>
+</div>
+</div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+<a href="/">Overview</a>
+<a href="/services">Services</a>
+<a href="/results">Results</a>
+<a class="active-nav" href="/about">About</a>
+<a href="/apply">Apply Now →</a>
+</div>
+<!-- ======================== STICKY BAR ======================== -->
+<div id="stickyBar">
+<span class="sticky-text">
+<span class="sticky-dot"></span>
+    We open 3 client spots per month. Currently accepting applications.
+  </span>
+<a class="btn-gold" href="/apply" style="padding:10px 22px;font-size:0.78rem;flex-shrink:0;">Apply Now →</a>
+</div>
+<!-- ======================== SECTION 1: PAGE HERO ======================== -->
+<section class="page-hero">
+<div class="page-hero-glow"></div>
+<div class="container">
+<div class="page-hero-inner">
+<h1>Three teenagers.<br/>No agency playbook.<br/><span class="gold-shimmer">Real clients.</span></h1>
+<p class="page-hero-sub">TriFactor Scaling was built from scratch — no courses, no agency templates, no shortcuts. Just a clear-eyed read on what local businesses actually needed, and the willingness to go build it.</p>
+</div>
+</div>
+</section>
+<!-- ======================== SECTION 2: ORIGIN STORY ======================== -->
+<section class="section-divider-top" id="origin">
+<div class="container">
+<div class="origin-grid">
+<div class="reveal-left">
+<div class="origin-eyebrow-row">
+<span class="eyebrow"><span class="eline"></span>How It Started</span>
+</div>
+<div class="origin-paragraphs">
+<p>We started by asking a simple question: why do so many skilled local business owners struggle to grow? <strong>Not because they're bad at their craft — they're excellent.</strong> It's because they have no system. Leads come in through texts and DMs, get followed up on inconsistently, and die quietly in someone's inbox. We decided to fix that.</p>
+<p>TriFactor Scaling started as an experiment — could we take enterprise-grade growth systems and make them work for a barbershop or a restoration company? The answer, as it turned out, was yes. The tools existed. The integrations were possible. <strong>What was missing was someone willing to actually do the work</strong> of building and connecting it all for a small business.</p>
+<p>We taught ourselves GoHighLevel, AppSheet, and automation engineering by building real systems for real clients. We didn't learn from a course — we learned from the client's dashboard numbers. <strong>That education is irreplaceable,</strong> and it's what makes every system we build actually work in the real world.</p>
+</div>
+</div>
+<div class="origin-stats reveal-right">
+<div class="origin-stat-card">
+<div class="origin-stat-val">6+</div>
+<div class="origin-stat-label">Active client systems running</div>
+<div class="origin-stat-sub">Every one of them live and operational right now.</div>
+</div>
+<div class="origin-stat-card">
+<div class="origin-stat-val">100%</div>
+<div class="origin-stat-label">Builds completed on time</div>
+<div class="origin-stat-sub">Every project delivered. Every deadline met.</div>
+</div>
+<div class="origin-stat-card">
+<div class="origin-stat-val">2026</div>
+<div class="origin-stat-label">Year founded</div>
+<div class="origin-stat-sub">We're new. That's the point.</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== SECTION 3: THE FOUNDERS ======================== -->
+<section class="section-divider-top" id="founders">
+<div class="container">
+<div class="section-header reveal" style="margin-bottom:44px;">
+<span class="eyebrow"><span class="eline"></span>The Founders<span class="eline"></span></span>
+<h2>The people doing the work</h2>
+</div>
+<!-- Side-by-side half-panel layout -->
+<div class="founders-panel">
+<!-- EVAN — left panel -->
+<div class="founder-half reveal-left">
+<div class="founder-placeholder">
+<span class="founder-initials">EV</span>
+</div>
+<div class="founder-name">Evan</div>
+<div class="founder-title">Co-Founder — Growth Strategy &amp; Client Operations</div>
+<p class="founder-quote">"What does your pipeline actually look like right now?"</p>
+<p class="founder-bio">Evan leads client strategy, system architecture, and new business. He's the one on every intro call asking the question most consultants are afraid to ask — then building the answer. Direct, fast, and allergic to anything that doesn't move a needle.</p>
+<p class="founder-photo-note">Photo coming soon</p>
+</div>
+<!-- GAVIN — right panel -->
+<div class="founder-half reveal-right">
+<div class="founder-placeholder">
+<span class="founder-initials">GV</span>
+</div>
+<div class="founder-name">Gavin</div>
+<div class="founder-title">Co-Founder — Technical Build &amp; Automation Engineering</div>
+<p class="founder-quote">"If it runs inside a client's business, Gavin built it."</p>
+<p class="founder-bio">Gavin builds the systems. GHL configuration, workflow automations, AppSheet dashboards, SMS sequences — every client deployment has Gavin's fingerprints on it. He solves problems by going deeper into the tool than most people know is possible.</p>
+<p class="founder-photo-note">Photo coming soon</p>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== SECTION 4: THE APPROACH ======================== -->
+<section class="section-divider-top" id="approach">
+<div class="container">
+<div class="reveal" style="margin-bottom:56px;">
+<span class="eyebrow"><span class="eline"></span>Our Philosophy</span>
+<h2 style="font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;margin-top:18px;">How we think about the work</h2>
+</div>
+<div class="approach-row reveal">
+<div class="approach-pillar">
+<span class="approach-ghost-num">01</span>
+<div class="approach-title">Systems before campaigns</div>
+<p class="approach-body">We build infrastructure, not deliverables. A campaign ends. A system compounds.</p>
+</div>
+<div class="approach-pillar">
+<span class="approach-ghost-num">02</span>
+<div class="approach-title">Radical candor, always</div>
+<p class="approach-body">If your funnel has three problems, we tell you all three. No sugar-coating, no protecting the project scope.</p>
+</div>
+<div class="approach-pillar">
+<span class="approach-ghost-num">03</span>
+<div class="approach-title">Skin in the game</div>
+<p class="approach-body">On our Full Scale plans, we participate in revenue share. We only win when you win.</p>
+</div>
+<div class="approach-pillar">
+<span class="approach-ghost-num">04</span>
+<div class="approach-title">Founders do the work</div>
+<p class="approach-body">You're not getting handed to a junior. Evan and Gavin are on every build, every optimization call, every result.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== SECTION 5: WHY GROWTH OPS ======================== -->
+<section class="section-divider-top" id="why-growth-ops">
+<!-- No container — full-width dramatic split -->
+<div class="compare-dramatic reveal">
+<!-- Left: dark/red-tinted — "What we're not" -->
+<div class="compare-side compare-side-not">
+<span class="compare-side-label label-not">What we're not</span>
+<h2 class="compare-side-headline">Marketing agencies sell campaigns.<br/>Campaigns end.</h2>
+<ul class="compare-list agency-list">
+<li><span class="compare-icon icon-x">✕</span>Campaigns with an expiry date</li>
+<li><span class="compare-icon icon-x">✕</span>Deliverables that stop working the moment the retainer does</li>
+<li><span class="compare-icon icon-x">✕</span>Traffic that hits your homepage and bounces</li>
+<li><span class="compare-icon icon-x">✕</span>Monthly reports that look good but can't explain your revenue</li>
+<li><span class="compare-icon icon-x">✕</span>Junior account managers handling your account</li>
+<li><span class="compare-icon icon-x">✕</span>Unclear ROI because attribution is always "murky"</li>
+</ul>
+</div>
+<!-- Right: warm-gold-tinted — "What we are" -->
+<div class="compare-side compare-side-tfs">
+<span class="compare-side-label label-is">What we are</span>
+<h2 class="compare-side-headline">We build operations.<br/>Operations run forever.</h2>
+<p class="compare-side-intro">When we build your CRM, your booking system, and your follow-up automation — it keeps running. Every lead captured, every job booked, every review generated happens without your involvement.</p>
+<ul class="compare-list tfs-list">
+<li><span class="compare-icon icon-check">✦</span>Infrastructure with no expiry date</li>
+<li><span class="compare-icon icon-check">✦</span>Systems that compound in value every month</li>
+<li><span class="compare-icon icon-check">✦</span>Lead-to-revenue pipelines — fully automated</li>
+<li><span class="compare-icon icon-check">✦</span>Dashboards showing exactly what's working</li>
+<li><span class="compare-icon icon-check">✦</span>Both founders on every build and every call</li>
+<li><span class="compare-icon icon-check">✦</span>Revenue you can trace back to a specific system</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- ======================== SECTION 6: FINAL CTA ======================== -->
+<section id="final-cta">
+<div class="container">
+<div class="cta-inner">
+<div class="cta-availability reveal">
+<span class="cta-avail-dot"></span>
+<span class="cta-avail-text">Work with the founders directly</span>
+</div>
+<h2 class="cta-headline reveal">
+        Two people. Your business.<br/>
+<span class="gold-shimmer">Full attention.</span>
+</h2>
+<p class="cta-body reveal">We take 3 clients per month. Not because of capacity — because of quality. If we take your project, you get both founders on every call and every build.</p>
+<div class="cta-actions reveal">
+<a class="btn-gold" href="/apply">Apply for a Spot →</a>
+</div>
+<p class="cta-sub reveal">Or email <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a></p>
+</div>
+</div>
+</section>
+<!-- ======================== FOOTER ======================== -->
+<footer>
+<img alt="" aria-hidden="true" class="footer-watermark" src="./TFS-Logo-Transparent.png"/>
+<div class="container footer-inner">
+<div class="footer-top">
+<div class="footer-brand">
+<img alt="TriFactor Scaling" class="footer-logo-img" src="./TFS-Logo-Transparent.png"/>
+<p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
+<a class="footer-contact-link" href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com →</a>
+</div>
+<div>
+<div class="footer-col-label">Pages</div>
+<div class="footer-col-links">
+<a href="/">Overview</a>
+<a href="/services">Services</a>
+<a href="/results">Results</a>
+<a href="/about">About</a>
+<a href="/apply">Apply Now</a>
+</div>
+</div>
+<div>
+<div class="footer-col-label">Work With Us</div>
+<div class="footer-col-links">
+<a href="/apply">Apply for Growth Ops</a>
+<a href="/results">See Client Results</a>
+<a href="/services">What We Build</a>
+<a href="mailto:trifactorscaling@gmail.com">Send Us an Email</a>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<span class="footer-copy">© 2026 TriFactor Scaling. All rights reserved.</span>
+<span class="footer-built">Built by <span>teens</span>. Powered by results.</span>
+</div>
+</div>
+</footer>
+<!-- ======================== SCRIPTS ======================== -->
 `;
 
 const About = () => {
@@ -941,24 +882,20 @@ const About = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Force black body background for full-bleed dark pages
     const prevBg = document.body.style.background;
     const prevColor = document.body.style.color;
-    document.body.style.background = "#000000";
-    document.body.style.color = "#FFFFFF";
+    document.body.style.background = "#040404";
+    document.body.style.color = "#f0ece0";
 
-    // Inject scoped CSS once per page
     const styleEl = document.createElement("style");
     styleEl.setAttribute("data-tri-page", "tri-about");
     styleEl.innerHTML = CSS;
     document.head.appendChild(styleEl);
 
-    // Run page scripts after DOM is mounted
     let scriptEl: HTMLScriptElement | null = null;
     const t = window.setTimeout(() => {
       try {
         scriptEl = document.createElement("script");
-        // Wrap user script in IIFE+try so a single null deref doesn't blank the page
         scriptEl.text = "(function(){try{\n" + SCRIPT + "\n}catch(e){console.error('tri page script error',e);}})();";
         document.body.appendChild(scriptEl);
       } catch (e) { console.error("page script error", e); }
@@ -973,7 +910,6 @@ const About = () => {
     };
   }, []);
 
-  // Intercept internal link clicks for smooth SPA routing
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const a = (e.target as HTMLElement).closest("a");
     if (!a) return;
