@@ -269,7 +269,7 @@ const HTML = `
     <div class="container">
       <div class="nav-inner">
         <a href="/" class="nav-logo" aria-label="TriFactor Scaling">
-          <img src="/tfs-logo.png" alt="TriFactor Scaling" height="40">
+          <img src="/tfs-logo.png" alt="TriFactor Scaling">
         </a>
         <ul class="nav-links">
           <li><a href="/" class="nav-link">Overview</a></li>

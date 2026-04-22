@@ -624,7 +624,7 @@ const HTML = `
 <nav id="navbar">
   <div class="container">
     <div class="nav-inner">
-      <a href="/" class="nav-logo"><img src="/tfs-logo.png" alt="TriFactor Scaling" height="40"></a>
+      <a href="/" class="nav-logo"><img src="/tfs-logo.png" alt="TriFactor Scaling"></a>
       <ul class="nav-links">
         <li><a href="/" class="nav-link">Overview</a></li>
         <li><a href="/services" class="nav-link">Services</a></li>
