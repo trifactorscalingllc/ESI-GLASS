@@ -209,7 +209,7 @@ const CSS = `
       mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 15%, transparent 72%);
     }
 
-    .hero-inner { position: relative; z-index: 2; padding: 60px 0 110px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .hero-inner { position: relative; z-index: 2; padding: 20px 0 110px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
     #hero .container { max-width: 100%; padding: 0 25vw; text-align: center; }
     @media (max-width: 900px) { #hero .container { padding: 0 8vw; } }
     @media (max-width: 600px) { #hero .container { padding: 0 5vw; } }
