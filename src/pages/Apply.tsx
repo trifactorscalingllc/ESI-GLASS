@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-
 const CSS = `
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -415,7 +414,6 @@ const CSS = `
 
   
 `;
-
 const SCRIPT = `
 
     (function(c,l,a,r,i,t,y){
@@ -500,7 +498,6 @@ const SCRIPT = `
     }
   
 `;
-
 const HTML = `
 <!-- STICKY BAR -->
 <div class="sticky-bar" id="stickyBar">
@@ -678,17 +675,22 @@ const HTML = `
 <div class="form-title">Application Form</div>
 <div class="form-sub">Takes 3 minutes. Every field helps us prepare for your call.</div>
 <!-- SUCCESS STATE (hidden until submit) -->
-<div id="form-success" style="display:none; border:1px solid var(--gold-border); border-radius:2px; padding:48px 36px; text-align:center;">
-<div style="font-size:2rem; margin-bottom:16px;">✦</div>
-<h3 style="font-family:var(--fh); font-size:1.5rem; font-weight:800; margin-bottom:12px;">Application received.</h3>
-<p style="font-size:0.92rem; color:var(--gray-light); line-height:1.8; max-width:380px; margin:0 auto 24px;">Evan and Gavin will review it and respond within 24 hours. Check your inbox — including spam.</p>
-<a href="mailto:trifactorscaling@gmail.com" style="font-size:0.8rem; color:var(--gold); text-decoration:none;">trifactorscaling@gmail.com</a>
+<div id="form-success" style="display:none; border:1px solid var(--gold-border); border-radius:2px; padding:32px 24px; text-align:center;">
+<div style="font-size:2rem; margin-bottom:12px;">✦</div>
+<h3 style="font-family:var(--fh); font-size:1.4rem; font-weight:800; margin-bottom:10px;">Application received.</h3>
+<p style="font-size:0.88rem; color:var(--gray-light); line-height:1.7; max-width:420px; margin:0 auto 24px;">Now pick a time that works for you. We'll review your application before the call so we come prepared.</p>
+<!-- Inline GHL calendar so they can book immediately after applying -->
+<div style="border:1px solid var(--border); border-radius:4px; overflow:hidden; margin-top:8px;">
+<iframe id="booking-iframe-success" scrolling="yes" src="https://api.leadconnectorhq.com/widget/bookings/tfs-calender" style="width:100%; height:680px; border:none; display:block; background:#0d0d0d;" title="Book Your Free Growth Audit">
+</iframe>
+</div>
+<p style="font-size:0.78rem; color:var(--gray); margin-top:14px;">Can't find a time? Email us at <a href="mailto:trifactorscaling@gmail.com" style="color:var(--gold); text-decoration:none;">trifactorscaling@gmail.com</a></p>
 </div>
 <!-- ERROR STATE (hidden until needed) -->
 <div id="form-error" style="display:none; border:1px solid rgba(220,50,50,0.3); background:rgba(220,50,50,0.05); border-radius:2px; padding:16px 20px; margin-bottom:20px;">
 <p style="font-size:0.85rem; color:#f87171; margin:0;">Something went wrong. Please try again or email us directly at <a href="mailto:trifactorscaling@gmail.com" style="color:var(--gold);">trifactorscaling@gmail.com</a></p>
 </div>
-<form action="https://formspree.io/f/YOUR_FORM_ID" id="apply-form" method="POST">
+<form action="https://formspree.io/f/xnjlobal" id="apply-form" method="POST">
 <!-- Formspree config -->
 <input name="_subject" type="hidden" value="New TFS Growth Ops Application"/>
 <div class="form-2col">
@@ -762,8 +764,17 @@ const HTML = `
 </p>
 </div>
 </div>
-<!-- Right: trust/context box -->
+<!-- Right: calendar + trust -->
 <div class="form-right-wrap reveal-right" style="transition-delay:0.1s">
+<!-- Direct booking calendar -->
+<div style="margin-bottom:28px;">
+<span class="eyebrow" style="margin-bottom:14px; display:inline-flex;"><span class="eline"></span>Or Book Directly</span>
+<p style="font-size:0.85rem; color:var(--gray-light); margin-bottom:16px; line-height:1.6;">Skip the form — grab a time on the calendar and we'll send you a prep questionnaire before the call.</p>
+<div style="border:1px solid var(--border); border-radius:4px; overflow:hidden;">
+<iframe id="booking-iframe-main" scrolling="yes" src="https://api.leadconnectorhq.com/widget/bookings/tfs-calender" style="width:100%; height:660px; border:none; display:block; background:#0d0d0d;" title="Book Your Free Growth Audit">
+</iframe>
+</div>
+</div>
 <!-- Why apply trust box -->
 <div class="form-trust-box">
 <div class="form-trust-box-title">Why this call is worth your time</div>
@@ -904,11 +915,9 @@ const HTML = `
 </div>
 </footer>
 `;
-
 const Apply = () => {
   const rootRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-
   useEffect(() => {
     const prevBg = document.body.style.background;
     const prevColor = document.body.style.color;
@@ -916,20 +925,16 @@ const Apply = () => {
     document.body.style.color = "#f0ece0";
     document.documentElement.style.overflowX = "hidden";
     document.body.style.overflowX = "hidden";
-
     const styleEl = document.createElement("style");
     styleEl.setAttribute("data-tri-page", "tri-apply");
     styleEl.innerHTML = CSS;
     document.head.appendChild(styleEl);
-
-    // Inject Microsoft Clarity
     if (!document.querySelector('script[data-clarity]')) {
-      const clarityEl = document.createElement("script");
-      clarityEl.setAttribute("data-clarity", "vwvpjcliya");
-      clarityEl.text = `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vwvpjcliya");`;
-      document.head.appendChild(clarityEl);
+      const cl = document.createElement("script");
+      cl.setAttribute("data-clarity", "vwvpjcliya");
+      cl.text = `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vwvpjcliya");`;
+      document.head.appendChild(cl);
     }
-
     let scriptEl: HTMLScriptElement | null = null;
     const t = window.setTimeout(() => {
       try {
@@ -938,41 +943,27 @@ const Apply = () => {
         document.body.appendChild(scriptEl);
       } catch (e) { console.error("page script error", e); }
     }, 0);
-
     return () => {
-      window.clearTimeout(t);
-      styleEl.remove();
-      scriptEl?.remove();
-      document.body.style.background = prevBg;
-      document.body.style.color = prevColor;
-      document.documentElement.style.overflowX = "";
-      document.body.style.overflowX = "";
+      window.clearTimeout(t); styleEl.remove(); scriptEl?.remove();
+      document.body.style.background = prevBg; document.body.style.color = prevColor;
+      document.documentElement.style.overflowX = ""; document.body.style.overflowX = "";
     };
   }, []);
-
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const a = (e.target as HTMLElement).closest("a");
     if (!a) return;
     const href = a.getAttribute("href") || "";
     if (href.startsWith("/") && !href.startsWith("//")) {
       e.preventDefault();
-      if (href === window.location.pathname) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        navigate(href);
-      }
+      if (href === window.location.pathname) { window.scrollTo({ top: 0, behavior: "smooth" }); }
+      else { navigate(href); }
     }
   };
-
   return (
-    <div
-      ref={rootRef}
-      className="tri-apply tri-page-fade"
+    <div ref={rootRef} className="tri-apply tri-page-fade"
       style={{ overflowX: "hidden", maxWidth: "100vw" }}
       onClick={onClick}
-      dangerouslySetInnerHTML={{ __html: HTML }}
-    />
+      dangerouslySetInnerHTML={{ __html: HTML }} />
   );
 };
-
 export default Apply;

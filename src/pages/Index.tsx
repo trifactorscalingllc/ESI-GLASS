@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-
 const CSS = `
 
     /* ======================== VARIABLES ======================== */
@@ -1658,7 +1657,6 @@ const CSS = `
 
   
 `;
-
 const SCRIPT = `
 
     (function(c,l,a,r,i,t,y){
@@ -2004,7 +2002,6 @@ const SCRIPT = `
 
   
 `;
-
 const HTML = `
 <!-- ======================== STICKY CTA BAR ======================== -->
 <div class="sticky-bar" id="stickyBar">
@@ -2843,13 +2840,13 @@ const HTML = `
 <p class="reveal" style="transition-delay:0.2s;">
         One free 45-minute call. We map your gaps, show you exactly what system needs to be built, and hand you a full Growth Blueprint — whether you work with us or not. No pitch. No pressure.
       </p>
-<div class="cta-actions reveal" style="transition-delay:0.3s;">
-<a class="btn-gold" href="mailto:trifactorscaling@gmail.com?subject=Book%20Free%20Growth%20Audit" style="font-size:0.95rem;padding:18px 40px;">
-          Book Your Free Growth Audit →
-        </a>
+<!-- Inline GHL booking calendar -->
+<div class="reveal" style="transition-delay:0.3s; max-width:780px; margin:36px auto 0; border:1px solid var(--border-mid); border-radius:6px; overflow:hidden;">
+<iframe scrolling="yes" src="https://api.leadconnectorhq.com/widget/bookings/tfs-calender" style="width:100%; height:680px; border:none; display:block; background:#0a0a0a;" title="Book Your Free Growth Audit">
+</iframe>
 </div>
-<p class="cta-sub reveal" style="transition-delay:0.4s;">
-        Or reach us directly at <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a>
+<p class="cta-sub reveal" style="transition-delay:0.4s; margin-top:20px;">
+        Prefer email? <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a>
 </p>
 </div>
 </section>
@@ -2895,11 +2892,9 @@ const HTML = `
 </div>
 </footer>
 `;
-
 const Index = () => {
   const rootRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-
   useEffect(() => {
     const prevBg = document.body.style.background;
     const prevColor = document.body.style.color;
@@ -2907,20 +2902,16 @@ const Index = () => {
     document.body.style.color = "#f0ece0";
     document.documentElement.style.overflowX = "hidden";
     document.body.style.overflowX = "hidden";
-
     const styleEl = document.createElement("style");
     styleEl.setAttribute("data-tri-page", "tri-home");
     styleEl.innerHTML = CSS;
     document.head.appendChild(styleEl);
-
-    // Inject Microsoft Clarity
     if (!document.querySelector('script[data-clarity]')) {
-      const clarityEl = document.createElement("script");
-      clarityEl.setAttribute("data-clarity", "vwvpjcliya");
-      clarityEl.text = `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vwvpjcliya");`;
-      document.head.appendChild(clarityEl);
+      const cl = document.createElement("script");
+      cl.setAttribute("data-clarity", "vwvpjcliya");
+      cl.text = `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vwvpjcliya");`;
+      document.head.appendChild(cl);
     }
-
     let scriptEl: HTMLScriptElement | null = null;
     const t = window.setTimeout(() => {
       try {
@@ -2929,41 +2920,27 @@ const Index = () => {
         document.body.appendChild(scriptEl);
       } catch (e) { console.error("page script error", e); }
     }, 0);
-
     return () => {
-      window.clearTimeout(t);
-      styleEl.remove();
-      scriptEl?.remove();
-      document.body.style.background = prevBg;
-      document.body.style.color = prevColor;
-      document.documentElement.style.overflowX = "";
-      document.body.style.overflowX = "";
+      window.clearTimeout(t); styleEl.remove(); scriptEl?.remove();
+      document.body.style.background = prevBg; document.body.style.color = prevColor;
+      document.documentElement.style.overflowX = ""; document.body.style.overflowX = "";
     };
   }, []);
-
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const a = (e.target as HTMLElement).closest("a");
     if (!a) return;
     const href = a.getAttribute("href") || "";
     if (href.startsWith("/") && !href.startsWith("//")) {
       e.preventDefault();
-      if (href === window.location.pathname) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        navigate(href);
-      }
+      if (href === window.location.pathname) { window.scrollTo({ top: 0, behavior: "smooth" }); }
+      else { navigate(href); }
     }
   };
-
   return (
-    <div
-      ref={rootRef}
-      className="tri-home tri-page-fade"
+    <div ref={rootRef} className="tri-home tri-page-fade"
       style={{ overflowX: "hidden", maxWidth: "100vw" }}
       onClick={onClick}
-      dangerouslySetInnerHTML={{ __html: HTML }}
-    />
+      dangerouslySetInnerHTML={{ __html: HTML }} />
   );
 };
-
 export default Index;

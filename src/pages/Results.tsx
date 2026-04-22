@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-
 const CSS = `
 
     /* ======================== RESET & VARIABLES ======================== */
@@ -875,7 +874,6 @@ const CSS = `
 
   
 `;
-
 const SCRIPT = `
 
     (function(c,l,a,r,i,t,y){
@@ -907,7 +905,6 @@ const SCRIPT = `
   }
 
 `;
-
 const HTML = `
 <!-- ======================== NAV ======================== -->
 <nav id="navbar">
@@ -1241,11 +1238,9 @@ const HTML = `
 </footer>
 <!-- ======================== SCRIPTS ======================== -->
 `;
-
 const Results = () => {
   const rootRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-
   useEffect(() => {
     const prevBg = document.body.style.background;
     const prevColor = document.body.style.color;
@@ -1253,20 +1248,16 @@ const Results = () => {
     document.body.style.color = "#f0ece0";
     document.documentElement.style.overflowX = "hidden";
     document.body.style.overflowX = "hidden";
-
     const styleEl = document.createElement("style");
     styleEl.setAttribute("data-tri-page", "tri-results");
     styleEl.innerHTML = CSS;
     document.head.appendChild(styleEl);
-
-    // Inject Microsoft Clarity
     if (!document.querySelector('script[data-clarity]')) {
-      const clarityEl = document.createElement("script");
-      clarityEl.setAttribute("data-clarity", "vwvpjcliya");
-      clarityEl.text = `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vwvpjcliya");`;
-      document.head.appendChild(clarityEl);
+      const cl = document.createElement("script");
+      cl.setAttribute("data-clarity", "vwvpjcliya");
+      cl.text = `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vwvpjcliya");`;
+      document.head.appendChild(cl);
     }
-
     let scriptEl: HTMLScriptElement | null = null;
     const t = window.setTimeout(() => {
       try {
@@ -1275,41 +1266,27 @@ const Results = () => {
         document.body.appendChild(scriptEl);
       } catch (e) { console.error("page script error", e); }
     }, 0);
-
     return () => {
-      window.clearTimeout(t);
-      styleEl.remove();
-      scriptEl?.remove();
-      document.body.style.background = prevBg;
-      document.body.style.color = prevColor;
-      document.documentElement.style.overflowX = "";
-      document.body.style.overflowX = "";
+      window.clearTimeout(t); styleEl.remove(); scriptEl?.remove();
+      document.body.style.background = prevBg; document.body.style.color = prevColor;
+      document.documentElement.style.overflowX = ""; document.body.style.overflowX = "";
     };
   }, []);
-
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const a = (e.target as HTMLElement).closest("a");
     if (!a) return;
     const href = a.getAttribute("href") || "";
     if (href.startsWith("/") && !href.startsWith("//")) {
       e.preventDefault();
-      if (href === window.location.pathname) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        navigate(href);
-      }
+      if (href === window.location.pathname) { window.scrollTo({ top: 0, behavior: "smooth" }); }
+      else { navigate(href); }
     }
   };
-
   return (
-    <div
-      ref={rootRef}
-      className="tri-results tri-page-fade"
+    <div ref={rootRef} className="tri-results tri-page-fade"
       style={{ overflowX: "hidden", maxWidth: "100vw" }}
       onClick={onClick}
-      dangerouslySetInnerHTML={{ __html: HTML }}
-    />
+      dangerouslySetInnerHTML={{ __html: HTML }} />
   );
 };
-
 export default Results;
