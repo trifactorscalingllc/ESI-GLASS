@@ -615,6 +615,169 @@ const CSS = `
       .founder-card { padding: 28px 22px; }
     }
   
+    /* ============================================================
+       MOBILE RESPONSIVE OVERHAUL — injected fix
+       Ensures nothing overflows or overlaps on any device width
+    ============================================================ */
+
+    html, body { overflow-x: hidden; max-width: 100%; }
+    *, *::before, *::after { box-sizing: border-box; }
+
+    img, video, canvas, svg { max-width: 100%; height: auto; }
+
+    /* Nav: hide CTA button, keep hamburger visible on mobile */
+    @media (max-width: 768px) {
+      .nav-inner { grid-template-columns: 1fr auto; }
+      .nav-links  { display: none !important; }
+      .nav-cta    { display: none !important; }
+      .nav-cta-wrap { justify-content: flex-end; }
+      .hamburger  { display: flex !important; }
+      .mobile-menu { top: 58px; }
+    }
+
+    /* ── HERO fluid sizing ── */
+    @media (max-width: 768px) {
+      #hero { min-height: 80vh; padding-top: 76px; }
+      .hero-inner { padding: 32px 0 72px; }
+      .hero-headline { font-size: clamp(2rem, 9vw, 3rem) !important; line-height: 1.06 !important; }
+      .hero-sub { font-size: 0.92rem; max-width: 100%; }
+      .hero-actions { gap: 10px; }
+      .btn-gold, .btn-outline { padding: 12px 22px; font-size: 0.82rem; }
+    }
+
+    /* ── Hero stats: wrap cleanly on mobile ── */
+    @media (max-width: 540px) {
+      .hero-stats { flex-direction: column; align-items: center; gap: 0; width: 100%; }
+      .hstat {
+        flex-direction: row !important; justify-content: space-between !important;
+        width: 100% !important; padding: 10px 0 !important;
+        border-right: none !important; border-bottom: 1px solid var(--border-mid, rgba(255,255,255,0.1));
+        text-align: left !important; gap: 12px !important;
+      }
+      .hstat:last-child { border-bottom: none !important; }
+      .hstat-val, .stat-val { font-size: 1.4rem !important; }
+    }
+
+    /* ── Section padding scale ── */
+    @media (max-width: 768px) {
+      section { padding: 60px 0 !important; }
+      .container { padding-left: max(18px, 4vw) !important; padding-right: max(18px, 4vw) !important; }
+    }
+    @media (max-width: 480px) {
+      section { padding: 44px 0 !important; }
+      .container { padding-left: 16px !important; padding-right: 16px !important; }
+    }
+
+    /* ── All 2-col grids → 1 col on mobile ── */
+    @media (max-width: 768px) {
+      .wwd-grid,
+      .la-grid,
+      .hiw-steps,
+      .qualify-split,
+      .faq-grid,
+      .tech-split,
+      .faq-split,
+      .service-grid,
+      .apply-hero-grid,
+      .origin-grid,
+      .founders-panel,
+      .compare-dramatic,
+      .featured-case-split,
+      .svc-grid,
+      .crm-board
+      { grid-template-columns: 1fr !important; gap: 32px !important; }
+    }
+
+    /* ── Client card grids ── */
+    @media (max-width: 640px) {
+      .cl-row { grid-template-columns: repeat(2, 1fr) !important; }
+      .why-items { grid-template-columns: repeat(2, 1fr) !important; }
+    }
+    @media (max-width: 400px) {
+      .cl-row { grid-template-columns: 1fr !important; }
+      .why-items { grid-template-columns: 1fr !important; }
+    }
+
+    /* ── Testimonials ── */
+    @media (max-width: 560px) {
+      .testi-row { grid-template-columns: 1fr !important; }
+    }
+
+    /* ── Demo section ── */
+    @media (max-width: 768px) {
+      .demo-panel { width: 100%; padding: 24px 16px !important; }
+      .dp-phone { max-width: 140px; width: 100%; }
+      .demo-tabs { flex-wrap: wrap; }
+      .demo-tab { flex: 1 1 45%; min-width: 0; text-align: center; }
+    }
+
+    /* ── Approach row (about page) ── */
+    @media (max-width: 480px) {
+      .approach-row { grid-template-columns: 1fr !important; }
+      .client-cards-row-2,
+      .client-cards-row-3 { grid-template-columns: 1fr !important; }
+    }
+
+    /* ── Process timeline (apply) ── */
+    @media (max-width: 600px) {
+      .process-timeline { grid-template-columns: 1fr !important; }
+    }
+
+    /* ── Pipeline flow (services) ── */
+    @media (max-width: 600px) {
+      .pipeline-flow { flex-wrap: wrap; gap: 8px; }
+      .pipeline-step { flex: 1 1 calc(50% - 8px); min-width: 120px; }
+      .pipeline-arrow { display: none; }
+    }
+
+    /* ── Page hero inner pages ── */
+    @media (max-width: 768px) {
+      .page-hero { padding: 110px 0 56px !important; }
+      .page-hero-inner { padding: 0 !important; }
+      .page-hero-inner h1 { font-size: clamp(1.9rem, 7vw, 2.8rem) !important; }
+    }
+
+    /* ── Footer ── */
+    @media (max-width: 768px) {
+      .footer-top { grid-template-columns: 1fr !important; gap: 36px !important; }
+      .footer-bottom { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
+    }
+
+    /* ── Sticky bar ── */
+    @media (max-width: 540px) {
+      .sticky-bar { gap: 10px; padding: 9px 16px; }
+      .sticky-bar-text { display: none; }
+      .sticky-bar { justify-content: center; }
+    }
+
+    /* ── Featured client card ── */
+    @media (max-width: 600px) {
+      .cl-featured { flex-direction: column !important; gap: 20px !important; padding: 28px 20px !important; }
+    }
+
+    /* ── Text overflow guard ── */
+    h1, h2, h3, h4, h5, p, li, span, a {
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+
+    /* ── Eyebrow pills: prevent wrapping oddly ── */
+    .eyebrow { flex-wrap: wrap; }
+
+    /* ── Why TFS proof stats ── */
+    @media (max-width: 600px) {
+      .why-proof { gap: 20px; flex-wrap: wrap; justify-content: center; }
+      .wstat-val { font-size: 2rem !important; }
+    }
+
+    /* ── Cards: prevent horizontal overflow ── */
+    .svc-card, .why-item, .cl-card, .testi-card, .hiw-step,
+    .approach-item, .founder-card, .feat-case-card, .step-card {
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+  
 `;
 
 const SCRIPT = `
@@ -886,6 +1049,8 @@ const About = () => {
     const prevColor = document.body.style.color;
     document.body.style.background = "#040404";
     document.body.style.color = "#f0ece0";
+    document.documentElement.style.overflowX = "hidden";
+    document.body.style.overflowX = "hidden";
 
     const styleEl = document.createElement("style");
     styleEl.setAttribute("data-tri-page", "tri-about");
@@ -907,6 +1072,8 @@ const About = () => {
       scriptEl?.remove();
       document.body.style.background = prevBg;
       document.body.style.color = prevColor;
+      document.documentElement.style.overflowX = "";
+      document.body.style.overflowX = "";
     };
   }, []);
 
@@ -928,6 +1095,7 @@ const About = () => {
     <div
       ref={rootRef}
       className="tri-about tri-page-fade"
+      style={{ overflowX: "hidden", maxWidth: "100vw" }}
       onClick={onClick}
       dangerouslySetInnerHTML={{ __html: HTML }}
     />
