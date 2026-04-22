@@ -1281,9 +1281,6 @@ const Services = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Scroll to top on page mount
-    window.scrollTo(0, 0);
-
     // Force black body background for full-bleed dark pages
     const prevBg = document.body.style.background;
     const prevColor = document.body.style.color;
@@ -1301,7 +1298,8 @@ const Services = () => {
     const t = window.setTimeout(() => {
       try {
         scriptEl = document.createElement("script");
-        scriptEl.text = SCRIPT;
+        // Wrap user script in IIFE+try so a single null deref doesn't blank the page
+        scriptEl.text = "(function(){try{\n" + SCRIPT + "\n}catch(e){console.error('tri page script error',e);}})();";
         document.body.appendChild(scriptEl);
       } catch (e) { console.error("page script error", e); }
     }, 0);
