@@ -103,3 +103,15 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* TriFactor page transition: smooth fade + slight rise on route change */
+@keyframes tri-page-fade-in {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.tri-page-fade {
+  animation: tri-page-fade-in 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tri-page-fade { animation: none; }
+}
