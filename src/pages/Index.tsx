@@ -1502,7 +1502,7 @@ const HTML = `
     <div class="container">
       <div class="nav-inner">
         <a href="/" class="nav-logo" aria-label="TriFactor Scaling">
-          <img src="./TFS-Logo-Transparent.png" alt="TriFactor Scaling" height="40">
+          <img src="/tfs-logo.png" alt="TriFactor Scaling" height="40">
         </a>
         <ul class="nav-links">
           <li><a href="/" class="nav-link active-nav">Overview</a></li>
@@ -2400,14 +2400,14 @@ const HTML = `
 
   <!-- ======================== FOOTER ======================== -->
   <footer>
-    <img src="./TFS-Logo-Transparent.png" alt="" class="footer-watermark" aria-hidden="true">
+    <img src="/tfs-logo.png" alt="" class="footer-watermark" aria-hidden="true">
     <div class="container footer-inner">
 
       <div class="footer-top">
 
         <!-- Brand -->
         <div class="footer-brand">
-          <img src="./TFS-Logo-Transparent.png" alt="TriFactor Scaling" class="footer-logo-img">
+          <img src="/tfs-logo.png" alt="TriFactor Scaling" class="footer-logo-img">
           <p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
           <a href="mailto:trifactorscaling@gmail.com" class="footer-contact-link">
             trifactorscaling@gmail.com →
