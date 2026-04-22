@@ -1,16 +1,2833 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useEffect, useRef } from "react";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
-  return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+const CSS = `
+    /* ======================== VARIABLES ======================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    .tri-home {
+      color-scheme: dark;
+      --gold:        #D4AF37;
+      --gold-light:  #E2C860;
+      --gold-dark:   #B8962A;
+      --gold-dim:    rgba(212,175,55,0.10);
+      --gold-glow:   rgba(212,175,55,0.22);
+      --gold-border: rgba(212,175,55,0.28);
+      --black:       #000000;
+      --surface:     #0F0F0F;
+      --surface-warm: #130F00;
+      --cta-bg:      #0B0800;
+      --card:        #161616;
+      --card-hover:  #1C1C1C;
+      --border:      #222222;
+      --border-mid:  #2E2E2E;
+      --white:       #FFFFFF;
+      --off-white:   #F2F0EB;
+      --gray:        #6B7280;
+      --gray-light:  #9CA3AF;
+      --fh: 'Plus Jakarta Sans', sans-serif;
+      --fb: 'Inter', sans-serif;
+    } .tri-home { scroll-behavior: smooth; }
+
+    /* Golden scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold-light); }
+    * { scrollbar-width: thin; scrollbar-color: var(--gold) var(--black); } .tri-home {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--fb);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ======================== TYPOGRAPHY ======================== */
+    h1, h2, h3, h4 { font-family: var(--fh); line-height: 1.08; letter-spacing: -0.025em; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--fb);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .eline { width: 26px; height: 1.5px; background: var(--gold); flex-shrink: 0; }
+
+    /* ======================== LAYOUT ======================== */
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 28px; }
+    section { padding: 100px 0; }
+
+    /* ======================== BUTTONS ======================== */
+    .btn-gold {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold); color: var(--black);
+      font-family: var(--fh); font-weight: 700; font-size: 0.86rem; letter-spacing: 0.02em;
+      padding: 15px 32px; border: none; border-radius: 2px; cursor: pointer;
+      text-decoration: none;
+      transition: background 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+    }
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 10px 32px var(--gold-glow); }
+
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--white);
+      font-family: var(--fh); font-weight: 600; font-size: 0.86rem; letter-spacing: 0.02em;
+      padding: 15px 32px; border: 1px solid var(--border-mid); border-radius: 2px;
+      cursor: pointer; text-decoration: none;
+      transition: border-color 0.22s ease, color 0.22s ease;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+    .btn-apply {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; background: transparent; color: var(--gold);
+      font-family: var(--fh); font-weight: 700; font-size: 0.8rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 14px 28px; border: 1px solid var(--gold-border); border-radius: 2px;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
+    }
+    .btn-apply:hover { background: var(--gold); color: var(--black); box-shadow: 0 6px 24px var(--gold-glow); }
+    .btn-apply-fill { background: var(--gold); color: var(--black); border-color: var(--gold); }
+    .btn-apply-fill:hover { background: var(--gold-light); }
+
+    /* ======================== REVEAL ======================== */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left  { opacity: 0; transform: translateX(-30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right { opacity: 0; transform: translateX(30px);  transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    /* ======================== STICKY CTA BAR ======================== */
+    .sticky-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 95;
+      background: rgba(0,0,0,0.95); backdrop-filter: blur(20px);
+      border-top: 1px solid var(--gold-border);
+      padding: 14px 28px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .sticky-bar.show { transform: translateY(0); }
+    .sticky-bar-text {
+      font-family: var(--fh); font-size: 0.88rem; font-weight: 600; color: var(--off-white);
+    }
+    .sticky-bar-text span { color: var(--gold); }
+    @media (max-width: 600px) { .sticky-bar-text { display: none; } .sticky-bar { justify-content: center; } }
+
+    /* ======================== NAV ======================== */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 20px 0; border-bottom: 1px solid transparent;
+      transition: background 0.3s ease, border-color 0.3s ease, padding 0.3s ease;
+    }
+    #navbar.scrolled {
+      background: rgba(0,0,0,0.94); backdrop-filter: blur(24px);
+      border-color: var(--border); padding: 13px 0;
+    }
+    .nav-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 0; }
+    .nav-logo { display: flex; align-items: center; text-decoration: none; }
+    .nav-logo img {
+      height: 56px; width: auto; object-fit: contain;
+      filter: none; /* prevent browser dark-mode inversion */
+    }
+
+    .nav-links { display: flex; align-items: center; justify-content: center; gap: 36px; list-style: none; }
+    .nav-cta-wrap { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+    .nav-links a {
+      font-family: var(--fb); font-size: 0.82rem; font-weight: 500;
+      color: var(--gray-light); text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--white); transition: all 0.3s; }
+
+    .mobile-menu {
+      display: none; position: fixed; top: 61px; left: 0; right: 0;
+      background: rgba(0,0,0,0.97); backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 28px; z-index: 99; flex-direction: column;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--fb); font-size: 0.95rem; font-weight: 500;
+      color: var(--white); text-decoration: none;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .mobile-menu a:last-child { border-bottom: none; color: var(--gold); padding-top: 18px; }
+
+    @media (max-width: 768px) { .nav-links, .nav-cta { display: none; } .hamburger { display: flex; } }
+
+    /* ======================== HERO ======================== */
+    #hero {
+      min-height: 88vh; display: flex; align-items: center;
+      padding-top: 90px; position: relative; overflow: hidden;
+    }
+
+    /* Canvas particles */
+    #hero-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* Subtle radial glows */
+    .hero-glow-a {
+      position: absolute; top: -15%; right: -8%; width: 60vw; height: 60vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,175,55,0.055) 0%, transparent 65%);
+      pointer-events: none; z-index: 0;
+    }
+    .hero-glow-b {
+      position: absolute; bottom: -15%; left: -8%; width: 44vw; height: 44vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,175,55,0.025) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* Horizontal hairlines */
+    .hero-lines {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 80px 80px;
+      opacity: 0.35;
+      mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 15%, transparent 72%);
+    }
+
+    .hero-inner { position: relative; z-index: 2; padding: 60px 0 110px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    #hero .container { max-width: 100%; padding: 0 25vw; text-align: center; }
+    @media (max-width: 900px) { #hero .container { padding: 0 8vw; } }
+    @media (max-width: 600px) { #hero .container { padding: 0 5vw; } }
+
+    .hero-eyebrow-wrap {
+      margin-bottom: 38px;
+      opacity: 0; animation: fadeUp 0.7s ease 0.1s forwards;
+    }
+
+    /* HEADLINE */
+    .hero-headline {
+      font-family: var(--fh);
+      font-size: clamp(2.6rem, 6.8vw, 6.5rem);
+      font-weight: 800;
+      line-height: 0.96;
+      letter-spacing: -0.03em;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.75s ease 0.25s forwards;
+    }
+
+    /* Rotating phrase container */
+    .rotate-wrap {
+      display: inline-block;
+      white-space: nowrap;
+      color: var(--gold);
+    }
+    .rotate-word {
+      display: inline;
+      white-space: nowrap;
+      transition: opacity 0.38s ease;
+    }
+    .rotate-word.exit  { opacity: 0; }
+    .rotate-word.enter { opacity: 0; }
+    .rotate-word.show  { opacity: 1; }
+
+    /* Gold shimmer on hero text */
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position:  200% center; }
+    }
+    .gold-shimmer {
+      background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 40%, #fff8d6 55%, var(--gold-light) 70%, var(--gold) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+    }
+
+    .hero-sub {
+      font-size: 0.97rem; color: var(--gray-light);
+      max-width: 490px; line-height: 1.78; font-weight: 400; margin: 0 auto 38px;
+      opacity: 0; animation: fadeUp 0.75s ease 0.4s forwards;
+    }
+
+    .hero-actions {
+      display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 72px;
+      opacity: 0; animation: fadeUp 0.75s ease 0.55s forwards;
+    }
+
+    .hero-stats {
+      display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 0.75s ease 0.7s forwards;
+    }
+    .hstat {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 0 36px;
+      border-right: 1px solid var(--border-mid);
+      text-align: center;
+    }
+    .hstat:first-child { padding-left: 0; }
+    .hstat:last-child { border-right: none; padding-right: 0; }
+    .hstat-val {
+      font-family: var(--fh); font-weight: 800; font-size: 1.7rem;
+      color: var(--gold); letter-spacing: -0.03em; line-height: 1;
+      display: inline-block;
+    }
+    .hstat-lbl { font-size: 0.74rem; color: var(--gray); font-weight: 400; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ======================== MARQUEE ======================== */
+    .marquee-wrap {
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      background: var(--black); overflow: hidden; padding: 22px 0;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%);
+    }
+    .marquee-track {
+      display: flex; animation: marquee 44s linear infinite; width: max-content;
+      will-change: transform; backface-visibility: hidden; transform: translateZ(0);
+    }
+    .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+    .marquee-item {
+      display: flex; align-items: center; gap: 24px; padding: 0 36px;
+      font-family: var(--fb); font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); white-space: nowrap;
+    }
+    .marquee-item:hover span { color: var(--gold-light); transition: color 0.2s ease; }
+    .marquee-gem {
+      width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; opacity: 0.7;
+    }
+    @keyframes marquee { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
+
+    /* ======================== SECTION: WHAT WE DO ======================== */
+    #what-we-do { background: var(--black); border-bottom: 1px solid var(--border); padding: 120px 0; }
+
+    .wwd-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+    }
+    .wwd-left h2 {
+      font-size: clamp(1.9rem, 3.6vw, 2.85rem); font-weight: 800;
+      margin: 20px 0 28px;
+    }
+    .wwd-left p { font-size: 0.95rem; color: var(--gray-light); line-height: 1.85; margin-bottom: 14px; }
+
+    .wwd-pillars { display: flex; flex-direction: column; }
+    .pillar { display: flex; gap: 20px; padding: 28px 0; border-bottom: 1px solid var(--border); }
+    .pillar:first-child { border-top: 1px solid var(--border); }
+    .pillar-num {
+      font-family: var(--fh); font-size: 0.67rem; font-weight: 700;
+      letter-spacing: 0.14em; color: var(--gold); padding-top: 3px; flex-shrink: 0; width: 26px;
+    }
+    .pillar-content h4 { font-family: var(--fh); font-weight: 700; font-size: 0.98rem; margin-bottom: 7px; }
+    .pillar-content p  { font-size: 0.86rem; color: var(--gray-light); line-height: 1.7; }
+
+    @media (max-width: 900px) { .wwd-grid { grid-template-columns: 1fr; gap: 56px; } }
+
+    /* ======================== SECTION: SYSTEMS DEMO ======================== */
+    #systems-demo {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 88px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Subtle grid background */
+    #systems-demo::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    /* Radial vignette to soften grid edges */
+    #systems-demo .sdemo-vignette {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background: radial-gradient(ellipse 80% 75% at 50% 45%, transparent 25%, var(--surface) 90%);
+    }
+    #systems-demo .container { position: relative; z-index: 1; }
+
+    .sdemo-header { text-align: center; margin-bottom: 52px; }
+    .sdemo-header h2 { font-size: clamp(1.7rem, 3.2vw, 2.55rem); font-weight: 800; margin-top: 16px; line-height: 1.12; }
+    .sdemo-header p { font-size: 0.92rem; color: var(--gray-light); max-width: 400px; margin: 16px auto 0; line-height: 1.72; }
+
+    /* ---- TAB NAVIGATION (centered inline) ---- */
+    .demo-nav {
+      display: flex; justify-content: center;
+      overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      margin-bottom: 0;
+    }
+    .demo-nav::-webkit-scrollbar { display: none; }
+    /* Inner wrap: inline-block so it shrinks to content width — makes tabs truly centered */
+    .demo-tabs-wrap {
+      display: inline-flex; flex-direction: column; flex-shrink: 0;
+      border: 1px solid var(--border); border-bottom: none;
+      background: #080808; position: relative; overflow: hidden;
+    }
+    .demo-tabs { display: flex; }
+    /* Sliding gold indicator bar */
+    .demo-tab-indicator {
+      position: absolute; bottom: 0; left: 0; height: 2px; width: 0;
+      background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold-light) 50%, var(--gold-dark) 100%);
+      background-size: 200% 100%;
+      animation: indicator-shimmer 2.4s linear infinite;
+      transition: left 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+                  width 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 5;
+      pointer-events: none;
+    }
+    @keyframes indicator-shimmer {
+      0%   { background-position: 0% 0%; }
+      100% { background-position: 200% 0%; }
+    }
+    .demo-tab {
+      flex-shrink: 0; background: none; border: none;
+      padding: 20px 30px 18px; cursor: pointer; position: relative;
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      transition: background 0.22s ease; min-width: 0;
+    }
+    .demo-tab + .demo-tab::before {
+      content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
+      width: 1px; background: var(--border);
+    }
+    .demo-tab-num {
+      font-family: var(--fh); font-size: 0.58rem; font-weight: 800;
+      letter-spacing: 0.16em; color: var(--border-mid);
+      transition: color 0.22s ease; line-height: 1;
+    }
+    .demo-tab-label {
+      font-family: var(--fb); font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.07em; text-transform: uppercase; color: var(--gray);
+      white-space: nowrap; transition: color 0.22s ease;
+    }
+    .demo-tab:hover { background: rgba(255,255,255,0.025); }
+    .demo-tab:hover .demo-tab-num { color: var(--gold); }
+    .demo-tab:hover .demo-tab-label { color: var(--off-white); }
+    .demo-tab.active .demo-tab-num { color: var(--gold); }
+    .demo-tab.active .demo-tab-label { color: var(--white); }
+
+    /* ---- PANEL STATUS BAR ---- */
+    .demo-panel-status {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 24px; border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .demo-status-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--gold);
+      flex-shrink: 0; animation: status-pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes status-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(212,175,55,0.55); }
+      50%       { box-shadow: 0 0 0 5px rgba(212,175,55,0); }
+    }
+    .demo-status-text { font-family: var(--fb); font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); flex: 1; min-width: 0; }
+    .demo-status-name { color: var(--off-white); }
+    .demo-status-live {
+      font-family: var(--fb); font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ---- PANEL CONTAINER ---- */
+    .demo-panel-wrap {
+      border: 1px solid var(--border); border-top: none;
+      background: linear-gradient(165deg, #131313 0%, #161616 55%, #111 100%);
+      min-height: 360px; overflow: hidden; position: relative;
+    }
+    /* Animated loop progress bar — thin line at top of panel */
+    .demo-loop-bar {
+      position: absolute; top: 0; left: 0; height: 2px; width: 0%;
+      background: linear-gradient(90deg, rgba(212,175,55,0.25) 0%, var(--gold) 50%, rgba(212,175,55,0.25) 100%);
+      z-index: 4; pointer-events: none; transition: none;
+    }
+    .demo-panel {
+      display: none; padding: 44px 40px;
+      animation: panel-in 0.35s ease forwards;
+    }
+    .demo-panel.active { display: block; }
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---- SHARED PHONE FRAME ---- */
+    .dp-phone-wrap { display: flex; justify-content: center; flex-shrink: 0; }
+    .dp-phone {
+      width: 178px; background: #0C0C0C; border: 2px solid #2A2A2A; border-radius: 28px;
+      padding: 10px 7px 14px;
+      box-shadow: 0 0 0 1px #181818, 0 20px 56px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.04);
+      position: relative; flex-shrink: 0;
+    }
+    .dp-phone::before {
+      content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+      top: 9px; width: 52px; height: 9px; background: #111; border-radius: 0 0 7px 7px;
+    }
+    .dp-screen {
+      background: #111; border-radius: 18px; min-height: 230px; overflow: hidden;
+      padding: 26px 7px 10px; display: flex; flex-direction: column;
+    }
+    .dp-status {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 6px 7px; font-size: 0.5rem; color: var(--gray); font-family: var(--fb); font-weight: 600;
+    }
+    .dp-body { flex: 1; padding: 0 3px; overflow: hidden; }
+
+    /* SMS styles (shared) */
+    .sms-in {
+      background: #1C1C1E; color: #E5E5EA; border-radius: 10px 10px 10px 2px;
+      padding: 8px 10px; font-size: 0.57rem; line-height: 1.55; font-family: var(--fb);
+      margin-bottom: 5px; display: block;
+    }
+    .sms-out {
+      background: #0A84FF; color: #fff; border-radius: 10px 10px 2px 10px;
+      padding: 8px 10px; font-size: 0.57rem; line-height: 1.55; font-family: var(--fb);
+      margin-left: auto; display: block; max-width: 85%;
+    }
+    .sms-label { font-size: 0.48rem; color: var(--gray); font-family: var(--fb); text-align: center; margin: 4px 0 6px; display: block; }
+    .sms-gold { color: var(--gold); font-weight: 700; }
+
+    /* ============================================================
+       TAB 1 — LEAD ALERT
+    ============================================================ */
+    .la-grid {
+      display: grid; grid-template-columns: 1fr 70px 1fr;
+      align-items: center; max-width: 760px; margin: 0 auto;
+    }
+    .la-form {
+      background: rgba(255,255,255,0.025); border: 1px solid var(--border-mid);
+      padding: 22px 20px 16px; border-radius: 3px;
+    }
+    .la-form-label {
+      font-family: var(--fb); font-size: 0.57rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 6px;
+    }
+    .la-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: la-dot-pulse 6s ease-in-out infinite; }
+    @keyframes la-dot-pulse { 0%,34%,100% { box-shadow: none; } 38% { box-shadow: 0 0 0 4px rgba(212,175,55,0.25); } }
+    .la-field { margin-bottom: 8px; }
+    .la-field-lbl { font-size: 0.55rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 3px; }
+    .la-field-val {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border-mid); border-radius: 2px;
+      padding: 7px 10px; font-size: 0.75rem; color: var(--off-white); font-family: var(--fb);
+    }
+    .la-btn {
+      width: 100%; margin-top: 11px; background: var(--gold); color: var(--black);
+      font-family: var(--fh); font-weight: 700; font-size: 0.73rem;
+      padding: 10px; border: none; border-radius: 2px; cursor: default;
+      animation: la-submit 6s ease-in-out infinite;
+    }
+    @keyframes la-submit {
+      0%,32%,100% { background: var(--gold); color: var(--black); box-shadow: none; transform: scale(1); }
+      36%          { background: var(--gold-light); transform: scale(0.97); }
+      40%,90%      { background: var(--gold-light); color: var(--black); box-shadow: 0 0 22px rgba(212,175,55,0.35), 0 0 6px rgba(212,175,55,0.18); transform: scale(1); }
+    }
+    .la-connector { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+    .la-timing {
+      font-family: var(--fh); font-weight: 800; font-size: 0.8rem; color: var(--gold);
+      white-space: nowrap; opacity: 0; animation: la-timing-in 6s ease-in-out infinite;
+    }
+    @keyframes la-timing-in { 0%,38%,100%{opacity:0;} 44%,88%{opacity:1;} }
+    .la-arrow { display: flex; flex-direction: row; align-items: center; }
+    .la-arrow-line {
+      width: 34px; height: 1.5px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      opacity: 0; animation: la-arr 6s ease-in-out infinite;
+    }
+    .la-arrow-head {
+      width: 0; height: 0;
+      border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid var(--gold);
+      opacity: 0; animation: la-arr 6s ease-in-out infinite;
+    }
+    @keyframes la-arr { 0%,38%,100%{opacity:0;} 44%,88%{opacity:1;} }
+    .la-notif {
+      background: #1C1C1E; border-radius: 10px; padding: 10px; margin: 0 2px;
+      animation: la-notif-drop 6s ease-in-out infinite; transform: translateY(-100px); opacity: 0;
+    }
+    @keyframes la-notif-drop {
+      0%,42%   { transform: translateY(-100px); opacity: 0; }
+      48%      { transform: translateY(0);      opacity: 1; }
+      84%      { transform: translateY(0);      opacity: 1; }
+      90%,100% { transform: translateY(-100px); opacity: 0; }
+    }
+    .la-notif-top { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; }
+    .la-notif-icon {
+      width: 15px; height: 15px; background: var(--gold); border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.46rem; font-weight: 800; color: var(--black); font-family: var(--fh); flex-shrink: 0;
+    }
+    .la-notif-src { font-size: 0.53rem; color: #aaa; font-family: var(--fb); font-weight: 600; }
+    .la-notif-ts  { font-size: 0.49rem; color: #666; margin-left: auto; font-family: var(--fb); }
+    .la-notif-body { font-size: 0.56rem; color: #E5E5E5; font-family: var(--fb); line-height: 1.5; }
+    .la-notif-body .gh { color: var(--gold); font-weight: 600; }
+    .la-read {
+      text-align: right; margin-top: 4px; font-size: 0.49rem; color: var(--gold); font-family: var(--fb);
+      animation: la-read 6s ease-in-out infinite; opacity: 0;
+    }
+    @keyframes la-read { 0%,54%,88%,100%{opacity:0;} 60%,83%{opacity:1;} }
+
+    /* ============================================================
+       TAB 2 — FOLLOW-UP CHAIN
+    ============================================================ */
+    .fu-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: start; max-width: 800px; margin: 0 auto; }
+    .fu-steps { display: flex; flex-direction: column; }
+    .fu-step {
+      display: flex; gap: 14px; padding: 14px 0 14px 18px;
+      border-left: 2px solid var(--border); margin-left: 8px; position: relative;
+      opacity: 0.3; transition: opacity 0.4s ease, border-left-color 0.4s ease;
+    }
+    .fu-step::before {
+      content: ''; position: absolute; left: -7px; top: 17px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--card); border: 2px solid var(--border-mid);
+      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+    .fu-step:first-child { padding-top: 4px; }
+    .fu-step:first-child::before { top: 8px; }
+    .fu-step.lit { opacity: 1; border-left-color: rgba(212,175,55,0.6); }
+    .fu-step.lit::before { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 8px rgba(212,175,55,0.45); }
+    .fu-step-time { font-family: var(--fh); font-size: 0.64rem; font-weight: 700; color: var(--gold); white-space: nowrap; min-width: 58px; padding-top: 2px; }
+    .fu-step-info h4 { font-family: var(--fh); font-size: 0.83rem; font-weight: 700; margin-bottom: 2px; }
+    .fu-step-info p  { font-size: 0.75rem; color: var(--gray-light); line-height: 1.5; }
+    .fu-msg { opacity: 0; transform: translateY(6px); transition: opacity 0.38s ease, transform 0.38s ease; }
+    .fu-msg.vis { opacity: 1; transform: translateY(0); }
+    .fu-reply { opacity: 0; transform: translateY(6px); transition: opacity 0.38s ease 0.1s, transform 0.38s ease 0.1s; }
+    .fu-reply.vis { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       TAB 3 — CRM PIPELINE
+    ============================================================ */
+    .crm-layout { max-width: 860px; margin: 0 auto; }
+    .crm-lead-info { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .crm-lead-avatar {
+      width: 34px; height: 34px; background: var(--gold-dim); border: 1px solid var(--gold-border);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-family: var(--fh); font-size: 0.76rem; font-weight: 800; color: var(--gold); flex-shrink: 0;
+    }
+    .crm-lead-name { font-family: var(--fh); font-weight: 700; font-size: 0.9rem; }
+    .crm-lead-sub  { font-size: 0.7rem; color: var(--gray-light); }
+    .crm-progress  { flex: 1; min-width: 80px; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .crm-progress-fill {
+      height: 100%; background: linear-gradient(to right, var(--gold-dark), var(--gold)); border-radius: 2px;
+      width: 0%; transition: width 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .crm-board-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .crm-board {
+      display: grid; grid-template-columns: repeat(5, minmax(120px, 1fr));
+      gap: 1px; background: var(--border-mid); min-width: 580px;
+    }
+    .crm-stage { background: var(--black); padding: 14px 11px 52px; transition: background 0.4s ease; position: relative; min-height: 130px; }
+    .crm-stage.active-stage { background: rgba(212,175,55,0.04); }
+    .crm-stage-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding-bottom: 9px; border-bottom: 1px solid var(--border); }
+    .crm-stage-name { font-family: var(--fb); font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); transition: color 0.4s ease; }
+    .crm-stage.active-stage .crm-stage-name { color: var(--gold); }
+    .crm-stage-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border-mid); transition: background 0.4s ease, box-shadow 0.4s ease; flex-shrink: 0; }
+    .crm-stage.active-stage .crm-stage-dot { background: var(--gold); box-shadow: 0 0 6px rgba(212,175,55,0.5); }
+    .crm-card {
+      position: absolute; bottom: 10px; left: 8px; right: 8px;
+      background: rgba(212,175,55,0.07); border: 1px solid rgba(212,175,55,0.18);
+      padding: 9px; border-radius: 3px;
+      opacity: 0; transform: translateY(5px); transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .crm-stage.active-stage .crm-card { opacity: 1; transform: translateY(0); }
+    .crm-card-name { font-family: var(--fh); font-weight: 700; font-size: 0.7rem; margin-bottom: 2px; }
+    .crm-card-sub  { font-size: 0.59rem; color: var(--gray-light); line-height: 1.4; }
+    .crm-card-badge { display: inline-block; margin-top: 5px; font-size: 0.5rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); background: rgba(212,175,55,0.1); padding: 2px 6px; border-radius: 2px; }
+
+    /* ============================================================
+       TAB 4 — BOOKING SYSTEM
+    ============================================================ */
+    .bk-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center; max-width: 760px; margin: 0 auto; }
+    .bk-steps { display: flex; flex-direction: column; gap: 8px; }
+    .bk-step {
+      display: flex; gap: 14px; align-items: flex-start; padding: 15px 16px;
+      border: 1px solid var(--border); border-radius: 2px;
+      opacity: 0.3; transition: opacity 0.4s ease, border-color 0.4s ease, background 0.4s ease;
+    }
+    .bk-step.lit { opacity: 1; border-color: var(--gold-border); background: rgba(212,175,55,0.04); }
+    .bk-step-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--border-mid); display: flex; align-items: center; justify-content: center;
+      font-family: var(--fh); font-size: 0.6rem; font-weight: 800; color: var(--gray);
+      flex-shrink: 0; transition: background 0.4s ease, color 0.4s ease;
+    }
+    .bk-step.lit .bk-step-num { background: var(--gold); color: var(--black); }
+    .bk-step-content h4 { font-family: var(--fh); font-weight: 700; font-size: 0.83rem; margin-bottom: 2px; }
+    .bk-step-content p  { font-size: 0.75rem; color: var(--gray-light); line-height: 1.5; }
+    .bk-msg { opacity: 0; transform: translateY(5px); transition: opacity 0.35s ease, transform 0.35s ease; }
+    .bk-msg.vis { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       TAB 5 — REVIEW REQUEST
+    ============================================================ */
+    .rv-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center; max-width: 760px; margin: 0 auto; }
+    .rv-left { display: flex; flex-direction: column; gap: 12px; }
+    .rv-trigger {
+      border: 1px solid var(--border); padding: 13px 15px; border-radius: 3px;
+      display: flex; align-items: center; gap: 12px;
+      opacity: 0.3; transition: opacity 0.4s ease, border-color 0.4s ease;
+    }
+    .rv-trigger.lit { opacity: 1; border-color: var(--gold-border); }
+    .rv-trigger-icon { width: 30px; height: 30px; background: rgba(62,207,110,0.12); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; }
+    .rv-trigger-text h4 { font-family: var(--fh); font-weight: 700; font-size: 0.8rem; }
+    .rv-trigger-text p  { font-size: 0.71rem; color: var(--gray-light); line-height: 1.45; }
+    .rv-stars-wrap { padding: 14px; border: 1px solid var(--border); border-radius: 3px; text-align: center; opacity: 0.25; transition: opacity 0.4s ease; }
+    .rv-stars-wrap.lit { opacity: 1; }
+    .rv-stars-label { font-size: 0.63rem; color: var(--gray); margin-bottom: 10px; font-family: var(--fb); display: block; }
+    .rv-stars { display: flex; gap: 5px; justify-content: center; }
+    .rv-star { font-size: 1.45rem; color: var(--border-mid); transition: color 0.25s ease, transform 0.25s ease; display: inline-block; }
+    .rv-star.lit { color: #F5C518; transform: scale(1.18); }
+    .rv-result {
+      border: 1px solid rgba(212,175,55,0.22); padding: 13px 15px; border-radius: 3px;
+      background: rgba(212,175,55,0.04);
+      opacity: 0; transform: translateY(6px); transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .rv-result.vis { opacity: 1; transform: translateY(0); }
+    .rv-result-stars { font-size: 0.82rem; color: #F5C518; letter-spacing: 2px; margin-bottom: 5px; }
+    .rv-result-quote { font-size: 0.71rem; color: var(--gray-light); line-height: 1.55; font-style: italic; }
+    .rv-result-name  { font-family: var(--fh); font-weight: 700; font-size: 0.7rem; margin-top: 6px; color: var(--off-white); }
+    .rv-msg { opacity: 0; transform: translateY(5px); transition: opacity 0.35s ease, transform 0.35s ease; }
+    .rv-msg.vis { opacity: 1; transform: translateY(0); }
+
+    /* ---- Caption ---- */
+    .sdemo-caption { text-align: center; margin-top: 32px; font-size: 0.78rem; color: var(--gray); font-style: italic; }
+    .sdemo-caption strong { color: var(--gold); font-style: normal; }
+
+    /* ============================================================
+       RESPONSIVE — SYSTEMS DEMO
+    ============================================================ */
+    @media (max-width: 820px) {
+      .la-grid { grid-template-columns: 1fr; gap: 20px; }
+      .la-connector { flex-direction: row; justify-content: center; gap: 8px; }
+      .la-arrow { flex-direction: column; align-items: center; }
+      .la-arrow-line { width: 1.5px; height: 36px; background: linear-gradient(to bottom, transparent, var(--gold), transparent); }
+      .la-arrow-head { border-top: none; border-bottom: 7px solid var(--gold); border-left: 5px solid transparent; border-right: 5px solid transparent; }
+    }
+    @media (max-width: 700px) {
+      .demo-panel { padding: 28px 18px; }
+      .fu-layout, .bk-layout, .rv-layout { grid-template-columns: 1fr; gap: 24px; }
+      .dp-phone-wrap { order: -1; }
+    }
+    @media (max-width: 580px) {
+      .demo-tab { padding: 15px 18px 13px; }
+      .demo-tab-label { font-size: 0.64rem; }
+    }
+    @media (max-width: 420px) {
+      .demo-tab { padding: 13px 13px 11px; }
+      .demo-tab-num { font-size: 0.54rem; }
+      .demo-tab-label { font-size: 0.6rem; }
+    }
+    @media (max-width: 400px) {
+      .dp-phone { width: 155px; }
+      .demo-tab { padding: 12px 10px 10px; }
+    }
+
+    /* ======================== SECTION: HOW IT WORKS ======================== */
+    #how-it-works { background: var(--black); border-bottom: 1px solid var(--border); padding: 110px 0; }
+
+    .hiw-head { margin-bottom: 80px; }
+    .hiw-head h2 { font-size: clamp(1.9rem, 3.6vw, 2.85rem); font-weight: 800; margin-top: 18px; max-width: 520px; }
+
+    /* Horizontal 3-step layout with ghost numbers */
+    .hiw-steps {
+      display: grid;
+      grid-template-columns: 1fr 56px 1fr 56px 1fr;
+      align-items: start;
+    }
+    .hiw-step { position: relative; }
+    .hiw-num-ghost {
+      font-family: var(--fh); font-size: clamp(4.5rem, 9vw, 8rem);
+      font-weight: 800; color: var(--gold); opacity: 0.055;
+      line-height: 1; letter-spacing: -0.06em;
+      margin-bottom: -2rem; display: block;
+      user-select: none; pointer-events: none;
+    }
+    .hiw-step h3 {
+      font-family: var(--fh); font-size: 1.22rem; font-weight: 800;
+      margin-bottom: 14px; position: relative; z-index: 1;
+    }
+    .hiw-step p {
+      font-size: 0.88rem; color: var(--gray-light);
+      line-height: 1.78; position: relative; z-index: 1;
+    }
+    .step-badge {
+      display: inline-block; margin-top: 22px; position: relative; z-index: 1;
+      background: var(--gold-dim); color: var(--gold);
+      font-family: var(--fb); font-size: 0.65rem; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px;
+    }
+    /* Arrow connector between steps */
+    .hiw-connector {
+      display: flex; flex-direction: column; align-items: center;
+      padding-top: 4.8rem; gap: 4px;
+    }
+    .hiw-conn-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, transparent, var(--border-mid) 50%, transparent);
+    }
+    .hiw-conn-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--gold); opacity: 0.28;
+    }
+
+    @media (max-width: 820px) {
+      .hiw-steps { grid-template-columns: 1fr; }
+      .hiw-connector {
+        flex-direction: row; padding-top: 0; padding: 16px 0;
+        justify-content: flex-start; padding-left: 24px;
+      }
+      .hiw-conn-line {
+        width: 40px; height: 1px;
+        background: linear-gradient(to right, transparent, var(--border-mid) 50%, transparent);
+      }
+    }
+
+    /* ======================== SECTION: SERVICES ======================== */
+    #services {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 120px 0;
+      position: relative;
+    }
+    #services::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--gold-light) 50%, var(--gold) 70%, transparent 100%);
+      opacity: 0.7;
+    }
+
+    .svc-header { text-align: center; margin-bottom: 68px; }
+    .svc-header h2 { font-size: clamp(1.9rem, 3.6vw, 2.85rem); font-weight: 800; margin-top: 18px; }
+    .svc-header p {
+      margin-top: 16px; font-size: 0.94rem; color: var(--gray-light);
+      max-width: 440px; margin-left: auto; margin-right: auto; line-height: 1.75;
+    }
+
+    .svc-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1px; background: var(--border); border: 1px solid var(--border);
+    }
+    .svc-card {
+      background: var(--black); padding: 48px 34px;
+      display: flex; flex-direction: column; position: relative;
+      transition: background 0.25s ease;
+    }
+    .svc-card:hover { background: #030303; }
+
+    /* Animated gold border on featured card */
+    .svc-card.featured {
+      background: #090900;
+      border: none;
+      position: relative;
+    }
+    .svc-card.featured::before {
+      content: ''; position: absolute; inset: 0;
+      border: 1px solid var(--gold-border);
+      pointer-events: none;
+      transition: border-color 0.3s ease;
+    }
+    .svc-card.featured:hover::before { border-color: var(--gold); }
+
+    .svc-badge {
+      position: absolute; top: 0; left: 0; right: 0;
+      background: var(--gold); color: var(--black);
+      font-family: var(--fb); font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.2em; text-align: center; padding: 6px;
+    }
+    .svc-card.featured { padding-top: 58px; }
+
+    .svc-tier {
+      font-family: var(--fb); font-size: 0.67rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 10px;
+    }
+    .svc-card.featured .svc-tier { color: var(--gold); }
+
+    .svc-name {
+      font-family: var(--fh); font-size: 1.55rem; font-weight: 800;
+      margin-bottom: 8px; letter-spacing: -0.02em;
+    }
+    .svc-target {
+      font-size: 0.83rem; color: var(--gray-light); line-height: 1.6;
+      margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border);
+    }
+    .svc-features { list-style: none; display: flex; flex-direction: column; gap: 13px; flex: 1; margin-bottom: 36px; }
+    .svc-features li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.86rem; color: var(--gray-light); line-height: 1.45;
+    }
+    .svc-check {
+      color: var(--gold); font-size: 0.65rem; font-weight: 700;
+      flex-shrink: 0; margin-top: 3px; letter-spacing: 0;
+    }
+
+    .svc-note { text-align: center; margin-top: 44px; font-size: 0.84rem; color: var(--gray); font-style: italic; }
+    .svc-note a { color: var(--gold); text-decoration: none; }
+
+    @media (max-width: 900px) {
+      .svc-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; background: transparent; border: none; }
+      .svc-card { border: 1px solid var(--border); }
+      .svc-card.featured { border: 1px solid var(--gold-border); }
+      .svc-card.featured::before { display: none; }
+    }
+
+    /* ======================== SECTION: WHY TRIFACTOR ======================== */
+    #why-tfs { background: var(--surface-warm); border-bottom: 1px solid var(--border); padding: 120px 0; }
+
+    /* Centered statement block */
+    .why-statement { text-align: center; max-width: 680px; margin: 0 auto 60px; }
+    .why-statement h2 { font-size: clamp(2.4rem, 5vw, 4.2rem); font-weight: 800; margin: 20px 0 24px; line-height: 1.0; }
+    .why-statement > p { font-size: 0.95rem; color: var(--gray-light); line-height: 1.85; }
+
+    /* Stat row — centered under statement */
+    .why-proof { display: flex; justify-content: center; gap: 56px; flex-wrap: wrap; margin-bottom: 72px; }
+    .wstat { display: flex; flex-direction: column; gap: 4px; text-align: center; }
+    .wstat-val {
+      font-family: var(--fh); font-size: 2.9rem; font-weight: 800;
+      color: var(--gold); letter-spacing: -0.03em; line-height: 1;
+    }
+    .wstat-lbl { font-size: 0.76rem; color: var(--gray); }
+
+    /* 5-column horizontal items grid */
+    .why-items {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 1px; background: var(--border); border: 1px solid var(--border);
+    }
+    .why-item {
+      background: rgba(0,0,0,0.5);
+      padding: 28px 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 14px;
+      transition: background 0.3s ease;
+      cursor: default;
+    }
+    .why-item:hover { background: rgba(0,0,0,0.82); }
+
+    /* Icon containers */
+    .wi-icon {
+      width: 38px; height: 38px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--gold-dim); border: 1px solid var(--gold-border); border-radius: 3px;
+      position: relative; overflow: hidden;
+    }
+
+    /* --- ICON 1: Lightning bolt (We Move Fast) --- */
+    .icon-bolt svg { transition: filter 0.3s ease; }
+    .why-item:hover .icon-bolt svg { filter: drop-shadow(0 0 6px var(--gold)); }
+    @keyframes bolt-zap {
+      0%,85%   { opacity: 0.7; }
+      88%      { opacity: 1; }
+      91%      { opacity: 0.4; }
+      94%      { opacity: 1; }
+      100%     { opacity: 0.7; }
+    }
+    .icon-bolt svg { animation: bolt-zap 3.5s ease infinite; }
+
+    /* --- ICON 2: Target rings (Skin in the Game) --- */
+    @keyframes ring-pulse {
+      0%,100% { r: 6; opacity: 0.3; }
+      50%     { r: 9; opacity: 0.8; }
+    }
+    @keyframes ring-pulse2 {
+      0%,100% { r: 10; opacity: 0.15; }
+      50%     { r: 13; opacity: 0.5; }
+    }
+    .icon-target .ring1 { animation: ring-pulse  2s ease-in-out infinite; }
+    .icon-target .ring2 { animation: ring-pulse2 2s ease-in-out 0.4s infinite; }
+
+    /* --- ICON 3: Stacked bars (Enterprise Stack) --- */
+    @keyframes layer-lift {
+      0%,60%,100% { transform: translateY(0); }
+      30%         { transform: translateY(-2.5px); }
+    }
+    .icon-stack .layer1 { animation: layer-lift 2.4s ease-in-out 0s infinite; }
+    .icon-stack .layer2 { animation: layer-lift 2.4s ease-in-out 0.2s infinite; }
+    .icon-stack .layer3 { animation: layer-lift 2.4s ease-in-out 0.4s infinite; }
+
+    /* --- ICON 4: Bar chart growing (Full Transparency) --- */
+    @keyframes bar-grow {
+      0%,100% { transform: scaleY(1); }
+      50%     { transform: scaleY(1.35); }
+    }
+    .icon-chart .bar1 { transform-origin: bottom; animation: bar-grow 2s ease-in-out 0s infinite; }
+    .icon-chart .bar2 { transform-origin: bottom; animation: bar-grow 2s ease-in-out 0.25s infinite; }
+    .icon-chart .bar3 { transform-origin: bottom; animation: bar-grow 2s ease-in-out 0.5s infinite; }
+
+    /* --- ICON 5: Circular arrows (Systems Compound) --- */
+    @keyframes spin-cw  { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .icon-cycle .spin-group { transform-origin: 50% 50%; animation: spin-cw 4s linear infinite; }
+
+    .wi-title { font-family: var(--fh); font-weight: 700; font-size: 0.88rem; margin-bottom: 4px; }
+    .wi-desc  { font-size: 0.78rem; color: var(--gray-light); line-height: 1.58; }
+
+    @media (max-width: 1000px) { .why-items { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 640px)  { .why-items { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ======================== SECTION: CLIENTS ======================== */
+    #clients { background: var(--black); border-bottom: 1px solid var(--border); padding: 80px 0; }
+
+    .cl-header { margin-bottom: 52px; }
+    .cl-header h2 { font-size: clamp(1.9rem, 3.6vw, 2.85rem); font-weight: 800; margin-top: 18px; }
+    .cl-header p  { margin-top: 12px; font-size: 0.92rem; color: var(--gray-light); max-width: 460px; }
+
+    /* Featured wide card */
+    .cl-featured {
+      border: 1px solid var(--gold-border);
+      background: linear-gradient(135deg, rgba(212,175,55,0.05) 0%, rgba(0,0,0,0) 55%);
+      padding: 44px 52px; margin-bottom: 1px;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 52px;
+      transition: background 0.3s ease; position: relative; overflow: hidden;
+    }
+    .cl-featured:hover { background: linear-gradient(135deg, rgba(212,175,55,0.08) 0%, rgba(0,0,0,0) 55%); }
+    .clf-tag {
+      position: absolute; top: 0; right: 0;
+      background: var(--gold); color: var(--black);
+      font-family: var(--fb); font-size: 0.55rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; padding: 5px 14px;
+    }
+    .clf-body { flex: 1; min-width: 0; }
+    .clf-name { font-family: var(--fh); font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .clf-type {
+      font-size: 0.67rem; color: var(--gold); font-family: var(--fb);
+      font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 16px;
+    }
+    .clf-desc { font-size: 0.93rem; color: var(--gray-light); line-height: 1.74; margin-bottom: 22px; max-width: 560px; }
+    .clf-link {
+      font-family: var(--fh); font-size: 0.8rem; font-weight: 700;
+      color: var(--gold); text-decoration: none; letter-spacing: 0.04em;
+      transition: color 0.2s ease;
+    }
+    .clf-link:hover { color: var(--gold-light); }
+
+    /* 5-col compact row */
+    .cl-row {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 1px; background: var(--border); border: 1px solid var(--border); border-top: none;
+    }
+    .cl-card { background: var(--card); padding: 28px 24px; transition: background 0.25s ease; }
+    .cl-card:hover { background: var(--card-hover); }
+    .cl-name { font-family: var(--fh); font-weight: 800; font-size: 0.98rem; margin-bottom: 5px; }
+    .cl-type {
+      font-size: 0.63rem; color: var(--gold); font-family: var(--fb);
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .cl-desc { font-size: 0.8rem; color: var(--gray-light); line-height: 1.65; }
+
+    @media (max-width: 900px)  { .cl-row { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 600px)  { .cl-row { grid-template-columns: repeat(2, 1fr); } .cl-featured { flex-direction: column; gap: 20px; padding: 32px 28px; } .clf-name { font-size: 1.7rem; } }
+
+    /* ======================== SECTION: TESTIMONIALS ======================== */
+    #testimonials {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 0;
+    }
+
+    /* Featured (large) quote */
+    .testi-featured {
+      background: rgba(0,0,0,0.45);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      padding: 52px 60px 44px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s ease;
+    }
+    .testi-featured:hover { border-color: var(--gold); }
+    .testi-featured::before {
+      content: '\\201C';
+      position: absolute;
+      top: -10px; right: 32px;
+      font-size: 10rem;
+      font-family: Georgia, serif;
+      color: var(--gold);
+      opacity: 0.06;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .testi-quote-large {
+      font-family: var(--fh);
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      line-height: 1.65;
+      color: var(--off-white);
+      font-weight: 500;
+      font-style: italic;
+      margin-bottom: 36px;
+      position: relative;
+    }
+
+    /* Small cards row */
+    .testi-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .testi-card {
+      background: rgba(0,0,0,0.45);
+      border: 1px solid var(--border);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.25s ease, background 0.25s ease;
+    }
+    .testi-card:hover { border-color: rgba(212,175,55,0.3); background: rgba(0,0,0,0.6); }
+
+    .testi-mark {
+      font-size: 3.2rem;
+      line-height: 0.7;
+      color: var(--gold);
+      opacity: 0.4;
+      font-family: Georgia, serif;
+      margin-bottom: 16px;
+      display: block;
+      user-select: none;
+    }
+
+    .testi-quote {
+      font-size: 0.88rem;
+      color: var(--gray-light);
+      line-height: 1.78;
+      flex: 1;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .testi-divider {
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.35;
+      margin-bottom: 14px;
+    }
+
+    .testi-author-name {
+      font-family: var(--fh);
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--white);
+    }
+    .testi-author-company {
+      font-size: 0.67rem;
+      color: var(--gold);
+      font-family: var(--fb);
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 768px) { .testi-featured { padding: 36px 28px 32px; } }
+    @media (max-width: 560px) { .testi-row { grid-template-columns: 1fr; } }
+
+    /* ======================== SECTION: QUALIFY ======================== */
+    #qualify {
+      background: var(--surface-warm); border-bottom: 1px solid var(--border); padding: 100px 0;
+      position: relative; overflow: hidden;
+    }
+    #qualify::before {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, rgba(212,175,55,0.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* Split layout: criteria left, CTA right */
+    .qualify-split {
+      display: grid; grid-template-columns: 1fr 360px; gap: 80px; align-items: start;
+    }
+    .qualify-criteria h2 { font-size: clamp(1.9rem, 3.6vw, 2.85rem); font-weight: 800; margin: 20px 0 14px; }
+    .qualify-criteria > p { font-size: 0.93rem; color: var(--gray-light); max-width: 440px; margin-bottom: 40px; line-height: 1.75; }
+
+    /* List items — clean, not cards */
+    .qualify-list { display: flex; flex-direction: column; gap: 0; }
+    .qualify-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 16px 0; border-bottom: 1px solid var(--border);
+    }
+    .qualify-item:first-child { border-top: 1px solid var(--border); }
+    .qualify-check {
+      width: 20px; height: 20px; border: 1.5px solid var(--gold); border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .qualify-check-mark {
+      width: 9px; height: 6px; border-left: 2px solid var(--gold); border-bottom: 2px solid var(--gold);
+      transform: rotate(-45deg) translateY(-1px);
+    }
+    .qualify-item p { font-size: 0.88rem; color: var(--gray-light); line-height: 1.6; }
+
+    /* Right-side CTA box */
+    .qualify-action { position: sticky; top: 120px; }
+    .qa-box {
+      background: rgba(0,0,0,0.5); border: 1px solid var(--gold-border);
+      padding: 40px 36px; position: relative; overflow: hidden;
+    }
+    .qa-box::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 100% 80% at 50% 0%, rgba(212,175,55,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .qa-box h3 { font-family: var(--fh); font-size: 1.35rem; font-weight: 800; margin-bottom: 14px; position: relative; }
+    .qa-box > p { font-size: 0.88rem; color: var(--gray-light); line-height: 1.72; margin-bottom: 28px; position: relative; }
+    .qa-box .btn-gold { width: 100%; justify-content: center; position: relative; }
+    .qa-note { margin-top: 18px; font-size: 0.75rem; color: var(--gray); font-style: italic; line-height: 1.55; }
+    .qa-note strong { color: var(--gold-light); font-style: normal; }
+
+    @media (max-width: 900px) { .qualify-split { grid-template-columns: 1fr; gap: 48px; } .qualify-action { position: static; } }
+    @media (max-width: 480px) { .qualify-item { padding: 14px 0; } }
+
+    /* ======================== SECTION: FAQ ======================== */
+    #faq { background: var(--black); border-bottom: 1px solid var(--border); padding: 100px 0; }
+
+    .faq-grid { display: grid; grid-template-columns: 280px 1fr; gap: 80px; align-items: start; }
+    .faq-left h2 { font-size: clamp(1.75rem, 3.2vw, 2.5rem); font-weight: 800; margin: 18px 0 16px; }
+    .faq-left > p { font-size: 0.88rem; color: var(--gray-light); line-height: 1.75; margin-bottom: 32px; }
+
+    .faq-list { display: flex; flex-direction: column; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:first-child { border-top: 1px solid var(--border); }
+
+    .faq-q {
+      width: 100%; background: none; border: none; color: var(--white);
+      font-family: var(--fh); font-weight: 600; font-size: 0.93rem; text-align: left;
+      padding: 22px 0; cursor: pointer; display: flex; justify-content: space-between;
+      align-items: center; gap: 16px; transition: color 0.2s ease; line-height: 1.45;
+    }
+    .faq-q:hover { color: var(--gold); }
+    .faq-icon {
+      width: 22px; height: 22px; border: 1px solid var(--border-mid); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 0.78rem; color: var(--gray);
+      transition: all 0.28s ease; font-family: var(--fb);
+    }
+    .faq-item.open .faq-icon { background: var(--gold); border-color: var(--gold); color: var(--black); transform: rotate(45deg); }
+
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .faq-a-inner { padding-bottom: 22px; font-size: 0.88rem; color: var(--gray-light); line-height: 1.82; }
+
+    @media (max-width: 900px) { .faq-grid { grid-template-columns: 1fr; gap: 48px; } }
+
+    /* ======================== SECTION: FINAL CTA ======================== */
+    #cta {
+      background: var(--cta-bg); padding: 160px 0; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    #cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--gold-light) 50%, var(--gold) 70%, transparent);
+    }
+    .cta-glow {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 900px; height: 600px;
+      background: radial-gradient(ellipse, rgba(212,175,55,0.13) 0%, rgba(212,175,55,0.04) 45%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-glow-b {
+      position: absolute; bottom: -20%; left: 50%; transform: translateX(-50%);
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(212,175,55,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    #cta .eyebrow { justify-content: center; display: flex; }
+    #cta h2 {
+      font-family: var(--fh); font-size: clamp(3rem, 7.5vw, 7rem); font-weight: 800;
+      line-height: 0.97; letter-spacing: -0.035em; margin: 28px 0 36px; position: relative;
+    }
+    #cta > .container > p {
+      font-size: 0.98rem; color: var(--gray-light); max-width: 430px;
+      margin: 0 auto 48px; line-height: 1.78;
+    }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; }
+    .cta-sub {
+      margin-top: 24px; font-size: 0.8rem; color: var(--gray); position: relative;
+    }
+    .cta-sub a { color: var(--gold); text-decoration: none; font-weight: 500; }
+
+    /* ======================== FOOTER ======================== */
+    footer {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      padding: 80px 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Faded TFS logo watermark */
+    .footer-watermark {
+      position: absolute;
+      right: -40px; bottom: -30px;
+      width: 480px; height: auto;
+      opacity: 0.03;
+      pointer-events: none;
+      user-select: none;
+      filter: grayscale(1) brightness(8);
+    }
+
+    /* Subtle top gradient fade */
+    footer::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--gold-border) 30%, var(--gold-border) 70%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .footer-inner { position: relative; z-index: 2; }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+      padding-bottom: 56px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Brand column */
+    .footer-brand {}
+    .footer-logo-img { height: 52px; width: auto; margin-bottom: 20px; display: block; }
+    .footer-tagline {
+      font-size: 0.82rem; color: var(--gray); max-width: 260px;
+      line-height: 1.75; margin-bottom: 28px;
+    }
+    .footer-contact-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--fb); font-size: 0.78rem; font-weight: 500;
+      color: var(--gray-light); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-contact-link:hover { color: var(--gold); }
+
+    /* Nav columns */
+    .footer-col-label {
+      font-family: var(--fb); font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px;
+    }
+    .footer-col-links { display: flex; flex-direction: column; gap: 12px; }
+    .footer-col-links a {
+      font-family: var(--fb); font-size: 0.82rem; font-weight: 400;
+      color: var(--gray-light); text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .footer-col-links a:hover { color: var(--white); }
+
+    /* Bottom bar */
+    .footer-bottom {
+      padding: 22px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-copy { font-size: 0.73rem; color: var(--gray); }
+    .footer-built {
+      font-size: 0.73rem; color: var(--gray);
+      font-style: italic;
+    }
+    .footer-built span { color: var(--gold); font-style: normal; }
+
+    @media (max-width: 768px) {
+      .footer-top { grid-template-columns: 1fr; gap: 40px; padding-bottom: 40px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+    }
+    @media (max-width: 600px) {
+      .footer-top { grid-template-columns: 1fr; gap: 28px; padding-bottom: 32px; }
+      .footer-bottom { flex-direction: column; gap: 8px; align-items: flex-start; }
+    }
+
+    /* ============================================================
+       GLOBAL RESPONSIVE SYSTEM — All breakpoints consolidated
+       Priority: maintain structure first, then scale content
+    ============================================================ */
+
+    /* 1. Prevent text from overflowing grid/flex containers everywhere */
+    .wwd-grid > *, .hiw-steps > *, .faq-grid > *,
+    .svc-grid > *, .cl-row > *, .hiw-step,
+    .fu-layout > *, .bk-layout > *, .rv-layout > *,
+    .la-grid > *, .qualify-split > *, .testi-row > *,
+    .footer-top > *, .crm-board > *, .pillar-content,
+    .why-item, .faq-q { min-width: 0; }
+
+    /* 2. Intermediate tablet (901–1100px) — tighten large gaps before breakpoints trigger */
+    @media (max-width: 1100px) {
+      .wwd-grid { gap: 48px; }
+      .faq-grid  { gap: 48px; }
+    }
+
+    /* 3. Tablet (≤900px) — reduce section padding, fix layout gaps */
+    @media (max-width: 900px) {
+      section                          { padding: 72px 0; }
+      #what-we-do, #services, #why-tfs { padding: 84px 0; }
+      #systems-demo                    { padding: 64px 0; }
+      #how-it-works                    { padding: 72px 0; }
+      #qualify, #faq                   { padding: 72px 0; }
+      #clients, #testimonials          { padding: 64px 0; }
+      #cta                             { padding: 100px 0; }
+      footer                           { padding: 48px 0 28px; }
+    }
+
+    /* 4. Mobile landscape / large phone (≤768px) */
+    @media (max-width: 768px) {
+      section                          { padding: 60px 0; }
+      #what-we-do, #services, #why-tfs { padding: 68px 0; }
+      #cta                             { padding: 80px 0; }
+      .hero-inner                      { padding: 40px 0 80px; }
+
+      /* Service cards single-column */
+      .svc-card { padding: 36px 24px; }
+      .svc-card.featured { padding-top: 52px; }
+
+      /* FAQ left col */
+      .faq-left { padding-bottom: 0; }
+    }
+
+    /* 5. Mobile (≤600px) — significant reductions, container padding */
+    @media (max-width: 600px) {
+      section                          { padding: 52px 0; }
+      #what-we-do, #services, #why-tfs { padding: 60px 0; }
+      #systems-demo                    { padding: 52px 0; }
+      #cta                             { padding: 72px 0; }
+      #qualify, #faq                   { padding: 56px 0; }
+      #clients, #testimonials          { padding: 52px 0; }
+      footer                           { padding: 40px 0 24px; }
+      .hero-inner                      { padding: 32px 0 64px; }
+
+      /* Container: tighten on small phones */
+      .container { padding: 0 20px; }
+
+      /* Why TFS stats: reduce big number font */
+      .wstat-val { font-size: 2.2rem; }
+      .why-proof { gap: 32px; }
+
+      /* Client cards in single col: less padding */
+      .cl-card { padding: 22px 18px; }
+
+      /* CTA heading */
+      #cta h2 { margin: 18px 0 26px; }
+    }
+
+    /* 6. Small mobile (≤480px) — hero stats, testimonials, demo */
+    @media (max-width: 480px) {
+      section                          { padding: 44px 0; }
+      #cta                             { padding: 60px 0; }
+
+      /* Hero: fix stat dividers when they may wrap */
+      .hero-stats                      { flex-direction: column; gap: 0; align-items: center; width: 100%; max-width: 260px; }
+      .hstat {
+        flex-direction: row; align-items: baseline; justify-content: space-between;
+        padding: 10px 0; border-right: none; border-left: none;
+        border-bottom: 1px solid var(--border-mid);
+        gap: 12px; width: 100%; text-align: left;
+      }
+      .hstat:first-child { padding-left: 0; }
+      .hstat:last-child { border-bottom: none; padding-right: 0; }
+      .hstat-val { font-size: 1.35rem; }
+      .hstat-lbl { font-size: 0.7rem; }
+
+      /* Testimonials: reduce padding */
+      .testi-featured { padding: 28px 20px 24px; }
+      .testi-card     { padding: 24px 18px; }
+
+      /* Demo panel padding */
+      .demo-panel { padding: 22px 16px; }
+
+      /* FAQ button font */
+      .faq-q { font-size: 0.87rem; padding: 18px 0; }
+
+      /* Services: even tighter */
+      .svc-card { padding: 30px 20px; }
+      .svc-card.featured { padding-top: 46px; }
+
+      /* Buttons: don't let them overflow */
+      .btn-gold, .btn-outline { padding: 13px 24px; font-size: 0.82rem; }
+
+      /* Nav logo size */
+      .nav-logo img { height: 46px; }
+    }
+
+    /* 7. Tiny phones (≤360px) */
+    @media (max-width: 360px) {
+      .container      { padding: 0 16px; }
+      .demo-panel     { padding: 16px 12px; }
+      .demo-tab       { padding: 10px 9px 8px; }
+      .demo-tab-num   { font-size: 0.5rem; }
+      .demo-tab-label { font-size: 0.54rem; }
+      .dp-phone       { width: 148px; }
+      .la-field-val   { font-size: 0.68rem; padding: 6px 8px; }
+      .hstat-val      { font-size: 1.2rem; }
+      /* Tab indicator: reposition on resize */
+      .demo-tab-indicator { transition: none; }
+    }
+
+
+  `;
+const HTML = `
+
+  <!-- ======================== STICKY CTA BAR ======================== -->
+  <div class="sticky-bar" id="stickyBar">
+    <p class="sticky-bar-text">We open <span>3 client spots per month.</span> Currently accepting applications.</p>
+    <a href="/apply" class="btn-gold" style="padding:11px 24px;font-size:0.8rem;white-space:nowrap;">Book Your Free Audit →</a>
+  </div>
+
+  <!-- ======================== NAV ======================== -->
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="trifactor-website.html" class="nav-logo" aria-label="TriFactor Scaling">
+          <img src="./TFS-Logo-Transparent.png" alt="TriFactor Scaling" height="40">
+        </a>
+        <ul class="nav-links">
+          <li><a href="trifactor-website.html" class="nav-link active-nav">Overview</a></li>
+          <li><a href="/services" class="nav-link">Services</a></li>
+          <li><a href="/results" class="nav-link">Results</a></li>
+          <li><a href="/about" class="nav-link">About</a></li>
+        </ul>
+        <div class="nav-cta-wrap">
+          <a href="/apply" class="btn-gold nav-cta" style="padding:11px 22px;font-size:0.8rem;">Apply Now →</a>
+          <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
     </div>
-  );
-};
+  </nav>
 
-const Index = PlaceholderIndex;
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="trifactor-website.html"    onclick="toggleMenu()" class="active-nav">Overview</a>
+    <a href="/services" onclick="toggleMenu()">Services</a>
+    <a href="/results"  onclick="toggleMenu()">Results</a>
+    <a href="/about"    onclick="toggleMenu()">About</a>
+    <a href="/apply"    onclick="toggleMenu()">Apply Now →</a>
+  </div>
+
+
+
+  <!-- ======================== HERO ======================== -->
+  <section id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-glow-a"></div>
+    <div class="hero-glow-b"></div>
+    <div class="hero-lines"></div>
+    <div class="container">
+      <div class="hero-inner">
+
+        <h1 class="hero-headline">
+          We Build the<br>
+          System That<br>
+          <span class="rotate-wrap">
+            <span class="rotate-word show gold-shimmer" id="rotWord">Books You.</span>
+          </span>
+        </h1>
+
+        <p class="hero-sub">
+          We automate your intake, follow-up, and pipeline so every lead gets handled — while you stay focused on the work.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#cta" class="btn-gold">Book Your Free Growth Audit →</a>
+          <a href="#how-it-works" class="btn-outline">See the Process</a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hstat">
+            <span class="hstat-val" data-target="12" data-suffix="+">12+</span>
+            <span class="hstat-lbl">Businesses Grown</span>
+          </div>
+          <div class="hstat">
+            <span class="hstat-val" data-prefix="$" data-target="250" data-suffix="K+">$250K+</span>
+            <span class="hstat-lbl">Client Revenue Built</span>
+          </div>
+          <div class="hstat">
+            <span class="hstat-val">100%</span>
+            <span class="hstat-lbl">Local Service Focused</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== MARQUEE ======================== -->
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-track">
+      <!-- Set 1 -->
+      <div class="marquee-item"><span>LeadCompass</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>CutByDack</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Profitable Barbers</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Dionet Academy</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Mectrix Media</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Rampal Restores</span><div class="marquee-gem"></div></div>
+      <!-- Set 2 -->
+      <div class="marquee-item"><span>LeadCompass</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>CutByDack</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Profitable Barbers</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Dionet Academy</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Mectrix Media</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Rampal Restores</span><div class="marquee-gem"></div></div>
+      <!-- Set 3 -->
+      <div class="marquee-item"><span>LeadCompass</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>CutByDack</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Profitable Barbers</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Dionet Academy</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Mectrix Media</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Rampal Restores</span><div class="marquee-gem"></div></div>
+      <!-- Set 4 -->
+      <div class="marquee-item"><span>LeadCompass</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>CutByDack</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Profitable Barbers</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Dionet Academy</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Mectrix Media</span><div class="marquee-gem"></div></div>
+      <div class="marquee-item"><span>Rampal Restores</span><div class="marquee-gem"></div></div>
+    </div>
+  </div>
+
+  <!-- ======================== WHAT WE DO ======================== -->
+  <section id="what-we-do">
+    <div class="container">
+      <div class="wwd-grid">
+        <div class="wwd-left reveal-left">
+          <span class="eyebrow"><span class="eline"></span>What We Do</span>
+          <h2>We don't run campaigns.<br>We build pipelines.</h2>
+          <p>Most service business owners don't have a marketing problem — they have a systems problem. Leads come in and fall through the cracks. Follow-up never happens. There's no way to see what's actually working.</p>
+          <p>We fix that. TriFactor integrates automated intake, follow-up, and tracking directly into your operations — so every lead is captured, every inquiry is followed up automatically, and you can see in real time exactly where your revenue is coming from.</p>
+          <p>Three founders. No courses. No outside money. Just operators who learned by doing — client by client — what actually moves the needle for local service businesses.</p>
+        </div>
+        <div class="wwd-pillars reveal-right">
+          <div class="pillar">
+            <div class="pillar-num">01</div>
+            <div class="pillar-content">
+              <h4>Systems First</h4>
+              <p>We build infrastructure before campaigns. Every engagement starts with a complete growth architecture designed around your specific business model.</p>
+            </div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">02</div>
+            <div class="pillar-content">
+              <h4>Automated Revenue</h4>
+              <p>GHL funnels, automated follow-up sequences, and CRM pipelines that capture, nurture, and close leads around the clock without you lifting a finger.</p>
+            </div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">03</div>
+            <div class="pillar-content">
+              <h4>Operators, Not Marketers</h4>
+              <p>We think in business outcomes and revenue. Vanity metrics don't pay your bills — we optimize for the numbers that do.</p>
+            </div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">04</div>
+            <div class="pillar-content">
+              <h4>AppSheet Intelligence</h4>
+              <p>Custom tracking dashboards so you always see in real time exactly what's working, what's not, and where to put more fuel on the fire.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== SYSTEMS DEMO ======================== -->
+  <section id="systems-demo">
+    <div class="sdemo-vignette" aria-hidden="true"></div>
+    <div class="container">
+
+      <div class="sdemo-header reveal">
+        <span class="eyebrow"><span class="eline"></span>Systems In Action</span>
+        <h2>Click any system. Watch it<br><span class="gold-shimmer">run in real time.</span></h2>
+        <p>Every automation below is live inside a client's business right now. This is exactly what we build.</p>
+      </div>
+
+      <!-- TAB NAVIGATION — centered inline -->
+      <div class="demo-nav reveal" style="transition-delay:0.1s">
+        <div class="demo-tabs-wrap" id="demoTabsWrap">
+          <!-- Sliding indicator -->
+          <div class="demo-tab-indicator" id="demoTabIndicator"></div>
+          <div class="demo-tabs">
+            <button class="demo-tab active" onclick="switchDemo('lead',this)" id="dtab-lead">
+              <span class="demo-tab-num">01</span>
+              <span class="demo-tab-label">Lead Alert</span>
+            </button>
+            <button class="demo-tab" onclick="switchDemo('followup',this)" id="dtab-followup">
+              <span class="demo-tab-num">02</span>
+              <span class="demo-tab-label">Follow-Up Chain</span>
+            </button>
+            <button class="demo-tab" onclick="switchDemo('crm',this)" id="dtab-crm">
+              <span class="demo-tab-num">03</span>
+              <span class="demo-tab-label">CRM Pipeline</span>
+            </button>
+            <button class="demo-tab" onclick="switchDemo('booking',this)" id="dtab-booking">
+              <span class="demo-tab-num">04</span>
+              <span class="demo-tab-label">Booking System</span>
+            </button>
+            <button class="demo-tab" onclick="switchDemo('review',this)" id="dtab-review">
+              <span class="demo-tab-num">05</span>
+              <span class="demo-tab-label">Review Request</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-panel-wrap reveal" style="transition-delay:0.15s">
+        <!-- Loop progress bar -->
+        <div class="demo-loop-bar" id="demoLoopBar"></div>
+        <!-- STATUS BAR -->
+        <div class="demo-panel-status">
+          <div class="demo-status-dot"></div>
+          <span class="demo-status-text">System Active — <span class="demo-status-name" id="demoStatusLabel">Lead Alert</span></span>
+          <span class="demo-status-live">● Live</span>
+        </div>
+
+        <!-- ==================== PANEL 1: LEAD ALERT ==================== -->
+        <div class="demo-panel active" id="panel-lead">
+          <div class="la-grid">
+            <!-- Form -->
+            <div class="la-form">
+              <div class="la-form-label"><div class="la-dot"></div>Service Request Form</div>
+              <div class="la-field"><div class="la-field-lbl">Full Name</div><div class="la-field-val">James Harrington</div></div>
+              <div class="la-field"><div class="la-field-lbl">Phone</div><div class="la-field-val">(647) 391-2844</div></div>
+              <div class="la-field"><div class="la-field-lbl">Service</div><div class="la-field-val">Vehicle Inspection + Oil Change</div></div>
+              <div class="la-field"><div class="la-field-lbl">Vehicle</div><div class="la-field-val">2021 Honda Accord</div></div>
+              <button class="la-btn">Submit Request ✓</button>
+            </div>
+            <!-- Connector -->
+            <div class="la-connector">
+              <div class="la-timing">&lt;&nbsp;1s</div>
+              <div class="la-arrow">
+                <div class="la-arrow-line"></div>
+                <div class="la-arrow-head"></div>
+              </div>
+            </div>
+            <!-- Phone -->
+            <div class="dp-phone-wrap">
+              <div class="dp-phone">
+                <div class="dp-screen">
+                  <div class="dp-status"><span>9:41</span><span>●●●</span></div>
+                  <div class="dp-body">
+                    <div class="la-notif">
+                      <div class="la-notif-top">
+                        <div class="la-notif-icon">TF</div>
+                        <div class="la-notif-src">Messages · TriFactor Alert</div>
+                        <div class="la-notif-ts">now</div>
+                      </div>
+                      <div class="la-notif-body">
+                        🔔 <span class="gh">New Lead</span><br>
+                        <span class="gh">James Harrington</span><br>
+                        (647) 391-2844<br>
+                        Service: Inspection + Oil Change
+                      </div>
+                    </div>
+                    <div class="la-read">Delivered ✓</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== PANEL 2: FOLLOW-UP CHAIN ==================== -->
+        <div class="demo-panel" id="panel-followup">
+          <div class="fu-layout">
+            <!-- Timeline -->
+            <div class="fu-steps">
+              <div class="fu-step" id="fu1">
+                <div class="fu-step-time">Immediate</div>
+                <div class="fu-step-info">
+                  <h4>First Touch SMS</h4>
+                  <p>Auto-text fires the moment a lead comes in — personalized, booking link included.</p>
+                </div>
+              </div>
+              <div class="fu-step" id="fu2">
+                <div class="fu-step-time">2 Hours</div>
+                <div class="fu-step-info">
+                  <h4>Value Follow-Up</h4>
+                  <p>If no reply, a second message asks a specific question to restart the conversation.</p>
+                </div>
+              </div>
+              <div class="fu-step" id="fu3">
+                <div class="fu-step-time">Day 3</div>
+                <div class="fu-step-info">
+                  <h4>Social Proof Message</h4>
+                  <p>Sends a client result to build trust — zero effort from the owner.</p>
+                </div>
+              </div>
+              <div class="fu-step" id="fu4">
+                <div class="fu-step-time">Day 7</div>
+                <div class="fu-step-info">
+                  <h4>Last Chance + Offer</h4>
+                  <p>Final message creates urgency. Most leads convert by this point.</p>
+                </div>
+              </div>
+            </div>
+            <!-- Phone SMS conversation -->
+            <div class="dp-phone-wrap">
+              <div class="dp-phone">
+                <div class="dp-screen">
+                  <div class="dp-status"><span>9:41</span><span>●●●</span></div>
+                  <div class="dp-body" style="display:flex;flex-direction:column;gap:4px;overflow:hidden;">
+                    <div class="fu-msg" id="fum0"><span class="sms-label">Rampal Restores Automated</span></div>
+                    <div class="fu-msg" id="fum1"><span class="sms-in">"Hey Marcus! It's Yash from Rampal Restores. We got your request — book your free estimate:<br><span class="sms-gold">rampalrestores.as.me</span> 👇"</span></div>
+                    <div class="fu-msg" id="fum2"><span class="sms-in">"Quick question — is it water damage or mold? We handle both same week 🙌"</span></div>
+                    <div class="fu-msg" id="fum3"><span class="sms-in">"Just finished a full basement restore nearby — 3 days ✅ Want before/after photos?"</span></div>
+                    <div class="fu-msg" id="fum4"><span class="sms-in">"Last message Marcus — spots filling up this week. Grab yours now 👇"</span></div>
+                    <div class="fu-reply" id="fureply"><span class="sms-out">"Let's book it!"</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== PANEL 3: CRM PIPELINE ==================== -->
+        <div class="demo-panel" id="panel-crm">
+          <div class="crm-layout">
+            <div class="crm-lead-info">
+              <div class="crm-lead-avatar">JH</div>
+              <div>
+                <div class="crm-lead-name">James Harrington</div>
+                <div class="crm-lead-sub">Vehicle Inspection · (647) 391-2844</div>
+              </div>
+              <div class="crm-progress">
+                <div class="crm-progress-fill" id="crmProgress"></div>
+              </div>
+            </div>
+            <div class="crm-board-wrap">
+              <div class="crm-board">
+                <div class="crm-stage" id="crm-0">
+                  <div class="crm-stage-head"><div class="crm-stage-name">New Lead</div><div class="crm-stage-dot"></div></div>
+                  <div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Submitted form</div><div class="crm-card-badge">🔔 New</div></div>
+                </div>
+                <div class="crm-stage" id="crm-1">
+                  <div class="crm-stage-head"><div class="crm-stage-name">Contacted</div><div class="crm-stage-dot"></div></div>
+                  <div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">SMS sent</div><div class="crm-card-badge">📱 Texted</div></div>
+                </div>
+                <div class="crm-stage" id="crm-2">
+                  <div class="crm-stage-head"><div class="crm-stage-name">Qualified</div><div class="crm-stage-dot"></div></div>
+                  <div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Replied &amp; interested</div><div class="crm-card-badge">✅ Warm</div></div>
+                </div>
+                <div class="crm-stage" id="crm-3">
+                  <div class="crm-stage-head"><div class="crm-stage-name">Booked</div><div class="crm-stage-dot"></div></div>
+                  <div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Appointment set</div><div class="crm-card-badge">📅 Booked</div></div>
+                </div>
+                <div class="crm-stage" id="crm-4">
+                  <div class="crm-stage-head"><div class="crm-stage-name">Won</div><div class="crm-stage-dot"></div></div>
+                  <div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Job complete</div><div class="crm-card-badge">🏆 Closed</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== PANEL 4: BOOKING SYSTEM ==================== -->
+        <div class="demo-panel" id="panel-booking">
+          <div class="bk-layout">
+            <!-- Steps -->
+            <div class="bk-steps">
+              <div class="bk-step" id="bk1">
+                <div class="bk-step-num">1</div>
+                <div class="bk-step-content">
+                  <h4>Booking Link Sent</h4>
+                  <p>Fires the moment a lead replies. Personalized link goes out instantly.</p>
+                </div>
+              </div>
+              <div class="bk-step" id="bk2">
+                <div class="bk-step-num">2</div>
+                <div class="bk-step-content">
+                  <h4>Appointment Confirmed</h4>
+                  <p>Client picks a slot. Confirmation SMS fires. Calendar blocks automatically.</p>
+                </div>
+              </div>
+              <div class="bk-step" id="bk3">
+                <div class="bk-step-num">3</div>
+                <div class="bk-step-content">
+                  <h4>24-Hour Reminder Sent</h4>
+                  <p>Auto-reminder reduces no-shows by 60%+. Zero effort from you.</p>
+                </div>
+              </div>
+            </div>
+            <!-- Phone -->
+            <div class="dp-phone-wrap">
+              <div class="dp-phone">
+                <div class="dp-screen">
+                  <div class="dp-status"><span>9:41</span><span>●●●</span></div>
+                  <div class="dp-body" style="display:flex;flex-direction:column;gap:5px;overflow:hidden;">
+                    <span class="sms-label">CutByDack Bookings</span>
+                    <div class="bk-msg" id="bkm1"><span class="sms-in">"Marcus, book your spot here 👇<br><span class="sms-gold">cutbydack.as.me</span><br>Takes 60 seconds ⚡"</span></div>
+                    <div class="bk-msg" id="bkm2"><span class="sms-in" style="background:rgba(62,207,110,0.18);color:#3ecf6e;">✅ Booked!<br>Thu May 2 @ 3:00 PM<br>CutByDack — 214 King St W</span></div>
+                    <div class="bk-msg" id="bkm3"><span class="sms-in">"⏰ Reminder: Tomorrow @ 3:00 PM with Dack. Reply CANCEL if plans change."</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== PANEL 5: REVIEW REQUEST ==================== -->
+        <div class="demo-panel" id="panel-review">
+          <div class="rv-layout">
+            <!-- Left: trigger + stars + result -->
+            <div class="rv-left">
+              <div class="rv-trigger" id="rvTrigger">
+                <div class="rv-trigger-icon">✅</div>
+                <div class="rv-trigger-text">
+                  <h4>Job Marked Complete</h4>
+                  <p>Owner taps "Complete" in GHL — review request fires in seconds.</p>
+                </div>
+              </div>
+              <div class="rv-stars-wrap" id="rvStarsWrap">
+                <span class="rv-stars-label">Client rates their experience</span>
+                <div class="rv-stars">
+                  <span class="rv-star" id="rs1">★</span>
+                  <span class="rv-star" id="rs2">★</span>
+                  <span class="rv-star" id="rs3">★</span>
+                  <span class="rv-star" id="rs4">★</span>
+                  <span class="rv-star" id="rs5">★</span>
+                </div>
+              </div>
+              <div class="rv-result" id="rvResult">
+                <div class="rv-result-stars">★★★★★</div>
+                <div class="rv-result-quote">"Rampal Restores did an incredible job on our basement. Fast, professional, spotless. Would 100% recommend."</div>
+                <div class="rv-result-name">— Sarah T. · Google Review</div>
+              </div>
+            </div>
+            <!-- Phone -->
+            <div class="dp-phone-wrap">
+              <div class="dp-phone">
+                <div class="dp-screen">
+                  <div class="dp-status"><span>9:41</span><span>●●●</span></div>
+                  <div class="dp-body" style="display:flex;flex-direction:column;gap:5px;overflow:hidden;">
+                    <span class="sms-label">Rampal Restores</span>
+                    <div class="rv-msg" id="rvm1"><span class="sms-in">"Hi Sarah! Happy with your restore? 👋<br><br>Leave us a quick Google review:<br><span class="sms-gold">g.page/rampal ⭐</span><br><br>— Yash @ Rampal Restores"</span></div>
+                    <div class="rv-msg" id="rvm2"><span class="sms-out">"Absolutely! Just left you 5 stars 🙌"</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end demo-panel-wrap -->
+
+      <p class="sdemo-caption reveal" style="transition-delay:0.25s">
+        Every system above runs in a real client's business. <strong>Built once. Runs forever. Compounds monthly.</strong>
+      </p>
+
+    </div>
+  </section>
+
+  <!-- ======================== HOW IT WORKS ======================== -->
+  <section id="how-it-works">
+    <div class="container">
+      <div class="hiw-head reveal">
+        <span class="eyebrow"><span class="eline"></span>The Process</span>
+        <h2>From audit to automated revenue<br>in three moves.</h2>
+      </div>
+      <div class="hiw-steps">
+
+        <div class="hiw-step reveal" style="transition-delay:0.05s">
+          <span class="hiw-num-ghost">01</span>
+          <h3>Growth Audit</h3>
+          <p>We map your entire business — lead flow, conversion points, revenue leaks, and missed opportunities. You leave with a custom Growth System Blueprint whether you work with us or not. No pitch. No pressure.</p>
+          <span class="step-badge">Free — 45 Minutes</span>
+        </div>
+
+        <div class="hiw-connector" aria-hidden="true">
+          <div class="hiw-conn-line"></div>
+          <div class="hiw-conn-dot"></div>
+          <div class="hiw-conn-line"></div>
+        </div>
+
+        <div class="hiw-step reveal" style="transition-delay:0.18s">
+          <span class="hiw-num-ghost">02</span>
+          <h3>System Integration</h3>
+          <p>We build and install your full growth stack: GHL funnel ecosystem, automated lead sequences, CRM pipeline, and AppSheet tracking dashboard — wired directly into your operations from day one.</p>
+          <span class="step-badge">4–6 Week Build</span>
+        </div>
+
+        <div class="hiw-connector" aria-hidden="true">
+          <div class="hiw-conn-line"></div>
+          <div class="hiw-conn-dot"></div>
+          <div class="hiw-conn-line"></div>
+        </div>
+
+        <div class="hiw-step reveal" style="transition-delay:0.31s">
+          <span class="hiw-num-ghost">03</span>
+          <h3>Optimize &amp; Scale</h3>
+          <p>Monthly strategy calls, performance reviews, and continuous iteration. We don't set it and forget it — we stay in the trenches until your system is compounding revenue consistently, month over month.</p>
+          <span class="step-badge">Ongoing — Monthly</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== SERVICES ======================== -->
+  <section id="services">
+    <div class="container">
+      <div class="svc-header reveal">
+        <span class="eyebrow"><span class="eline"></span>Services</span>
+        <h2>Three ways to build your growth system.</h2>
+        <p>Every tier starts with a custom audit and a system built around your business specifically — not a template. We take on 3 new clients per month across all tiers.</p>
+      </div>
+      <div class="svc-grid">
+
+        <div class="svc-card reveal" style="transition-delay:0.08s">
+          <div class="svc-tier">Starter</div>
+          <div class="svc-name">Foundation</div>
+          <p class="svc-target">For businesses ready to stop losing leads and build a reliable, automated follow-up system for the first time.</p>
+          <ul class="svc-features">
+            <li><span class="svc-check">&#9670;</span>GHL CRM setup and full configuration</li>
+            <li><span class="svc-check">&#9670;</span>1 high-converting lead capture funnel</li>
+            <li><span class="svc-check">&#9670;</span>Automated follow-up sequences (x5)</li>
+            <li><span class="svc-check">&#9670;</span>Monthly performance report</li>
+            <li><span class="svc-check">&#9670;</span>Email support</li>
+          </ul>
+          <a href="mailto:trifactorscaling@gmail.com?subject=Foundation%20Service%20Application" class="btn-apply">Apply for Foundation →</a>
+        </div>
+
+        <div class="svc-card featured reveal" style="transition-delay:0.2s">
+          <div class="svc-badge">MOST SELECTED</div>
+          <div class="svc-tier">Growth</div>
+          <div class="svc-name">Growth Engine</div>
+          <p class="svc-target">For established businesses ready to stack paid traffic on top of a proven organic lead system and see compounding results.</p>
+          <ul class="svc-features">
+            <li><span class="svc-check">&#9670;</span>Everything in Foundation</li>
+            <li><span class="svc-check">&#9670;</span>Paid ads management (Facebook and Google)</li>
+            <li><span class="svc-check">&#9670;</span>AppSheet tracking dashboard</li>
+            <li><span class="svc-check">&#9670;</span>Bi-weekly strategy calls</li>
+            <li><span class="svc-check">&#9670;</span>Lead optimization and A/B testing</li>
+            <li><span class="svc-check">&#9670;</span>Priority support</li>
+          </ul>
+          <a href="mailto:trifactorscaling@gmail.com?subject=Growth%20Engine%20Application" class="btn-apply btn-apply-fill">Apply for Growth Engine →</a>
+        </div>
+
+        <div class="svc-card reveal" style="transition-delay:0.32s">
+          <div class="svc-tier">Scale</div>
+          <div class="svc-name">Full Scale</div>
+          <p class="svc-target">For high-revenue operations ready for a fully dedicated growth ops team with complete accountability and revenue alignment.</p>
+          <ul class="svc-features">
+            <li><span class="svc-check">&#9670;</span>Everything in Growth Engine</li>
+            <li><span class="svc-check">&#9670;</span>Multi-funnel ecosystem build</li>
+            <li><span class="svc-check">&#9670;</span>Revenue share model — aligned incentives</li>
+            <li><span class="svc-check">&#9670;</span>Dedicated ops specialist</li>
+            <li><span class="svc-check">&#9670;</span>Weekly optimization reviews</li>
+            <li><span class="svc-check">&#9670;</span>24-hour response support</li>
+          </ul>
+          <a href="mailto:trifactorscaling@gmail.com?subject=Full%20Scale%20Application" class="btn-apply">Apply for Full Scale →</a>
+        </div>
+
+      </div>
+      <p class="svc-note reveal" style="transition-delay:0.44s">
+        Unsure which tier fits your stage? <a href="#qualify">Check if you qualify</a> below or <a href="#cta">book a free Growth Audit</a> — we'll map it out together.
+      </p>
+    </div>
+  </section>
+
+  <!-- ======================== WHY TRIFACTOR ======================== -->
+  <section id="why-tfs">
+    <div class="container">
+
+      <div class="why-statement reveal">
+        <span class="eyebrow" style="justify-content:center;"><span class="eline"></span>Why TriFactor</span>
+        <h2>Built by operators.<br>Paid on results.</h2>
+        <p>Three founders. No courses. No outside money. Built client by client, figuring out what actually moves the needle for service businesses. No overhead, no bureaucracy, no account handoffs — you get the founders building your system from day one. Our Full Scale model runs on revenue share. We only win when you win.</p>
+      </div>
+
+      <div class="why-proof reveal" style="transition-delay:0.1s">
+        <div class="wstat">
+          <span class="wstat-val" data-target="12" data-suffix="+">12+</span>
+          <span class="wstat-lbl">Businesses Grown</span>
+        </div>
+        <div class="wstat">
+          <span class="wstat-val" data-prefix="$" data-target="250" data-suffix="K+">$250K+</span>
+          <span class="wstat-lbl">Client Revenue Built</span>
+        </div>
+        <div class="wstat">
+          <span class="wstat-val">100%</span>
+          <span class="wstat-lbl">Local Service Focused</span>
+        </div>
+      </div>
+
+      <div class="why-items reveal" style="transition-delay:0.2s">
+
+          <!-- 1: Lightning — We Move Fast -->
+          <div class="why-item">
+            <div class="wi-icon icon-bolt">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.5 2L4 11.5H10L8.5 18L16 8.5H10L11.5 2Z" fill="#D4AF37" stroke="#D4AF37" stroke-width="0.5" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <div class="wi-title">We Move Fast</div>
+              <div class="wi-desc">No agency bureaucracy. You work directly with the founders building your system — not an account manager reading off a script.</div>
+            </div>
+          </div>
+
+          <!-- 2: Target rings — Skin in the Game -->
+          <div class="why-item">
+            <div class="wi-icon icon-target">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="3" fill="#D4AF37"/>
+                <circle class="ring1" cx="11" cy="11" r="6" stroke="#D4AF37" stroke-width="1.2" fill="none" opacity="0.5"/>
+                <circle class="ring2" cx="11" cy="11" r="10" stroke="#D4AF37" stroke-width="0.8" fill="none" opacity="0.2"/>
+              </svg>
+            </div>
+            <div>
+              <div class="wi-title">Skin in the Game</div>
+              <div class="wi-desc">Our Full Scale tier is built on revenue share. We only win when your business wins — total alignment, no exceptions.</div>
+            </div>
+          </div>
+
+          <!-- 3: Stacked layers — Enterprise Stack -->
+          <div class="why-item">
+            <div class="wi-icon icon-stack">
+              <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect class="layer3" x="0" y="11" width="22" height="4" rx="1" fill="#D4AF37" opacity="0.35"/>
+                <rect class="layer2" x="0" y="6"  width="22" height="4" rx="1" fill="#D4AF37" opacity="0.62"/>
+                <rect class="layer1" x="0" y="1"  width="22" height="4" rx="1" fill="#D4AF37" opacity="1"/>
+              </svg>
+            </div>
+            <div>
+              <div class="wi-title">Enterprise Stack, Accessible</div>
+              <div class="wi-desc">GHL + AppSheet gives your business the same infrastructure Fortune 500 companies use — without the Fortune 500 price tag.</div>
+            </div>
+          </div>
+
+          <!-- 4: Bar chart — Full Transparency -->
+          <div class="why-item">
+            <div class="wi-icon icon-chart">
+              <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect class="bar1" x="0"  y="8"  width="5" height="10" rx="1" fill="#D4AF37" opacity="0.45"/>
+                <rect class="bar2" x="8"  y="4"  width="5" height="14" rx="1" fill="#D4AF37" opacity="0.7"/>
+                <rect class="bar3" x="16" y="1"  width="5" height="17" rx="1" fill="#D4AF37" opacity="1"/>
+              </svg>
+            </div>
+            <div>
+              <div class="wi-title">Full Transparency</div>
+              <div class="wi-desc">Custom dashboards mean you see exactly what we're doing and what it's producing in real numbers, in real time.</div>
+            </div>
+          </div>
+
+          <!-- 5: Circular arrows — Systems Compound -->
+          <div class="why-item">
+            <div class="wi-icon icon-cycle">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g class="spin-group">
+                  <path d="M11 3C7.13 3 4 6.13 4 10" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M4 6L4 10L8 10" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M11 19C14.87 19 18 15.87 18 12" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M18 16L18 12L14 12" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+              </svg>
+            </div>
+            <div>
+              <div class="wi-title">Systems That Compound</div>
+              <div class="wi-desc">We build once, optimize monthly. The longer the system runs, the more efficient and profitable it becomes — automatically.</div>
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== CLIENTS ======================== -->
+  <section id="clients">
+    <div class="container">
+      <div class="cl-header reveal">
+        <span class="eyebrow"><span class="eline"></span>Client Results</span>
+        <h2>The systems we built.<br>The problems they solved.</h2>
+        <p>Every client below has a live operation running right now.</p>
+      </div>
+      <!-- Featured wide card: CutByDack -->
+      <div class="cl-featured reveal">
+        <div class="clf-tag">Featured Client</div>
+        <div class="clf-body">
+          <div class="clf-name">CutByDack</div>
+          <div class="clf-type">Barbershop · Toronto, ON</div>
+          <p class="clf-desc">Built a complete booking funnel and automated rebooking SMS system. Repeat clients now get rebooked without a single manual follow-up from Dack — the system runs 24/7 and fires the moment a job is marked complete.</p>
+          <a href="/results" class="clf-link">See all client results →</a>
+        </div>
+      </div>
+
+      <!-- 5-col compact row: remaining clients -->
+      <div class="cl-row reveal" style="transition-delay:0.1s">
+        <div class="cl-card">
+          <div class="cl-name">Rampal Restores</div>
+          <div class="cl-type">Home Services</div>
+          <div class="cl-desc">GHL lead capture + 7-touch follow-up. Every inquiry answered in under 2 minutes.</div>
+        </div>
+        <div class="cl-card">
+          <div class="cl-name">Profitable Barbers</div>
+          <div class="cl-type">Coaching</div>
+          <div class="cl-desc">Automated enrollment pipeline. Consistent monthly revenue without manual outreach.</div>
+        </div>
+        <div class="cl-card">
+          <div class="cl-name">Dionet Academy</div>
+          <div class="cl-type">Education</div>
+          <div class="cl-desc">Traffic-to-enrollment funnel + AppSheet dashboard. Every lead tracked in real time.</div>
+        </div>
+        <div class="cl-card">
+          <div class="cl-name">LeadCompass</div>
+          <div class="cl-type">Lead Generation</div>
+          <div class="cl-desc">Full GHL funnel + automated routing. Scales volume without adding headcount.</div>
+        </div>
+        <div class="cl-card">
+          <div class="cl-name">Mectrix Media</div>
+          <div class="cl-type">Media &amp; Content</div>
+          <div class="cl-desc">Monetization funnel converting audience into a structured revenue pipeline.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== TESTIMONIALS ======================== -->
+  <section id="testimonials">
+    <div class="container">
+
+      <!-- Featured large quote — eyebrow inline, no separate header -->
+      <div class="testi-featured reveal">
+        <span class="eyebrow" style="margin-bottom:24px;display:inline-flex;"><span class="eline"></span>What Clients Say</span>
+        <p class="testi-quote-large">"I reached out to Evan to get him to build our website. I was very impressed with the pricing and the simple process of working with him and his team. The website is absolutely amazing — we will be using their services again. Thanks Evan for the great experience!"</p>
+        <div class="testi-divider"></div>
+        <div class="testi-author-name">Jordan</div>
+        <div class="testi-author-company">Mectrix Media</div>
+      </div>
+
+      <!-- Two smaller cards -->
+      <div class="testi-row">
+        <div class="testi-card reveal" style="transition-delay:0.16s">
+          <span class="testi-mark">&ldquo;</span>
+          <p class="testi-quote">Evan and Gavin helped me scale my product into a brand. I can't thank them enough for the help they gave!</p>
+          <div class="testi-divider"></div>
+          <div class="testi-author-name">Aiden A.</div>
+          <div class="testi-author-company">Lumina Sphere</div>
+        </div>
+
+        <div class="testi-card reveal" style="transition-delay:0.24s">
+          <span class="testi-mark">&ldquo;</span>
+          <p class="testi-quote">Good service, scaled my brand up from nothing.</p>
+          <div class="testi-divider"></div>
+          <div class="testi-author-name">Vultus Worldwide</div>
+          <div class="testi-author-company"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================== QUALIFY ======================== -->
+  <section id="qualify">
+    <div class="container">
+      <div class="qualify-split">
+
+        <!-- LEFT: criteria list -->
+        <div class="qualify-criteria reveal-left">
+          <span class="eyebrow"><span class="eline"></span>Who We Work With</span>
+          <h2>Built for one type of business.</h2>
+          <p>Local service businesses — trades, barbershops, restoration, coaching, home services — with real clients but no real system behind lead capture or follow-up.</p>
+          <div class="qualify-list">
+            <div class="qualify-item">
+              <div class="qualify-check"><div class="qualify-check-mark"></div></div>
+              <p>You run a local service business with existing, paying clients</p>
+            </div>
+            <div class="qualify-item">
+              <div class="qualify-check"><div class="qualify-check-mark"></div></div>
+              <p>You're generating revenue but know you're leaving money on the table</p>
+            </div>
+            <div class="qualify-item">
+              <div class="qualify-check"><div class="qualify-check-mark"></div></div>
+              <p>You don't have time to build and manage systems yourself</p>
+            </div>
+            <div class="qualify-item">
+              <div class="qualify-check"><div class="qualify-check-mark"></div></div>
+              <p>You want your lead flow predictable and automated</p>
+            </div>
+            <div class="qualify-item">
+              <div class="qualify-check"><div class="qualify-check-mark"></div></div>
+              <p>You're ready to invest seriously in a proven growth system</p>
+            </div>
+            <div class="qualify-item">
+              <div class="qualify-check"><div class="qualify-check-mark"></div></div>
+              <p>You want full transparency on where your revenue is coming from</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: CTA box -->
+        <div class="qualify-action reveal-right" style="transition-delay:0.15s">
+          <div class="qa-box">
+            <h3>If 4 or more of these are you—</h3>
+            <p>Every week without a system is leads going cold. One call, 45 minutes. You walk away with a custom growth blueprint whether you hire us or not.</p>
+            <a href="/apply" class="btn-gold">Book Your Free Audit →</a>
+            <p class="qa-note"><strong>No pitch. No pressure.</strong> We map your gaps and hand you the plan. That's it.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== FAQ ======================== -->
+  <section id="faq">
+    <div class="container">
+      <div class="faq-grid">
+        <div class="faq-left reveal-left">
+          <span class="eyebrow"><span class="eline"></span>FAQ</span>
+          <h2>Common questions, straight answers.</h2>
+          <p>Still have questions? Book a free Growth Audit — we'll walk through everything on the call with zero pressure.</p>
+          <a href="#cta" class="btn-gold" style="display:inline-flex;margin-top:4px;">Book a Call →</a>
+        </div>
+        <div class="faq-list reveal-right">
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFAQ(this)">
+              What kind of businesses do you work with?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">We work with local service businesses — barbershops, restoration companies, trades, coaching programs, and home service operations. Specifically: businesses that have real paying clients but no real system behind how they capture and follow up on leads. If your revenue is inconsistent or you know you're losing leads because of slow follow-up, that's exactly the problem we solve.</div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFAQ(this)">
+              What happens in the free Growth Audit?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">A 45-minute strategy session where we map your current lead flow, identify your top 3 revenue leaks, and outline a custom growth system roadmap. You walk away with real clarity and a concrete plan — whether you hire us or not. No pitch, no pressure.</div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFAQ(this)">
+              Do I need to know tech to work with you?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">Not at all. We handle the entire build, integration, and ongoing management. You show up for strategy calls and review the results. We take care of everything technical end-to-end.</div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFAQ(this)">
+              How is TriFactor different from a marketing agency?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">Marketing agencies sell deliverables. We build infrastructure. Think of us as the operations team running inside your business — we build the funnels, automate the follow-up, track every lead, and optimize monthly. The goal is never a pretty deliverable. It's compounding revenue.</div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFAQ(this)">
+              How long until I see results?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">The initial system build takes 4–6 weeks. Most clients see lead flow improvements within the first 30 days of going live. Compounding results show clearly by month 3. We set specific benchmarks during your Growth Audit so you always know what to expect and when.</div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFAQ(this)">
+              You're a young team — does that affect the quality of work?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">Yes — and in your favor. No account managers. No junior staff running your project while a senior takes the credit. You work directly with the founders on every build. That means faster decisions, tighter feedback loops, and people personally invested in your results because their name is on it. Our clients choose us because of that edge, not despite it.</div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFAQ(this)">
+              How does the revenue share model work?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">On our Full Scale service, we participate in revenue share on leads generated through the systems we build and manage. This aligns our incentives completely with yours — we only win when you win. The exact structure is agreed upfront based on your business model and projections before we begin.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== FINAL CTA ======================== -->
+  <section id="cta">
+    <div class="cta-glow"></div>
+    <div class="cta-glow-b"></div>
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow"><span class="eline"></span>3 Spots Open This Month</span>
+      </div>
+      <h2 class="reveal" style="transition-delay:0.1s;">
+        Stop losing jobs to<br>slow <span style="background:linear-gradient(90deg,var(--gold) 0%,var(--gold-light) 50%,var(--gold) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite;">follow-up.</span>
+      </h2>
+      <p class="reveal" style="transition-delay:0.2s;">
+        One free 45-minute call. We map your gaps, show you exactly what system needs to be built, and hand you a full Growth Blueprint — whether you work with us or not. No pitch. No pressure.
+      </p>
+      <div class="cta-actions reveal" style="transition-delay:0.3s;">
+        <a href="mailto:trifactorscaling@gmail.com?subject=Book%20Free%20Growth%20Audit" class="btn-gold" style="font-size:0.95rem;padding:18px 40px;">
+          Book Your Free Growth Audit →
+        </a>
+      </div>
+      <p class="cta-sub reveal" style="transition-delay:0.4s;">
+        Or reach us directly at <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ======================== FOOTER ======================== -->
+  <footer>
+    <img src="./TFS-Logo-Transparent.png" alt="" class="footer-watermark" aria-hidden="true">
+    <div class="container footer-inner">
+
+      <div class="footer-top">
+
+        <!-- Brand -->
+        <div class="footer-brand">
+          <img src="./TFS-Logo-Transparent.png" alt="TriFactor Scaling" class="footer-logo-img">
+          <p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
+          <a href="mailto:trifactorscaling@gmail.com" class="footer-contact-link">
+            trifactorscaling@gmail.com →
+          </a>
+        </div>
+
+        <!-- Pages -->
+        <div>
+          <div class="footer-col-label">Pages</div>
+          <div class="footer-col-links">
+            <a href="trifactor-website.html">Overview</a>
+            <a href="/services">Services</a>
+            <a href="/results">Results</a>
+            <a href="/about">About</a>
+            <a href="/apply">Apply Now</a>
+          </div>
+        </div>
+
+        <!-- Work with us -->
+        <div>
+          <div class="footer-col-label">Work With Us</div>
+          <div class="footer-col-links">
+            <a href="/apply">Apply for Growth Ops</a>
+            <a href="/results">See Client Results</a>
+            <a href="/services">What We Build</a>
+            <a href="mailto:trifactorscaling@gmail.com">Send Us an Email</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 TriFactor Scaling. All rights reserved.</span>
+        <span class="footer-built">Built by <span>teens</span>. Powered by results.</span>
+      </div>
+
+    </div>
+  </footer>
+
+  
+`;
+const SCRIPT = `
+    /* ============================================================
+       NAV SCROLL
+    ============================================================ */
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 50));
+
+    /* ============================================================
+       MOBILE MENU
+    ============================================================ */
+    function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+    document.addEventListener('click', e => {
+      const m = document.getElementById('mobileMenu');
+      if (m.classList.contains('open') && !nav.contains(e.target) && !m.contains(e.target)) m.classList.remove('open');
+    });
+
+    /* ============================================================
+       PROGRESS DOTS — scroll helper
+    ============================================================ */
+    function scrollTo(id) { document.querySelector(id).scrollIntoView({ behavior: 'smooth' }); }
+
+
+    /* ============================================================
+       SCROLL REVEAL
+    ============================================================ */
+    const revObs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revObs.observe(el));
+
+    /* ============================================================
+       STICKY CTA BAR
+    ============================================================ */
+    const bar  = document.getElementById('stickyBar');
+    const hero = document.getElementById('hero');
+    function checkBar() {
+      const heroBottom = hero.getBoundingClientRect().bottom;
+      bar.classList.toggle('show', heroBottom < 0);
+    }
+    window.addEventListener('scroll', checkBar, { passive: true });
+
+    /* ============================================================
+       ROTATING HERO WORD
+    ============================================================ */
+    const words   = ['Books You.','Scales You.','Grows You.','Automates You.','Optimizes You.','Compounds You.'];
+    let   wordIdx = 0;
+    const rotEl   = document.getElementById('rotWord');
+
+    function nextWord() {
+      // Exit current word
+      rotEl.classList.remove('show');
+      rotEl.classList.add('exit');
+      setTimeout(() => {
+        wordIdx = (wordIdx + 1) % words.length;
+        rotEl.textContent = words[wordIdx];
+        rotEl.classList.remove('exit');
+        rotEl.classList.add('enter');
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          rotEl.classList.remove('enter');
+          rotEl.classList.add('show');
+        }));
+      }, 380);
+    }
+    setInterval(nextWord, 2800);
+
+    /* ============================================================
+       COUNTER ANIMATION
+    ============================================================ */
+    function animateCounter(el) {
+      const target = parseInt(el.getAttribute('data-target'));
+      const prefix = el.getAttribute('data-prefix') || '';
+      const suffix = el.getAttribute('data-suffix') || '';
+      if (!target) return;
+      const duration = 1400;
+      const start    = performance.now();
+      function tick(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        el.textContent = prefix + Math.round(ease * target) + suffix;
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+    const counterObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting && e.target.getAttribute('data-target')) {
+          animateCounter(e.target);
+          counterObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('[data-target]').forEach(el => counterObs.observe(el));
+
+    /* ============================================================
+       FAQ ACCORDION
+    ============================================================ */
+    function toggleFAQ(btn) {
+      const item = btn.parentElement;
+      const ans  = item.querySelector('.faq-a');
+      const open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-a').style.maxHeight = '0';
+      });
+      if (!open) {
+        item.classList.add('open');
+        ans.style.maxHeight = ans.scrollHeight + 40 + 'px';
+      }
+    }
+
+    /* ============================================================
+       SYSTEMS DEMO — Tab controller + animation runners
+    ============================================================ */
+    let _demoTimers = [];
+    function _clearDemo() { _demoTimers.forEach(clearTimeout); _demoTimers = []; }
+
+    const _demoLabels = {
+      lead: 'Lead Alert', followup: 'Follow-Up Chain',
+      crm: 'CRM Pipeline', booking: 'Booking System', review: 'Review Request'
+    };
+    const _demoLoopDurations = {
+      lead: 6000, followup: 11500, crm: 9200, booking: 8200, review: 9000
+    };
+
+    /* Move the gold sliding indicator under the active tab */
+    function _updateTabIndicator(btn) {
+      const indicator = document.getElementById('demoTabIndicator');
+      const wrap = document.getElementById('demoTabsWrap');
+      if (!indicator || !wrap || !btn) return;
+      const btnRect  = btn.getBoundingClientRect();
+      const wrapRect = wrap.getBoundingClientRect();
+      indicator.style.left  = (btnRect.left - wrapRect.left) + 'px';
+      indicator.style.width = btnRect.width + 'px';
+    }
+
+    /* Animate the loop progress bar from 0→100% over durationMs */
+    function _startLoopBar(durationMs) {
+      const bar = document.getElementById('demoLoopBar');
+      if (!bar) return;
+      bar.style.transition = 'none';
+      bar.style.width = '0%';
+      void bar.offsetWidth; // force reflow
+      bar.style.transition = 'width ' + durationMs + 'ms linear';
+      bar.style.width = '100%';
+    }
+
+    function switchDemo(id, btn) {
+      _clearDemo();
+      document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      _updateTabIndicator(btn);
+      document.querySelectorAll('.demo-panel').forEach(p => p.classList.remove('active'));
+      const panel = document.getElementById('panel-' + id);
+      // Update status label
+      const lbl = document.getElementById('demoStatusLabel');
+      if (lbl) lbl.textContent = _demoLabels[id] || id;
+      // Reset loop bar immediately
+      const bar = document.getElementById('demoLoopBar');
+      if (bar) { bar.style.transition = 'none'; bar.style.width = '0%'; }
+      // Activate panel (CSS animation handles the fade-in via @keyframes panel-in)
+      panel.classList.add('active');
+      _demoReset(id);
+      void panel.offsetWidth; // force reflow so CSS anims + panel-in restart
+      _demoTimers.push(setTimeout(() => {
+        _demoRunners[id] && _demoRunners[id]();
+        _startLoopBar(_demoLoopDurations[id]);
+      }, 80));
+    }
+
+    function _demoReset(id) {
+      if (id === 'followup') {
+        document.querySelectorAll('.fu-step').forEach(s => s.classList.remove('lit'));
+        document.querySelectorAll('.fu-msg, .fu-reply').forEach(m => m.classList.remove('vis'));
+      } else if (id === 'crm') {
+        document.querySelectorAll('.crm-stage').forEach(s => s.classList.remove('active-stage'));
+        const pf = document.getElementById('crmProgress');
+        if (pf) { pf.style.transition = 'none'; pf.style.width = '0%'; void pf.offsetWidth; pf.style.transition = ''; }
+      } else if (id === 'booking') {
+        document.querySelectorAll('.bk-step').forEach(s => s.classList.remove('lit'));
+        document.querySelectorAll('.bk-msg').forEach(m => m.classList.remove('vis'));
+      } else if (id === 'review') {
+        const el = id => document.getElementById(id);
+        el('rvTrigger').classList.remove('lit');
+        el('rvStarsWrap').classList.remove('lit');
+        document.querySelectorAll('.rv-star').forEach(s => s.classList.remove('lit'));
+        el('rvResult').classList.remove('vis');
+        document.querySelectorAll('.rv-msg').forEach(m => m.classList.remove('vis'));
+      }
+    }
+
+    const _demoRunners = {
+      lead: function() { /* CSS keyframe loop — no JS needed */ },
+
+      followup: function() {
+        const s = i => document.getElementById('fu' + i);
+        const m = i => document.getElementById('fum' + i);
+        const r = document.getElementById('fureply');
+        _demoTimers.push(setTimeout(() => { s(1).classList.add('lit'); m(0).classList.add('vis'); m(1).classList.add('vis'); }, 0));
+        _demoTimers.push(setTimeout(() => { s(2).classList.add('lit'); m(2).classList.add('vis'); }, 1800));
+        _demoTimers.push(setTimeout(() => { s(3).classList.add('lit'); m(3).classList.add('vis'); }, 3800));
+        _demoTimers.push(setTimeout(() => { s(4).classList.add('lit'); m(4).classList.add('vis'); }, 5800));
+        _demoTimers.push(setTimeout(() => { r.classList.add('vis'); }, 7400));
+        _demoTimers.push(setTimeout(() => {
+          _demoReset('followup');
+          void document.getElementById('panel-followup').offsetWidth;
+          _demoRunners.followup();
+          _startLoopBar(11500);
+        }, 11500));
+      },
+
+      crm: function() {
+        const widths = ['10%', '30%', '55%', '78%', '100%'];
+        const pf = document.getElementById('crmProgress');
+        for (let i = 0; i < 5; i++) {
+          _demoTimers.push(setTimeout(((idx) => () => {
+            document.querySelectorAll('.crm-stage').forEach(s => s.classList.remove('active-stage'));
+            document.getElementById('crm-' + idx).classList.add('active-stage');
+            if (pf) pf.style.width = widths[idx];
+          })(i), i * 1400));
+        }
+        _demoTimers.push(setTimeout(() => {
+          _demoReset('crm');
+          void document.getElementById('panel-crm').offsetWidth;
+          _demoRunners.crm();
+          _startLoopBar(9200);
+        }, 5 * 1400 + 2200));
+      },
+
+      booking: function() {
+        const s = i => document.getElementById('bk' + i);
+        const m = i => document.getElementById('bkm' + i);
+        _demoTimers.push(setTimeout(() => { s(1).classList.add('lit'); m(1).classList.add('vis'); }, 0));
+        _demoTimers.push(setTimeout(() => { s(2).classList.add('lit'); m(2).classList.add('vis'); }, 2200));
+        _demoTimers.push(setTimeout(() => { s(3).classList.add('lit'); m(3).classList.add('vis'); }, 4400));
+        _demoTimers.push(setTimeout(() => {
+          _demoReset('booking');
+          void document.getElementById('panel-booking').offsetWidth;
+          _demoRunners.booking();
+          _startLoopBar(8200);
+        }, 8200));
+      },
+
+      review: function() {
+        const trig   = document.getElementById('rvTrigger');
+        const sw     = document.getElementById('rvStarsWrap');
+        const result = document.getElementById('rvResult');
+        const stars  = document.querySelectorAll('.rv-star');
+        _demoTimers.push(setTimeout(() => { trig.classList.add('lit'); document.getElementById('rvm1').classList.add('vis'); }, 0));
+        _demoTimers.push(setTimeout(() => sw.classList.add('lit'), 2200));
+        stars.forEach((s, i) => _demoTimers.push(setTimeout(() => s.classList.add('lit'), 2800 + i * 300)));
+        _demoTimers.push(setTimeout(() => { result.classList.add('vis'); document.getElementById('rvm2').classList.add('vis'); }, 4500));
+        _demoTimers.push(setTimeout(() => {
+          _demoReset('review');
+          void document.getElementById('panel-review').offsetWidth;
+          _demoRunners.review();
+          _startLoopBar(9000);
+        }, 9000));
+      }
+    };
+
+    /* ---- Initialize demo on first load ---- */
+    (function _demoInit() {
+      const firstTab = document.getElementById('dtab-lead');
+      if (firstTab) {
+        // Slight delay so layout is complete before measuring tab positions
+        setTimeout(() => {
+          _updateTabIndicator(firstTab);
+          _startLoopBar(6000);
+          _demoRunners.lead && _demoRunners.lead();
+        }, 180);
+      }
+    })();
+
+    /* Reposition sliding indicator on window resize */
+    window.addEventListener('resize', function() {
+      const activeTab = document.querySelector('.demo-tab.active');
+      if (activeTab) _updateTabIndicator(activeTab);
+    }, { passive: true });
+
+    /* ============================================================
+       HERO CANVAS — floating gold particles
+    ============================================================ */
+    (function() {
+      const canvas = document.getElementById('hero-canvas');
+      const ctx    = canvas.getContext('2d');
+      let W, H, particles = [];
+
+      function resize() {
+        W = canvas.width  = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+      }
+
+      function createParticle() {
+        return {
+          x:     Math.random() * W,
+          y:     Math.random() * H,
+          r:     Math.random() * 1.5 + 0.4,
+          alpha: Math.random() * 0.35 + 0.05,
+          vx:    (Math.random() - 0.5) * 0.18,
+          vy:    (Math.random() - 0.5) * 0.18,
+          life:  Math.random() * 200 + 100,
+          age:   0,
+        };
+      }
+
+      function init() {
+        resize();
+        particles = Array.from({ length: 65 }, createParticle);
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach((p, i) => {
+          p.x   += p.vx;
+          p.y   += p.vy;
+          p.age += 1;
+          // fade in/out
+          const t = p.age / p.life;
+          const fade = t < 0.2 ? t / 0.2 : t > 0.8 ? (1 - t) / 0.2 : 1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = \`rgba(212,175,55,\${p.alpha * fade})\`;
+          ctx.fill();
+          if (p.age >= p.life || p.x < 0 || p.x > W || p.y < 0 || p.y > H) {
+            particles[i] = createParticle();
+          }
+        });
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', resize, { passive: true });
+      init();
+      draw();
+    })();
+
+  `;
+
+const Index = () => {
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Inject scoped CSS once per page
+    const styleEl = document.createElement("style");
+    styleEl.setAttribute("data-tri-page", "tri-home");
+    styleEl.innerHTML = CSS;
+    document.head.appendChild(styleEl);
+
+    // Run page scripts after DOM is mounted
+    let scriptEl: HTMLScriptElement | null = null;
+    const t = window.setTimeout(() => {
+      try {
+        scriptEl = document.createElement("script");
+        scriptEl.text = SCRIPT;
+        document.body.appendChild(scriptEl);
+      } catch (e) { console.error("page script error", e); }
+    }, 0);
+
+    // SPA link interception: route trifactor internal links via history
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement).closest("a");
+      if (!a) return;
+      const href = a.getAttribute("href") || "";
+      if (href.startsWith("/") && !href.startsWith("//")) {
+        e.preventDefault();
+        window.history.pushState({}, "", href);
+        window.dispatchEvent(new PopStateEvent("popstate"));
+      }
+    };
+    const root = rootRef.current;
+    root?.addEventListener("click", onClick);
+
+    return () => {
+      window.clearTimeout(t);
+      styleEl.remove();
+      scriptEl?.remove();
+      root?.removeEventListener("click", onClick);
+    };
+  }, []);
+
+  return <div ref={rootRef} className="tri-home" dangerouslySetInnerHTML={{ __html: HTML }} />;
+};
 
 export default Index;
