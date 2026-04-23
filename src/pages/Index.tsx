@@ -131,18 +131,17 @@ const CSS = `
     /* ======================== NAV ======================== */
     #navbar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      padding: 6px 0 0; border-bottom: 1px solid transparent;
+      padding: 8px 0; border-bottom: 1px solid transparent;
       transition: background 0.3s ease, border-color 0.3s ease, padding 0.3s ease;
-      overflow: hidden;
     }
     #navbar.scrolled {
       background: rgba(0,0,0,0.94); backdrop-filter: blur(24px);
-      border-color: var(--border); padding: 4px 0 0;
+      border-color: var(--border); padding: 6px 0;
     }
     .nav-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 0; }
     .nav-logo { display: flex; align-items: center; text-decoration: none; }
     .nav-logo img {
-      height: 56px; width: auto; object-fit: contain;
+      height: 36px; width: auto; object-fit: contain;
       filter: none; /* prevent browser dark-mode inversion */
     }
 
