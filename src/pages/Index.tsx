@@ -1309,7 +1309,7 @@ const CSS = `
 
     .footer-top {
       display: grid;
-      grid-template-columns: 1.4fr 1fr 1fr;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
       gap: 60px;
       align-items: start;
       padding-bottom: 56px;
@@ -1366,8 +1366,12 @@ const CSS = `
     }
     .footer-built span { color: var(--gold); font-style: normal; }
 
+    @media (max-width: 1024px) {
+      .footer-top { grid-template-columns: 1.2fr 1fr 1fr; gap: 40px; }
+    }
     @media (max-width: 768px) {
-      .footer-top { grid-template-columns: 1fr; gap: 40px; padding-bottom: 40px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; padding-bottom: 40px; }
+      .footer-brand { grid-column: 1 / -1; }
       .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
     }
     @media (max-width: 600px) {
@@ -1625,6 +1629,10 @@ const CSS = `
 
     /* ── Footer ── */
     @media (max-width: 768px) {
+      .footer-top { grid-template-columns: 1fr 1fr !important; gap: 36px !important; }
+      .footer-brand { grid-column: 1 / -1 !important; }
+    }
+    @media (max-width: 500px) {
       .footer-top { grid-template-columns: 1fr !important; gap: 36px !important; }
       .footer-bottom { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
     }
