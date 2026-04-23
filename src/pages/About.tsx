@@ -919,7 +919,7 @@ const HTML = `
 </div>
 <!-- GAVIN — right panel -->
 <div class="founder-half reveal-right">
-<img alt="Gavin — Co-Founder, TriFactor Scaling" class="founder-photo" src="gavin.jpg"/>
+<img alt="Gavin — Co-Founder, TriFactor Scaling" class="founder-photo" src="gavin.png"/>
 <div class="founder-name">Gavin</div>
 <div class="founder-title">Co-Founder — Technical Build &amp; Automation Engineering</div>
 <p class="founder-quote">"If it runs inside a client's business, Gavin built it."</p>
