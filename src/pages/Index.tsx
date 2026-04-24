@@ -896,14 +896,15 @@ const CSS = `
       margin-top: 5px;
     }
 
-    /* Progress dots — bottom of right-side column */
+    /* Progress dots — bottom center of whole section */
     .hiw-dots {
       position: absolute;
-      bottom: 44px;
-      left: clamp(24px, 5vw, 72px);
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       gap: 10px;
-      z-index: 5;
+      z-index: 20;
     }
     .hiw-dot {
       width: 7px; height: 7px; border-radius: 50%;
@@ -1186,39 +1187,34 @@ const CSS = `
       );
     }
 
-    /* Scrolling track — inline-flex so it naturally sizes to content width */
+    /* Marquee track — inline-block + white-space:nowrap is the most browser-reliable approach */
     @keyframes testiScroll {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
     }
 
+    .testi-marquee-wrap { white-space: nowrap; }
+
     .testi-track {
-      display: inline-flex;    /* inline-flex auto-sizes to content; avoids width:max-content issues */
-      flex-direction: row;
-      flex-wrap: nowrap;
-      gap: 20px;
-      animation: testiScroll 42s linear infinite;
+      display: inline-block;
+      white-space: nowrap;
+      animation: testiScroll 44s linear infinite;
       will-change: transform;
-      white-space: nowrap;     /* prevents any inherited word-wrap from breaking layout */
     }
     .testi-track:hover { animation-play-state: paused; }
 
-    /* Wrapper must allow the inline-flex track to overflow */
-    .testi-marquee-wrap { white-space: nowrap; }
-
-    /* Individual review cards */
+    /* Individual review cards — inline-block + white-space:normal restores text wrapping */
     .testi-card {
-      display: inline-flex !important; /* override global max-width:100% block rule */
-      flex-direction: column;
-      flex-shrink: 0;
-      width: 340px !important;         /* explicit px — wins over max-width:100% */
-      max-width: none !important;
-      white-space: normal;             /* restore text wrapping inside card */
+      display: inline-block !important;
+      white-space: normal !important;
+      vertical-align: top;
+      width: 340px !important;
+      max-width: 340px !important;
       background: rgba(0,0,0,0.5);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255,255,255,0.09);
       padding: 32px 28px;
       box-sizing: border-box;
-      vertical-align: top;
+      margin-right: 20px;
       transition: border-color 0.3s ease;
       cursor: default;
     }
@@ -2314,7 +2310,7 @@ const HTML = `
 </div>
 <div class="hstat">
 <span class="hstat-val">100%</span>
-<span class="hstat-lbl">Local Service Focused</span>
+<span class="hstat-lbl">Founder-Operated</span>
 </div>
 </div>
 </div>
@@ -2399,8 +2395,11 @@ const HTML = `
 <!-- ======================== HOW IT WORKS ======================== -->
 <section id="how-it-works">
 <div class="hiw-pin-sticky">
+<!-- Eyebrow pinned top-center across the whole section -->
+<div style="position:absolute;top:32px;left:50%;transform:translateX(-50%);z-index:20;pointer-events:none;">
+<span class="eyebrow" style="white-space:nowrap;">The Process</span>
+</div>
 <div class="hiw-head">
-<span class="eyebrow">The Process</span>
 <h2>From audit to automated revenue<br/>in three moves.</h2>
 </div>
 <div class="hiw-right">
@@ -2443,11 +2442,13 @@ const HTML = `
 </div>
 
 </div>
+</div>
+</div>
+<!-- Dots pinned bottom-center across the whole section -->
 <div class="hiw-dots" id="hiwDots">
 <div class="hiw-dot active" id="hiwDot0"></div>
 <div class="hiw-dot" id="hiwDot1"></div>
 <div class="hiw-dot" id="hiwDot2"></div>
-</div>
 </div>
 </div>
 </section>
@@ -2474,7 +2475,7 @@ const HTML = `
 <li><span class="svc-check">◆</span>Analytics, A/B testing &amp; retargeting pixel</li>
 <li><span class="svc-check">◆</span>Mobile-optimized, Google-indexed, monthly maintenance</li>
 </ul>
-<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Website%20%26%20Funnel%20Inquiry">Apply for Website &amp; Funnel →</a>
+<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Website%20%26%20Funnel%20Inquiry">Website &amp; Funnel →</a>
 </div>
 
 <!-- Pillar 02: Growth Operations (FEATURED) -->
@@ -2489,7 +2490,7 @@ const HTML = `
 <li><span class="svc-check">◆</span>Booking flows and appointment automation</li>
 <li><span class="svc-check">◆</span>Reporting dashboard so nothing falls through</li>
 </ul>
-<a class="btn-apply btn-apply-fill" href="mailto:contact@trifactorscaling.com?subject=Growth%20Operations%20Inquiry">Apply for Growth Ops →</a>
+<a class="btn-apply btn-apply-fill" href="mailto:contact@trifactorscaling.com?subject=Growth%20Operations%20Inquiry">Growth Ops →</a>
 </div>
 
 <!-- Pillar 03: Marketing -->
@@ -2504,7 +2505,7 @@ const HTML = `
 <li><span class="svc-check">◆</span>Organic content strategy</li>
 <li><span class="svc-check">◆</span>Monthly ROI reporting</li>
 </ul>
-<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Marketing%20Inquiry">Apply for Marketing →</a>
+<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Marketing%20Inquiry">Marketing →</a>
 </div>
 
 </div>
@@ -2520,7 +2521,6 @@ const HTML = `
 <div class="cl-header reveal">
 <span class="eyebrow">Client Results</span>
 <h2>Systems we built for businesses like yours.</h2>
-<p>Every client below has a live operation running right now.</p>
 </div>
 <!-- Featured wide card: CutByDack -->
 <div class="cl-featured reveal">
@@ -2532,6 +2532,7 @@ const HTML = `
 <a class="clf-link" href="/results">See all client results →</a>
 </div>
 </div>
+<p class="reveal" style="transition-delay:0.05s;font-size:0.85rem;color:var(--muted);margin:18px 0 0;letter-spacing:0.02em;">Every client below has a live operation running right now.</p>
 <!-- 5-col compact row: remaining clients -->
 <div class="cl-row reveal" style="transition-delay:0.1s">
 <div class="cl-card">
@@ -2572,10 +2573,10 @@ const HTML = `
 </div>
 <!-- Full-bleed scrolling marquee — cards duplicated for seamless loop -->
 <div class=”testi-marquee-wrap” style=”overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent 0%,black 8%,black 92%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,black 8%,black 92%,transparent 100%);”>
-<div class=”testi-track” id=”testiTrack” style=”display:flex;flex-direction:row;flex-wrap:nowrap;width:max-content;gap:20px;animation:testiScroll 44s linear infinite;will-change:transform;”>
+<div class=”testi-track” id=”testiTrack” style=”display:inline-block;white-space:nowrap;animation:testiScroll 44s linear infinite;will-change:transform;”>
 
 <!-- SET 1 -->
-<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
+<div class=”testi-card” style=”display:inline-block;white-space:normal;width:340px;max-width:340px;vertical-align:top;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;margin-right:20px;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>I reached out to Evan to get him to build our website. I was very impressed with the pricing and the simple process of working with him and his team. The website is absolutely amazing — we will be using their services again.</p>
 <div class=”testi-divider”></div>
@@ -2583,7 +2584,7 @@ const HTML = `
 <div class=”testi-author-company”>Mectrix Media</div>
 </div>
 
-<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
+<div class=”testi-card” style=”display:inline-block;white-space:normal;width:340px;max-width:340px;vertical-align:top;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;margin-right:20px;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>Evan and Gavin helped me scale my product into a brand. I can't thank them enough for the help they gave — the whole process was seamless and the results spoke for themselves.</p>
 <div class=”testi-divider”></div>
@@ -2591,7 +2592,7 @@ const HTML = `
 <div class=”testi-author-company”>Lumina Sphere</div>
 </div>
 
-<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
+<div class=”testi-card” style=”display:inline-block;white-space:normal;width:340px;max-width:340px;vertical-align:top;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;margin-right:20px;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>Good service, scaled my brand up from nothing. They know what they're doing and actually deliver — which is rare. Would recommend without hesitation.</p>
 <div class=”testi-divider”></div>
@@ -2599,7 +2600,7 @@ const HTML = `
 <div class=”testi-author-company”>Brand &amp; Creative</div>
 </div>
 
-<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
+<div class=”testi-card” style=”display:inline-block;white-space:normal;width:340px;max-width:340px;vertical-align:top;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;margin-right:20px;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>The booking system they built basically runs our follow-up on autopilot. We stopped losing clients to slow response times the week it went live.</p>
 <div class=”testi-divider”></div>
@@ -2608,7 +2609,7 @@ const HTML = `
 </div>
 
 <!-- SET 2 — exact duplicate for seamless loop -->
-<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
+<div class=”testi-card” style=”display:inline-block;white-space:normal;width:340px;max-width:340px;vertical-align:top;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;margin-right:20px;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>I reached out to Evan to get him to build our website. I was very impressed with the pricing and the simple process of working with him and his team. The website is absolutely amazing — we will be using their services again.</p>
 <div class=”testi-divider”></div>
@@ -2616,7 +2617,7 @@ const HTML = `
 <div class=”testi-author-company”>Mectrix Media</div>
 </div>
 
-<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
+<div class=”testi-card” style=”display:inline-block;white-space:normal;width:340px;max-width:340px;vertical-align:top;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;margin-right:20px;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>Evan and Gavin helped me scale my product into a brand. I can't thank them enough for the help they gave — the whole process was seamless and the results spoke for themselves.</p>
 <div class=”testi-divider”></div>
@@ -2624,7 +2625,7 @@ const HTML = `
 <div class=”testi-author-company”>Lumina Sphere</div>
 </div>
 
-<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
+<div class=”testi-card” style=”display:inline-block;white-space:normal;width:340px;max-width:340px;vertical-align:top;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;margin-right:20px;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>Good service, scaled my brand up from nothing. They know what they're doing and actually deliver — which is rare. Would recommend without hesitation.</p>
 <div class=”testi-divider”></div>
@@ -2632,7 +2633,7 @@ const HTML = `
 <div class=”testi-author-company”>Brand &amp; Creative</div>
 </div>
 
-<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
+<div class=”testi-card” style=”display:inline-block;white-space:normal;width:340px;max-width:340px;vertical-align:top;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;margin-right:20px;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>The booking system they built basically runs our follow-up on autopilot. We stopped losing clients to slow response times the week it went live.</p>
 <div class=”testi-divider”></div>
@@ -2726,11 +2727,12 @@ const HTML = `
 <div class="cta-glow"></div>
 <div class="cta-glow-b"></div>
 <div class="container">
+<!-- Eyebrow centered at the top of the section -->
+<div class="reveal" style="text-align:center;margin-bottom:40px;"><span class="eyebrow">Apply Now</span></div>
 <div style="display:flex;flex-direction:row;align-items:flex-start;gap:clamp(32px,5vw,80px);flex-wrap:wrap;">
   <!-- Left: text -->
   <div style="flex:1 1 300px;min-width:260px;display:flex;flex-direction:column;justify-content:center;padding-top:8px;">
-    <div class="reveal"><span class="eyebrow">Apply Now</span></div>
-    <h2 class="reveal" style="transition-delay:0.1s;font-size:clamp(1.8rem,3.2vw,3rem);font-weight:800;line-height:1.15;margin-top:14px;text-align:left;">
+    <h2 class="reveal" style="transition-delay:0.1s;font-size:clamp(1.8rem,3.2vw,3rem);font-weight:800;line-height:1.15;margin-top:0;text-align:left;">
       Stop running your business.<br/>Start building a <span style="background:linear-gradient(90deg,var(--gold) 0%,var(--gold-light) 50%,var(--gold) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite;">system that does.</span>
     </h2>
     <p class="reveal" style="transition-delay:0.2s;margin-top:20px;font-size:1rem;color:var(--muted);line-height:1.7;text-align:left;">
