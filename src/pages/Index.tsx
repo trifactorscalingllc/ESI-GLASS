@@ -2262,13 +2262,6 @@ const HTML = `
 <p>We don't hand you off. We actively manage, optimize, and improve your system monthly — so your results compound over time instead of stalling out.</p>
 </div>
 </div>
-<div class="pillar">
-<div class="pillar-num">04</div>
-<div class="pillar-content">
-<h4>You See Every Number</h4>
-<p>A live dashboard shows you exactly how many leads came in, how many were followed up, and what your system is generating in revenue. No guessing.</p>
-</div>
-</div>
 </div>
 </div>
 </div>
