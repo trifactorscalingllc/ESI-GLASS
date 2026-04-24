@@ -1014,9 +1014,9 @@ const CSS = `
     /* ======================== SECTION: CLIENTS ======================== */
     #clients { background: var(--black); border-bottom: 1px solid var(--border); padding: 80px 0; }
 
-    .cl-header { margin-bottom: 52px; }
+    .cl-header { margin-bottom: 52px; text-align: center; }
     .cl-header h2 { font-size: clamp(1.9rem, 3.6vw, 2.85rem); font-weight: 800; margin-top: 18px; }
-    .cl-header p  { margin-top: 12px; font-size: 0.92rem; color: var(--gray-light); max-width: 460px; }
+    .cl-header p  { margin-top: 12px; font-size: 0.92rem; color: var(--gray-light); max-width: 460px; margin-left: auto; margin-right: auto; }
 
     /* Featured wide card */
     .cl-featured {
@@ -2573,7 +2573,7 @@ const HTML = `
 <div class="container">
 <div class="cl-header reveal">
 <span class="eyebrow">Client Results</span>
-<h2>Systems we build for businesses like yours.</h2>
+<h2>Systems we built for businesses like yours.</h2>
 <p>Every client below has a live operation running right now.</p>
 </div>
 <!-- Featured wide card: CutByDack -->
