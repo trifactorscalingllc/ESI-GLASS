@@ -1196,12 +1196,10 @@ const CSS = `
     .testi-marquee-wrap { white-space: nowrap; }
 
     .testi-track {
-      display: inline-block;
+      display: block;
       white-space: nowrap;
-      animation: testiScroll 44s linear infinite;
       will-change: transform;
     }
-    .testi-track:hover { animation-play-state: paused; }
 
     /* Individual review cards — inline-block + white-space:normal restores text wrapping */
     .testi-card {
@@ -2240,7 +2238,67 @@ const SCRIPT = `
       draw();
     })();
 
-  
+    /* ============================================================
+       TESTIMONIALS MARQUEE — JS-driven (CSS approach loses to Tailwind cascade)
+       Uses element.style.setProperty with 'important' priority — highest in cascade
+       Uses requestAnimationFrame instead of CSS @keyframes
+    ============================================================ */
+    (function() {
+      var track = document.getElementById('testiTrack');
+      if (!track) return;
+
+      var CARD_W   = 340;
+      var CARD_GAP = 20;
+      var SPEED    = 55; /* px per second */
+
+      /* Force each card to inline-block via setProperty('important') */
+      var cards = track.querySelectorAll('.testi-card');
+      cards.forEach(function(card) {
+        card.style.setProperty('display',       'inline-block', 'important');
+        card.style.setProperty('white-space',   'normal',       'important');
+        card.style.setProperty('vertical-align','top',          'important');
+        card.style.setProperty('width',         CARD_W + 'px',  'important');
+        card.style.setProperty('max-width',     CARD_W + 'px',  'important');
+        card.style.setProperty('min-width',     CARD_W + 'px',  'important');
+        card.style.setProperty('margin-right',  CARD_GAP + 'px','important');
+        card.style.setProperty('box-sizing',    'border-box',   'important');
+      });
+
+      /* Force track to block + nowrap so inline-block cards sit in a row */
+      track.style.setProperty('display',     'block',   'important');
+      track.style.setProperty('white-space', 'nowrap',  'important');
+
+      /* Set track width explicitly so it's exactly twice the SET width */
+      var setCount   = cards.length / 2; /* 4 cards per set */
+      var setWidth   = setCount * (CARD_W + CARD_GAP);
+      var trackWidth = setWidth * 2;
+      track.style.setProperty('width', trackWidth + 'px', 'important');
+
+      /* Pause on hover */
+      var paused = false;
+      var wrap = track.parentElement;
+      if (wrap) {
+        wrap.addEventListener('mouseenter', function() { paused = true;  });
+        wrap.addEventListener('mouseleave', function() { paused = false; });
+      }
+
+      /* requestAnimationFrame scroll loop */
+      var x = 0;
+      var lastTs = null;
+      function tick(ts) {
+        if (lastTs !== null && !paused) {
+          var dt = ts - lastTs;
+          x -= SPEED * dt / 1000;
+          if (x <= -setWidth) x += setWidth; /* seamless loop: jump back by one full set */
+        }
+        lastTs = ts;
+        track.style.transform = 'translateX(' + x + 'px)';
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
+
+
 `;
 const HTML = `
 <!-- ======================== STICKY CTA BAR ======================== -->
@@ -2573,7 +2631,7 @@ const HTML = `
 </div>
 <!-- Full-bleed scrolling marquee — cards duplicated for seamless loop -->
 <div class=”testi-marquee-wrap” style=”overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent 0%,black 8%,black 92%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,black 8%,black 92%,transparent 100%);”>
-<div class=”testi-track” id=”testiTrack” style=”display:inline-block;white-space:nowrap;animation:testiScroll 44s linear infinite;will-change:transform;”>
+<div class=”testi-track” id=”testiTrack” style=”white-space:nowrap;will-change:transform;”>
 
 <!-- SET 1 -->
 <div class=”testi-card” style=”display:inline-block;white-space:normal;width:340px;max-width:340px;vertical-align:top;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;margin-right:20px;”>
