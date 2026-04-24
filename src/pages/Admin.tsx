@@ -7,7 +7,7 @@ import {
 // ── Config ──────────────────────────────────────────────────────────────────
 const EDGE_URL   = 'https://qamvvvwlpzkjvxoomjno.supabase.co/functions/v1/ga4-report'
 // Paste your anon key from: supabase.com/dashboard/project/qamvvvwlpzkjvxoomjno/settings/api
-const ANON_KEY   = 'PASTE_ANON_KEY_HERE'
+const ANON_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhbXZ2dndscHpranZ4b29tam5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5ODM1NjAsImV4cCI6MjA5MjU1OTU2MH0.gHY6FTV5gNiv7wCCw1fIlnCufgdE8XcvLW1qizHRbTQ'
 const ADMIN_PASS = 'tfs-admin-2026'
 
 // ── Brand ────────────────────────────────────────────────────────────────────
