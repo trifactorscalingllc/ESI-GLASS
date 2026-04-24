@@ -2152,11 +2152,10 @@ const HTML = `
 <div class="container">
 <div class="wwd-grid">
 <div class="wwd-left reveal-left">
-<span class="eyebrow"><span class="eline"></span>What We Do</span>
+<span class="eyebrow">What We Do</span>
 <h2>We don't run campaigns.<br/>We build pipelines.</h2>
 <p>Most service business owners don't have a marketing problem — they have a systems problem. Leads come in and fall through the cracks. Follow-up never happens. There's no way to see what's actually working.</p>
-<p>We fix that. TriFactor integrates automated intake, follow-up, and tracking directly into your operations — so every lead is captured, every inquiry is followed up automatically, and you can see in real time exactly where your revenue is coming from.</p>
-<p>Three founders. No courses. No outside money. Just operators who learned by doing — client by client — what actually moves the needle for local service businesses.</p>
+<p>We fix that. TriFactor automates your intake, follow-up, and tracking — so every lead is captured, every inquiry is handled, and you always know where your revenue is coming from.</p>
 </div>
 <div class="wwd-pillars reveal-right">
 <div class="pillar">
@@ -2196,7 +2195,7 @@ const HTML = `
 <div aria-hidden="true" class="sdemo-vignette"></div>
 <div class="container">
 <div class="sdemo-header reveal">
-<span class="eyebrow"><span class="eline"></span>Systems In Action</span>
+<span class="eyebrow">Systems In Action</span>
 <h2>Click any system. Watch it<br/><span class="gold-shimmer">run in real time.</span></h2>
 <p>Every automation below is live inside a client's business right now. This is exactly what we build.</p>
 </div>
@@ -2471,7 +2470,7 @@ const HTML = `
 <section id="how-it-works">
 <div class="container">
 <div class="hiw-head reveal">
-<span class="eyebrow"><span class="eline"></span>The Process</span>
+<span class="eyebrow">The Process</span>
 <h2>From audit to automated revenue<br/>in three moves.</h2>
 </div>
 <div class="hiw-steps">
@@ -2510,9 +2509,8 @@ const HTML = `
 <section id="services">
 <div class="container">
 <div class="svc-header reveal">
-<span class="eyebrow"><span class="eline"></span>Services</span>
+<span class="eyebrow">Services</span>
 <h2>Start where you are.<br/>Scale as you grow.</h2>
-<p>Three pillars that build on each other naturally. Most clients begin with a Website &amp; Funnel, layer in Growth Ops, then pour fuel on it with Marketing.</p>
 </div>
 
 <div class="svc-grid svc-grid-flow reveal">
@@ -2574,7 +2572,7 @@ const HTML = `
 <section id="clients">
 <div class="container">
 <div class="cl-header reveal">
-<span class="eyebrow"><span class="eline"></span>Client Results</span>
+<span class="eyebrow">Client Results</span>
 <h2>Systems we build for businesses like yours.</h2>
 <p>Every client below has a live operation running right now.</p>
 </div>
@@ -2623,7 +2621,7 @@ const HTML = `
 <div class="container">
 <!-- Featured large quote — eyebrow inline, no separate header -->
 <div class="testi-featured reveal">
-<span class="eyebrow" style="margin-bottom:24px;display:inline-flex;"><span class="eline"></span>What Clients Say</span>
+<span class="eyebrow" style="margin-bottom:24px;display:inline-flex;">What Clients Say</span>
 <p class="testi-quote-large">"I reached out to Evan to get him to build our website. I was very impressed with the pricing and the simple process of working with him and his team. The website is absolutely amazing — we will be using their services again. Thanks Evan for the great experience!"</p>
 <div class="testi-divider"></div>
 <div class="testi-author-name">Jordan</div>
@@ -2653,7 +2651,7 @@ const HTML = `
 <div class="container">
 <div class="faq-grid">
 <div class="faq-left reveal-left">
-<span class="eyebrow"><span class="eline"></span>FAQ</span>
+<span class="eyebrow">FAQ</span>
 <h2>Common questions, straight answers.</h2>
 <p>Still have questions? Book a free Growth Audit — we'll walk through everything on the call with zero pressure.</p>
 <a class="btn-gold" href="#cta" style="display:inline-flex;margin-top:4px;">Book a Call →</a>
@@ -2732,7 +2730,7 @@ const HTML = `
 <div class="cta-glow-b"></div>
 <div class="container">
 <div class="reveal">
-<span class="eyebrow"><span class="eline"></span>3 Spots Open This Month</span>
+<span class="eyebrow">3 Spots Open This Month</span>
 </div>
 <h2 class="reveal" style="transition-delay:0.1s;">
         Stop losing jobs to<br/>slow <span style="background:linear-gradient(90deg,var(--gold) 0%,var(--gold-light) 50%,var(--gold) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite;">follow-up.</span>
