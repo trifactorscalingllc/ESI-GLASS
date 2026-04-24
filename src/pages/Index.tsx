@@ -1152,67 +1152,74 @@ const CSS = `
     #testimonials {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 80px 0;
-    }
-
-    /* Featured (large) quote */
-    .testi-featured {
-      background: rgba(0,0,0,0.45);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--gold);
-      padding: 52px 60px 44px;
-      margin-bottom: 20px;
-      position: relative;
+      padding: 80px 0 88px;
       overflow: hidden;
-      transition: border-color 0.25s ease;
-    }
-    .testi-featured:hover { border-color: var(--gold); }
-    .testi-featured::before {
-      content: '\\201C';
-      position: absolute;
-      top: -10px; right: 32px;
-      font-size: 10rem;
-      font-family: Georgia, serif;
-      color: var(--gold);
-      opacity: 0.06;
-      line-height: 1;
-      pointer-events: none;
-      user-select: none;
     }
 
-    .testi-quote-large {
-      font-family: var(--fh);
-      font-size: clamp(1.05rem, 2vw, 1.35rem);
-      line-height: 1.65;
-      color: var(--off-white);
-      font-weight: 500;
-      font-style: italic;
-      margin-bottom: 36px;
-      position: relative;
+    /* Header — top left, inside container */
+    .testi-header {
+      margin-bottom: 52px;
+    }
+    .testi-header h2 {
+      font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+      font-weight: 800;
+      margin-top: 14px;
+      line-height: 1.1;
     }
 
-    /* Small cards row */
-    .testi-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    /* Marquee wrapper — full bleed, fades at both edges */
+    .testi-marquee-wrap {
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 10%,
+        black 90%,
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 10%,
+        black 90%,
+        transparent 100%
+      );
+    }
+
+    /* Scrolling track — contains cards × 2 for seamless loop */
+    @keyframes testiScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .testi-track {
+      display: flex;
+      width: max-content;
       gap: 20px;
+      animation: testiScroll 42s linear infinite;
+      will-change: transform;
     }
+    .testi-track:hover { animation-play-state: paused; }
 
+    /* Individual review cards */
     .testi-card {
-      background: rgba(0,0,0,0.45);
+      width: clamp(280px, 30vw, 380px);
+      flex-shrink: 0;
+      background: rgba(0,0,0,0.5);
       border: 1px solid var(--border);
       padding: 32px 28px;
       display: flex;
       flex-direction: column;
-      transition: border-color 0.25s ease, background 0.25s ease;
+      transition: border-color 0.3s ease;
+      cursor: default;
     }
-    .testi-card:hover { border-color: rgba(212,175,55,0.3); background: rgba(0,0,0,0.6); }
+    .testi-card:hover { border-color: rgba(212,175,55,0.35); }
 
     .testi-mark {
-      font-size: 3.2rem;
+      font-size: 3rem;
       line-height: 0.7;
       color: var(--gold);
-      opacity: 0.4;
+      opacity: 0.35;
       font-family: Georgia, serif;
       margin-bottom: 16px;
       display: block;
@@ -1220,7 +1227,7 @@ const CSS = `
     }
 
     .testi-quote {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       color: var(--gray-light);
       line-height: 1.78;
       flex: 1;
@@ -1252,8 +1259,10 @@ const CSS = `
       margin-top: 4px;
     }
 
-    @media (max-width: 768px) { .testi-featured { padding: 36px 28px 32px; } }
-    @media (max-width: 560px) { .testi-row { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) {
+      .testi-card { width: 80vw; }
+      .testi-track { animation-duration: 30s; }
+    }
 
     /* ======================== SECTION: QUALIFY ======================== */
     #qualify {
@@ -2821,32 +2830,83 @@ const HTML = `
 </div>
 </section>
 <!-- ======================== TESTIMONIALS ======================== -->
-<section id="testimonials">
-<div class="container">
-<!-- Featured large quote — eyebrow inline, no separate header -->
-<div class="testi-featured reveal">
-<span class="eyebrow" style="margin-bottom:24px;display:inline-flex;">What Clients Say</span>
-<p class="testi-quote-large">"I reached out to Evan to get him to build our website. I was very impressed with the pricing and the simple process of working with him and his team. The website is absolutely amazing — we will be using their services again. Thanks Evan for the great experience!"</p>
-<div class="testi-divider"></div>
-<div class="testi-author-name">Jordan</div>
-<div class="testi-author-company">Mectrix Media</div>
+<section id=”testimonials”>
+<div class=”container”>
+<div class=”testi-header reveal”>
+<span class=”eyebrow”>What Clients Say</span>
+<h2>Real words from real clients.</h2>
 </div>
-<!-- Two smaller cards -->
-<div class="testi-row">
-<div class="testi-card reveal" style="transition-delay:0.16s">
-<span class="testi-mark">“</span>
-<p class="testi-quote">Evan and Gavin helped me scale my product into a brand. I can't thank them enough for the help they gave!</p>
-<div class="testi-divider"></div>
-<div class="testi-author-name">Aiden A.</div>
-<div class="testi-author-company">Lumina Sphere</div>
 </div>
-<div class="testi-card reveal" style="transition-delay:0.24s">
-<span class="testi-mark">“</span>
-<p class="testi-quote">Good service, scaled my brand up from nothing.</p>
-<div class="testi-divider"></div>
-<div class="testi-author-name">Vultus Worldwide</div>
-<div class="testi-author-company"></div>
+<!-- Full-bleed scrolling marquee — cards duplicated for seamless loop -->
+<div class=”testi-marquee-wrap”>
+<div class=”testi-track” id=”testiTrack”>
+
+<!-- SET 1 -->
+<div class=”testi-card”>
+<span class=”testi-mark”>”</span>
+<p class=”testi-quote”>I reached out to Evan to get him to build our website. I was very impressed with the pricing and the simple process of working with him and his team. The website is absolutely amazing — we will be using their services again.</p>
+<div class=”testi-divider”></div>
+<div class=”testi-author-name”>Jordan</div>
+<div class=”testi-author-company”>Mectrix Media</div>
 </div>
+
+<div class=”testi-card”>
+<span class=”testi-mark”>”</span>
+<p class=”testi-quote”>Evan and Gavin helped me scale my product into a brand. I can't thank them enough for the help they gave — the whole process was seamless and the results spoke for themselves.</p>
+<div class=”testi-divider”></div>
+<div class=”testi-author-name”>Aiden A.</div>
+<div class=”testi-author-company”>Lumina Sphere</div>
+</div>
+
+<div class=”testi-card”>
+<span class=”testi-mark”>”</span>
+<p class=”testi-quote”>Good service, scaled my brand up from nothing. They know what they're doing and actually deliver — which is rare. Would recommend without hesitation.</p>
+<div class=”testi-divider”></div>
+<div class=”testi-author-name”>Vultus Worldwide</div>
+<div class=”testi-author-company”>Brand &amp; Creative</div>
+</div>
+
+<div class=”testi-card”>
+<span class=”testi-mark”>”</span>
+<p class=”testi-quote”>The booking system they built basically runs our follow-up on autopilot. We stopped losing clients to slow response times the week it went live.</p>
+<div class=”testi-divider”></div>
+<div class=”testi-author-name”>Dack</div>
+<div class=”testi-author-company”>CutByDack · Toronto</div>
+</div>
+
+<!-- SET 2 — exact duplicate for seamless loop -->
+<div class=”testi-card”>
+<span class=”testi-mark”>”</span>
+<p class=”testi-quote”>I reached out to Evan to get him to build our website. I was very impressed with the pricing and the simple process of working with him and his team. The website is absolutely amazing — we will be using their services again.</p>
+<div class=”testi-divider”></div>
+<div class=”testi-author-name”>Jordan</div>
+<div class=”testi-author-company”>Mectrix Media</div>
+</div>
+
+<div class=”testi-card”>
+<span class=”testi-mark”>”</span>
+<p class=”testi-quote”>Evan and Gavin helped me scale my product into a brand. I can't thank them enough for the help they gave — the whole process was seamless and the results spoke for themselves.</p>
+<div class=”testi-divider”></div>
+<div class=”testi-author-name”>Aiden A.</div>
+<div class=”testi-author-company”>Lumina Sphere</div>
+</div>
+
+<div class=”testi-card”>
+<span class=”testi-mark”>”</span>
+<p class=”testi-quote”>Good service, scaled my brand up from nothing. They know what they're doing and actually deliver — which is rare. Would recommend without hesitation.</p>
+<div class=”testi-divider”></div>
+<div class=”testi-author-name”>Vultus Worldwide</div>
+<div class=”testi-author-company”>Brand &amp; Creative</div>
+</div>
+
+<div class=”testi-card”>
+<span class=”testi-mark”>”</span>
+<p class=”testi-quote”>The booking system they built basically runs our follow-up on autopilot. We stopped losing clients to slow response times the week it went live.</p>
+<div class=”testi-divider”></div>
+<div class=”testi-author-name”>Dack</div>
+<div class=”testi-author-company”>CutByDack · Toronto</div>
+</div>
+
 </div>
 </div>
 </section>
