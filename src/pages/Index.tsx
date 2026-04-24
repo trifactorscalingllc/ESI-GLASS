@@ -2043,7 +2043,7 @@ const SCRIPT = `
 const HTML = `
 <!-- ======================== STICKY CTA BAR ======================== -->
 <div class="sticky-bar" id="stickyBar">
-<p class="sticky-bar-text">We open <span>3 client spots per month.</span> Currently accepting applications.</p>
+<p class="sticky-bar-text">Not sure if we're the right fit? <span>Let's find out.</span></p>
 <a class="btn-gold" href="/apply" style="padding:11px 24px;font-size:0.8rem;white-space:nowrap;">Book Your Free Audit →</a>
 </div>
 <!-- ======================== NAV ======================== -->
