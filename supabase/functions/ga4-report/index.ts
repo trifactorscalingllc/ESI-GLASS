@@ -41,11 +41,15 @@ async function getAccessToken(): Promise<string> {
   const signingInput = `${header}.${payload}`
 
   // Parse PEM → raw DER bytes
-  // Strip headers, then keep ONLY valid base64 chars (handles any stray whitespace/quotes/etc)
+  // 1. Convert JSON-escaped \n to real newlines (must happen BEFORE base64 filter
+  //    so literal backslash-n doesn't leave stray 'n' chars in the output)
+  // 2. Strip PEM headers
+  // 3. Keep ONLY valid base64 chars — handles any whitespace, \r, quotes, etc.
   const b64 = privateKeyPem
+    .replace(/\\n/g, '\n')
     .replace(/-----BEGIN PRIVATE KEY-----/g, '')
     .replace(/-----END PRIVATE KEY-----/g, '')
-    .replace(/[^A-Za-z0-9+/=]/g, '')  // strip everything that isn't valid base64
+    .replace(/[^A-Za-z0-9+/=]/g, '')
 
   let der: Uint8Array
   try {
