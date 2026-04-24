@@ -1,37 +1,35 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, ReactNode } from 'react'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  BarChart, Bar, Cell, PieChart, Pie, Legend,
+  BarChart, Bar, Cell, PieChart, Pie,
 } from 'recharts'
 
-// ── Config ─────────────────────────────────────────────────────────────────
+// ── Config ──────────────────────────────────────────────────────────────────
 const EDGE_URL = 'https://qamvvvwlpzkjvxoomjno.supabase.co/functions/v1/ga4-report'
-const ADMIN_PASS = 'tfs-admin-2026'  // Change via Lovable env if needed
+const ADMIN_PASS = 'tfs-admin-2026'
 
-// ── Brand tokens ────────────────────────────────────────────────────────────
-const G = {
+// ── Brand ────────────────────────────────────────────────────────────────────
+const C = {
   gold:    '#D4AF37',
-  goldDim: 'rgba(212,175,55,0.15)',
-  goldBrd: 'rgba(212,175,55,0.25)',
+  goldDim: 'rgba(212,175,55,0.12)',
+  goldBrd: 'rgba(212,175,55,0.22)',
   black:   '#050505',
   surface: 'rgba(255,255,255,0.03)',
-  border:  'rgba(255,255,255,0.06)',
+  border:  'rgba(255,255,255,0.07)',
   gray:    'rgba(255,255,255,0.45)',
   white:   '#ffffff',
-  red:     '#ef4444',
   green:   '#22c55e',
+  red:     '#ef4444',
 }
 
-const DEVICE_COLORS = [G.gold, 'rgba(212,175,55,0.55)', 'rgba(212,175,55,0.25)']
-const SOURCE_COLORS = [G.gold, '#b8942e', '#8a6e22', '#5c4916', 'rgba(212,175,55,0.4)', 'rgba(212,175,55,0.25)', 'rgba(212,175,55,0.15)', 'rgba(212,175,55,0.1)']
+const DEVICE_COLORS  = [C.gold, 'rgba(212,175,55,0.5)', 'rgba(212,175,55,0.22)']
+const SOURCE_COLORS  = [C.gold, '#b8942e', '#8a6e22', '#5c4916',
+  'rgba(212,175,55,0.4)', 'rgba(212,175,55,0.25)', 'rgba(212,175,55,0.15)', C.goldBrd]
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
-function fmt(n: number) { return n >= 1000 ? (n / 1000).toFixed(1) + 'k' : n.toString() }
-function fmtDur(s: number) {
-  const m = Math.floor(s / 60)
-  const sec = Math.round(s % 60)
-  return `${m}m ${sec}s`
-}
+// ── Helpers ──────────────────────────────────────────────────────────────────
+const fmt     = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n)
+const fmtDur  = (s: number) => `${Math.floor(s / 60)}m ${Math.round(s % 60)}s`
+const fmtPct  = (v: number) => `${(v * 100).toFixed(1)}%`
 
 async function fetchReport(report: string, startDate: string, endDate: string) {
   const res = await fetch(EDGE_URL, {
@@ -44,71 +42,54 @@ async function fetchReport(report: string, startDate: string, endDate: string) {
   return json.data
 }
 
-// ── Sub-components ───────────────────────────────────────────────────────────
+// ── Tiny components ───────────────────────────────────────────────────────────
 
-function KPICard({ label, value, delta, format = 'number' }: {
-  label: string; value: number; delta: number | null; format?: string
-}) {
-  const display =
-    format === 'percent'   ? `${value.toFixed(1)}%` :
-    format === 'duration'  ? fmtDur(value) :
-    format === 'pct-raw'   ? `${(value * 100).toFixed(1)}%` :
-    fmt(value)
-
-  const isPos = delta !== null && delta > 0
-  const isNeg = delta !== null && delta < 0
-
+function Card({ children, style = {} }: { children: ReactNode; style?: object }) {
   return (
     <div style={{
-      background: G.surface, border: `1px solid ${G.goldBrd}`,
-      borderRadius: 12, padding: '24px 28px', flex: 1, minWidth: 180,
-    }}>
-      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
-        textTransform: 'uppercase', color: G.gold, marginBottom: 12 }}>
-        {label}
-      </div>
-      <div style={{ fontSize: 36, fontWeight: 800, color: G.white,
-        fontFamily: "'Plus Jakarta Sans', sans-serif", lineHeight: 1 }}>
-        {display}
-      </div>
-      {delta !== null && (
-        <div style={{ marginTop: 8, fontSize: 13, fontWeight: 600,
-          color: isPos ? G.green : isNeg ? G.red : G.gray }}>
-          {isPos ? '▲' : isNeg ? '▼' : '—'} {Math.abs(delta)}% vs prev period
-        </div>
-      )}
-    </div>
+      background: C.surface,
+      border: `1px solid ${C.goldBrd}`,
+      borderRadius: 12,
+      padding: '24px 28px',
+      ...style,
+    }}>{children}</div>
   )
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function SectionTitle({ children }: { children: ReactNode }) {
   return (
-    <div style={{ background: G.surface, border: `1px solid ${G.border}`,
-      borderRadius: 12, padding: '28px 32px' }}>
-      <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.08em',
-        textTransform: 'uppercase', color: G.gold, marginBottom: 24 }}>
-        {title}
-      </div>
-      {children}
-    </div>
+    <div style={{
+      fontSize: 11, fontWeight: 700, letterSpacing: '0.12em',
+      textTransform: 'uppercase' as const, color: C.gold, marginBottom: 20,
+    }}>{children}</div>
   )
 }
 
-function Spinner() {
+function Skeleton({ h = 120 }: { h?: number }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
-      height: 180, color: G.gray, fontSize: 14 }}>
-      Loading…
+    <div style={{
+      height: h, background: 'rgba(255,255,255,0.05)',
+      borderRadius: 8, animation: 'tfsPulse 1.6s ease-in-out infinite',
+    }} />
+  )
+}
+
+function ErrorBox({ msg }: { msg: string }) {
+  return (
+    <div style={{ padding: '16px 20px', background: 'rgba(239,68,68,0.08)',
+      border: '1px solid rgba(239,68,68,0.3)', borderRadius: 8,
+      color: C.red, fontSize: 13 }}>
+      ⚠ {msg}
     </div>
   )
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const Tip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null
   return (
-    <div style={{ background: '#111', border: `1px solid ${G.goldBrd}`,
+    <div style={{ background: '#111', border: `1px solid ${C.goldBrd}`,
       borderRadius: 8, padding: '10px 16px', fontSize: 13 }}>
-      <div style={{ color: G.gray, marginBottom: 6 }}>{label}</div>
+      <div style={{ color: C.gray, marginBottom: 6 }}>{label}</div>
       {payload.map((p: any) => (
         <div key={p.name} style={{ color: p.color, fontWeight: 600 }}>
           {p.name}: {fmt(p.value)}
@@ -118,58 +99,72 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   )
 }
 
-// ── Login gate ───────────────────────────────────────────────────────────────
-function LoginGate({ onAuth }: { onAuth: () => void }) {
+function KPI({ label, value, delta, display }: {
+  label: string; value: number; delta: number | null; display: string
+}) {
+  const up = delta !== null && delta > 0
+  const dn = delta !== null && delta < 0
+  return (
+    <Card style={{ flex: 1, minWidth: 160 }}>
+      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
+        textTransform: 'uppercase' as const, color: C.gold, marginBottom: 10 }}>
+        {label}
+      </div>
+      <div style={{ fontSize: 34, fontWeight: 800, color: C.white, lineHeight: 1 }}>
+        {display}
+      </div>
+      {delta !== null && (
+        <div style={{ marginTop: 8, fontSize: 13, fontWeight: 600,
+          color: up ? C.green : dn ? C.red : C.gray }}>
+          {up ? '▲' : dn ? '▼' : '—'} {Math.abs(delta)}% vs prev
+        </div>
+      )}
+    </Card>
+  )
+}
+
+// ── Login ─────────────────────────────────────────────────────────────────────
+function Login({ onAuth }: { onAuth: () => void }) {
   const [pw, setPw]   = useState('')
   const [err, setErr] = useState(false)
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (pw === ADMIN_PASS) {
-      sessionStorage.setItem('tfs_admin', '1')
-      onAuth()
-    } else {
-      setErr(true)
-      setPw('')
-    }
+    if (pw === ADMIN_PASS) { sessionStorage.setItem('tfs_admin', '1'); onAuth() }
+    else { setErr(true); setPw('') }
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: G.black, display: 'flex',
-      alignItems: 'center', justifyContent: 'center', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-      <div style={{ width: 380, padding: '48px 40px',
-        background: G.surface, border: `1px solid ${G.goldBrd}`, borderRadius: 16 }}>
-        <img src="/TFS-Logo-Transparent.png" alt="TFS" style={{ height: 48, marginBottom: 32 }} />
-        <div style={{ fontSize: 22, fontWeight: 800, color: G.white, marginBottom: 6 }}>
+    <div style={{ minHeight: '100vh', background: C.black, display: 'flex',
+      alignItems: 'center', justifyContent: 'center',
+      fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <div style={{ width: 380, padding: '48px 40px', background: C.surface,
+        border: `1px solid ${C.goldBrd}`, borderRadius: 16 }}>
+        <img src="/TFS-Logo-Transparent.png" alt="TFS" style={{ height: 44, marginBottom: 28 }} />
+        <div style={{ fontSize: 22, fontWeight: 800, color: C.white, marginBottom: 6 }}>
           Admin Portal
         </div>
-        <div style={{ fontSize: 14, color: G.gray, marginBottom: 32 }}>
+        <div style={{ fontSize: 14, color: C.gray, marginBottom: 28 }}>
           Enter your access code to continue.
         </div>
         <form onSubmit={submit}>
-          <input
-            type="password"
-            value={pw}
+          <input type="password" value={pw} autoFocus
             onChange={e => { setPw(e.target.value); setErr(false) }}
             placeholder="Access code"
-            autoFocus
-            style={{
-              width: '100%', padding: '14px 16px', borderRadius: 8,
-              background: 'rgba(255,255,255,0.04)',
-              border: `1px solid ${err ? G.red : G.goldBrd}`,
-              color: G.white, fontSize: 15, outline: 'none',
+            style={{ width: '100%', padding: '13px 15px', borderRadius: 8,
+              background: 'rgba(255,255,255,0.05)',
+              border: `1px solid ${err ? C.red : C.goldBrd}`,
+              color: C.white, fontSize: 15, outline: 'none',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
-              boxSizing: 'border-box', marginBottom: err ? 8 : 16,
-            }}
+              boxSizing: 'border-box' as const, marginBottom: err ? 8 : 20 }}
           />
-          {err && <div style={{ color: G.red, fontSize: 13, marginBottom: 16 }}>
+          {err && <div style={{ color: C.red, fontSize: 13, marginBottom: 16 }}>
             Incorrect access code.
           </div>}
-          <button type="submit" style={{
-            width: '100%', padding: '14px', background: G.gold, color: G.black,
-            border: 'none', borderRadius: 8, fontWeight: 700, fontSize: 15,
-            cursor: 'pointer', fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}>
+          <button type="submit" style={{ width: '100%', padding: '13px',
+            background: C.gold, color: C.black, border: 'none', borderRadius: 8,
+            fontWeight: 700, fontSize: 15, cursor: 'pointer',
+            fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             Enter Dashboard →
           </button>
         </form>
@@ -178,7 +173,7 @@ function LoginGate({ onAuth }: { onAuth: () => void }) {
   )
 }
 
-// ── Main Dashboard ───────────────────────────────────────────────────────────
+// ── Dashboard ─────────────────────────────────────────────────────────────────
 const RANGES = [
   { label: '7 days',  start: '7daysAgo',  end: 'today' },
   { label: '30 days', start: '30daysAgo', end: 'today' },
@@ -186,22 +181,24 @@ const RANGES = [
 ]
 
 function Dashboard({ onLogout }: { onLogout: () => void }) {
-  const [range, setRange]         = useState(1)
-  const [overview, setOverview]   = useState<any>(null)
-  const [timeseries, setTimeseries] = useState<any[]>([])
-  const [pages, setPages]         = useState<any[]>([])
-  const [sources, setSources]     = useState<any[]>([])
-  const [devices, setDevices]     = useState<any[]>([])
-  const [realtime, setRealtime]   = useState<number | null>(null)
-  const [loading, setLoading]     = useState(true)
-  const [lastUpdated, setLastUpdated] = useState('')
+  const [range, setRange]       = useState(1)
+  const [overview, setOverview] = useState<any>(null)
+  const [ts, setTs]             = useState<any[]>([])
+  const [pages, setPages]       = useState<any[]>([])
+  const [sources, setSources]   = useState<any[]>([])
+  const [devices, setDevices]   = useState<any[]>([])
+  const [active, setActive]     = useState<number | null>(null)
+  const [loading, setLoading]   = useState(true)
+  const [error, setError]       = useState<string | null>(null)
+  const [updated, setUpdated]   = useState('')
 
   const { start, end } = RANGES[range]
 
-  const loadAll = useCallback(async () => {
+  const load = useCallback(async () => {
     setLoading(true)
+    setError(null)
     try {
-      const [ov, ts, pg, src, dev, rt] = await Promise.all([
+      const [ov, timeseries, pg, src, dev, rt] = await Promise.all([
         fetchReport('overview',   start, end),
         fetchReport('timeseries', start, end),
         fetchReport('pages',      start, end),
@@ -210,308 +207,273 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
         fetchReport('realtime',   start, end),
       ])
       setOverview(ov)
-      setTimeseries(ts)
+      setTs(timeseries)
       setPages(pg)
       setSources(src)
       setDevices(dev)
-      setRealtime(rt.activeUsers)
-      setLastUpdated(new Date().toLocaleTimeString())
-    } catch (e) {
-      console.error(e)
+      setActive(rt.activeUsers)
+      setUpdated(new Date().toLocaleTimeString())
+    } catch (e: any) {
+      setError(e.message ?? 'Failed to load analytics data.')
     }
     setLoading(false)
   }, [start, end])
 
-  useEffect(() => { loadAll() }, [loadAll])
+  useEffect(() => { load() }, [load])
 
-  // Refresh realtime every 30s
+  // Refresh active users every 30s
   useEffect(() => {
     const id = setInterval(async () => {
-      try {
-        const rt = await fetchReport('realtime', start, end)
-        setRealtime(rt.activeUsers)
-      } catch {}
+      try { const rt = await fetchReport('realtime', start, end); setActive(rt.activeUsers) } catch {}
     }, 30000)
     return () => clearInterval(id)
   }, [start, end])
 
   const totalSessions = sources.reduce((a, s) => a + s.sessions, 0)
+  const totalDevSessions = devices.reduce((a, d) => a + d.sessions, 0)
 
   return (
-    <div style={{ minHeight: '100vh', background: G.black,
-      fontFamily: "'Plus Jakarta Sans', sans-serif", color: G.white }}>
+    <div style={{ minHeight: '100vh', background: C.black,
+      fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.white }}>
 
-      {/* Nav */}
-      <div style={{ borderBottom: `1px solid ${G.border}`, padding: '0 40px',
+      {/* Nav bar */}
+      <div style={{ borderBottom: `1px solid ${C.border}`, padding: '0 40px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        height: 68, position: 'sticky', top: 0, background: G.black, zIndex: 100 }}>
+        height: 66, position: 'sticky', top: 0, background: C.black, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <img src="/TFS-Logo-Transparent.png" alt="TFS" style={{ height: 42 }} />
-          <div style={{ width: 1, height: 24, background: G.border }} />
-          <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.1em',
-            textTransform: 'uppercase', color: G.gold }}>
+          <img src="/TFS-Logo-Transparent.png" alt="TFS" style={{ height: 40 }} />
+          <div style={{ width: 1, height: 22, background: C.border }} />
+          <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em',
+            textTransform: 'uppercase' as const, color: C.gold }}>
             Analytics
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          {realtime !== null && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          {active !== null && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8,
-              background: G.goldDim, border: `1px solid ${G.goldBrd}`,
-              borderRadius: 20, padding: '6px 14px' }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%',
-                background: G.green, boxShadow: `0 0 6px ${G.green}` }} />
-              <span style={{ fontSize: 13, fontWeight: 600, color: G.white }}>
-                {realtime} active now
-              </span>
+              background: C.goldDim, border: `1px solid ${C.goldBrd}`,
+              borderRadius: 20, padding: '5px 14px' }}>
+              <div style={{ width: 7, height: 7, borderRadius: '50%',
+                background: C.green, boxShadow: `0 0 6px ${C.green}` }} />
+              <span style={{ fontSize: 13, fontWeight: 600 }}>{active} live</span>
             </div>
           )}
-          <span style={{ fontSize: 12, color: G.gray }}>Updated {lastUpdated}</span>
-          <button onClick={loadAll} style={{
-            background: 'transparent', border: `1px solid ${G.border}`,
-            color: G.gray, padding: '7px 16px', borderRadius: 6, cursor: 'pointer',
-            fontSize: 13, fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}>
-            ↻ Refresh
-          </button>
-          <button onClick={onLogout} style={{
-            background: 'transparent', border: `1px solid ${G.border}`,
-            color: G.gray, padding: '7px 16px', borderRadius: 6, cursor: 'pointer',
-            fontSize: 13, fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}>
-            Sign out
-          </button>
+          {updated && <span style={{ fontSize: 12, color: C.gray }}>Updated {updated}</span>}
+          {[{ label: '↻ Refresh', fn: load }, { label: 'Sign out', fn: onLogout }].map(b => (
+            <button key={b.label} onClick={b.fn} style={{
+              background: 'transparent', border: `1px solid ${C.border}`,
+              color: C.gray, padding: '7px 16px', borderRadius: 6, cursor: 'pointer',
+              fontSize: 13, fontFamily: "'Plus Jakarta Sans', sans-serif",
+            }}>{b.label}</button>
+          ))}
         </div>
       </div>
 
-      {/* Body */}
+      {/* Page body */}
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '40px 40px 80px' }}>
 
-        {/* Header */}
-        <div style={{ marginBottom: 36, display: 'flex', alignItems: 'flex-end',
-          justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+        {/* Header + range */}
+        <div style={{ display: 'flex', alignItems: 'flex-end',
+          justifyContent: 'space-between', flexWrap: 'wrap' as const,
+          gap: 16, marginBottom: 32 }}>
           <div>
-            <div style={{ fontSize: 28, fontWeight: 800, color: G.white }}>
-              trifactorscaling.com
-            </div>
-            <div style={{ fontSize: 15, color: G.gray, marginTop: 4 }}>
-              Website analytics dashboard
+            <div style={{ fontSize: 26, fontWeight: 800 }}>trifactorscaling.com</div>
+            <div style={{ fontSize: 14, color: C.gray, marginTop: 4 }}>
+              Analytics dashboard
             </div>
           </div>
-          {/* Date range */}
-          <div style={{ display: 'flex', gap: 6, background: G.surface,
-            border: `1px solid ${G.border}`, borderRadius: 8, padding: 4 }}>
+          <div style={{ display: 'flex', gap: 4, background: C.surface,
+            border: `1px solid ${C.border}`, borderRadius: 8, padding: 4 }}>
             {RANGES.map((r, i) => (
               <button key={i} onClick={() => setRange(i)} style={{
                 padding: '8px 18px', borderRadius: 6, border: 'none', cursor: 'pointer',
                 fontSize: 13, fontWeight: 600,
-                background: range === i ? G.gold : 'transparent',
-                color: range === i ? G.black : G.gray,
+                background: range === i ? C.gold : 'transparent',
+                color: range === i ? C.black : C.gray,
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
-                transition: 'all 0.18s',
-              }}>
-                {r.label}
-              </button>
+              }}>{r.label}</button>
             ))}
           </div>
         </div>
 
-        {/* KPI Cards */}
-        {loading ? (
-          <div style={{ display: 'flex', gap: 16, marginBottom: 24 }}>
-            {[1,2,3,4,5].map(i => (
-              <div key={i} style={{ flex: 1, height: 120, background: G.surface,
-                border: `1px solid ${G.goldBrd}`, borderRadius: 12,
-                animation: 'pulse 1.5s ease-in-out infinite' }} />
-            ))}
-          </div>
-        ) : overview ? (
-          <div style={{ display: 'flex', gap: 16, marginBottom: 32, flexWrap: 'wrap' }}>
-            <KPICard label="Sessions"   value={overview.sessions.value}    delta={overview.sessions.delta} />
-            <KPICard label="Users"      value={overview.users.value}       delta={overview.users.delta} />
-            <KPICard label="Page Views" value={overview.pageViews.value}   delta={overview.pageViews.delta} />
-            <KPICard label="Bounce Rate" value={overview.bounceRate.value} delta={overview.bounceRate.delta} format="pct-raw" />
-            <KPICard label="Avg Session" value={overview.avgDuration.value} delta={overview.avgDuration.delta} format="duration" />
-          </div>
-        ) : null}
+        {error && <div style={{ marginBottom: 24 }}><ErrorBox msg={error} /></div>}
 
-        {/* Charts row */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, marginBottom: 20 }}>
-          <Section title="Sessions Over Time">
-            {loading ? <Spinner /> : (
-              <ResponsiveContainer width="100%" height={240}>
-                <LineChart data={timeseries} margin={{ top: 4, right: 8, bottom: 0, left: -12 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={G.border} />
-                  <XAxis dataKey="date" tick={{ fill: G.gray, fontSize: 12 }}
-                    tickLine={false} axisLine={false} interval="preserveStartEnd" />
-                  <YAxis tick={{ fill: G.gray, fontSize: 12 }} tickLine={false} axisLine={false} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Line type="monotone" dataKey="sessions" name="Sessions"
-                    stroke={G.gold} strokeWidth={2.5} dot={false} activeDot={{ r: 4, fill: G.gold }} />
-                  <Line type="monotone" dataKey="users" name="Users"
-                    stroke="rgba(212,175,55,0.4)" strokeWidth={2} dot={false}
-                    strokeDasharray="4 3" activeDot={{ r: 4 }} />
-                </LineChart>
-              </ResponsiveContainer>
-            )}
-          </Section>
+        {/* KPI row */}
+        <div style={{ display: 'flex', gap: 16, marginBottom: 24, flexWrap: 'wrap' as const }}>
+          {loading ? [1,2,3,4,5].map(i => (
+            <div key={i} style={{ flex: 1, minWidth: 160 }}><Skeleton h={112} /></div>
+          )) : overview ? <>
+            <KPI label="Sessions"    value={overview.sessions.value}    delta={overview.sessions.delta}    display={fmt(overview.sessions.value)} />
+            <KPI label="Users"       value={overview.users.value}       delta={overview.users.delta}       display={fmt(overview.users.value)} />
+            <KPI label="Page Views"  value={overview.pageViews.value}   delta={overview.pageViews.delta}   display={fmt(overview.pageViews.value)} />
+            <KPI label="Bounce Rate" value={overview.bounceRate.value}  delta={overview.bounceRate.delta}  display={fmtPct(overview.bounceRate.value)} />
+            <KPI label="Avg Session" value={overview.avgDuration.value} delta={overview.avgDuration.delta} display={fmtDur(overview.avgDuration.value)} />
+          </> : null}
         </div>
 
-        {/* Second row: Top Pages + Sources */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 20, marginBottom: 20 }}>
+        {/* Timeseries */}
+        <Card style={{ marginBottom: 20 }}>
+          <SectionTitle>Sessions Over Time</SectionTitle>
+          {loading ? <Skeleton h={220} /> : (
+            <ResponsiveContainer width="100%" height={220}>
+              <LineChart data={ts} margin={{ top: 4, right: 8, bottom: 0, left: -20 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
+                <XAxis dataKey="date" tick={{ fill: C.gray, fontSize: 11 }} tickLine={false} axisLine={false} interval="preserveStartEnd" />
+                <YAxis tick={{ fill: C.gray, fontSize: 11 }} tickLine={false} axisLine={false} />
+                <Tooltip content={<Tip />} />
+                <Line type="monotone" dataKey="sessions" name="Sessions" stroke={C.gold} strokeWidth={2.5} dot={false} activeDot={{ r: 4, fill: C.gold }} />
+                <Line type="monotone" dataKey="users" name="Users" stroke="rgba(212,175,55,0.38)" strokeWidth={2} dot={false} strokeDasharray="4 3" />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+        </Card>
 
-          <Section title="Top Pages">
-            {loading ? <Spinner /> : (
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-                  <thead>
-                    <tr style={{ borderBottom: `1px solid ${G.border}` }}>
-                      {['Page', 'Views', 'Sessions', 'Bounce'].map(h => (
-                        <th key={h} style={{ textAlign: h === 'Page' ? 'left' : 'right',
-                          padding: '0 12px 14px 0', color: G.gray, fontWeight: 600,
-                          letterSpacing: '0.06em', fontSize: 11, textTransform: 'uppercase' }}>
-                          {h}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {pages.map((p, i) => (
-                      <tr key={i} style={{ borderBottom: `1px solid ${G.border}` }}>
-                        <td style={{ padding: '13px 12px 13px 0', color: G.white,
-                          maxWidth: 240, overflow: 'hidden', textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap' }}>
-                          <span style={{ color: G.gray }}>{p.path === '/' ? '/' : p.path}</span>
-                        </td>
-                        <td style={{ padding: '13px 12px 13px 0', textAlign: 'right',
-                          color: G.white, fontWeight: 600 }}>{fmt(p.views)}</td>
-                        <td style={{ padding: '13px 12px 13px 0', textAlign: 'right',
-                          color: G.gray }}>{fmt(p.sessions)}</td>
-                        <td style={{ padding: '13px 0 13px 0', textAlign: 'right',
-                          color: p.bounceRate > 60 ? G.red : p.bounceRate < 40 ? G.green : G.gray }}>
-                          {p.bounceRate}%
-                        </td>
-                      </tr>
+        {/* Pages + Sources */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 0.7fr', gap: 20, marginBottom: 20 }}>
+
+          <Card>
+            <SectionTitle>Top Pages</SectionTitle>
+            {loading ? <Skeleton h={200} /> : (
+              <table style={{ width: '100%', borderCollapse: 'collapse' as const, fontSize: 13 }}>
+                <thead>
+                  <tr>
+                    {['Page', 'Views', 'Sessions', 'Bounce'].map(h => (
+                      <th key={h} style={{ textAlign: h === 'Page' ? 'left' as const : 'right' as const,
+                        padding: '0 8px 12px 0', color: C.gray, fontWeight: 600,
+                        fontSize: 11, letterSpacing: '0.07em', textTransform: 'uppercase' as const,
+                        borderBottom: `1px solid ${C.border}` }}>
+                        {h}
+                      </th>
                     ))}
-                  </tbody>
-                </table>
-              </div>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pages.map((p, i) => (
+                    <tr key={i} style={{ borderBottom: `1px solid ${C.border}` }}>
+                      <td style={{ padding: '11px 8px 11px 0', color: C.gray, maxWidth: 200,
+                        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>
+                        {p.path}
+                      </td>
+                      <td style={{ padding: '11px 8px 11px 0', textAlign: 'right' as const, color: C.white, fontWeight: 600 }}>
+                        {fmt(p.views)}
+                      </td>
+                      <td style={{ padding: '11px 8px 11px 0', textAlign: 'right' as const, color: C.gray }}>
+                        {fmt(p.sessions)}
+                      </td>
+                      <td style={{ padding: '11px 0 11px 0', textAlign: 'right' as const,
+                        color: p.bounceRate > 60 ? C.red : p.bounceRate < 40 ? C.green : C.gray }}>
+                        {p.bounceRate}%
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             )}
-          </Section>
+          </Card>
 
-          <Section title="Traffic Sources">
-            {loading ? <Spinner /> : (
+          <Card>
+            <SectionTitle>Traffic Sources</SectionTitle>
+            {loading ? <Skeleton h={200} /> : (
               <>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={sources} layout="vertical"
-                    margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+                <ResponsiveContainer width="100%" height={180}>
+                  <BarChart data={sources} layout="vertical" margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                     <XAxis type="number" hide />
-                    <YAxis type="category" dataKey="channel" tick={{ fill: G.gray, fontSize: 12 }}
-                      tickLine={false} axisLine={false} width={110} />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="sessions" name="Sessions" radius={4}>
-                      {sources.map((_, i) => (
-                        <Cell key={i} fill={SOURCE_COLORS[i] ?? G.goldBrd} />
+                    <YAxis type="category" dataKey="channel" tick={{ fill: C.gray, fontSize: 11 }}
+                      tickLine={false} axisLine={false} width={105} />
+                    <Tooltip content={<Tip />} />
+                    <Bar dataKey="sessions" name="Sessions" radius={3}>
+                      {sources.map((_: any, i: number) => (
+                        <Cell key={i} fill={SOURCE_COLORS[i] ?? C.goldBrd} />
                       ))}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
-                <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {sources.map((s, i) => (
-                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between',
-                      fontSize: 13, color: G.gray }}>
-                      <span style={{ color: G.white }}>{s.channel}</span>
-                      <span>{totalSessions > 0 ? Math.round((s.sessions / totalSessions) * 100) : 0}%</span>
+                <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 7 }}>
+                  {sources.map((s: any, i: number) => (
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                      <span style={{ color: C.gray }}>{s.channel}</span>
+                      <span style={{ color: C.gold, fontWeight: 600 }}>
+                        {totalSessions > 0 ? Math.round((s.sessions / totalSessions) * 100) : 0}%
+                      </span>
                     </div>
                   ))}
                 </div>
               </>
             )}
-          </Section>
+          </Card>
         </div>
 
-        {/* Third row: Devices */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 20 }}>
+        {/* Devices + Conversions */}
+        <div style={{ display: 'grid', gridTemplateColumns: '0.6fr 1.4fr', gap: 20 }}>
 
-          <Section title="Devices">
-            {loading ? <Spinner /> : (
+          <Card>
+            <SectionTitle>Devices</SectionTitle>
+            {loading ? <Skeleton h={180} /> : (
               <>
-                <ResponsiveContainer width="100%" height={180}>
+                <ResponsiveContainer width="100%" height={160}>
                   <PieChart>
                     <Pie data={devices} dataKey="sessions" nameKey="device"
-                      cx="50%" cy="50%" innerRadius={50} outerRadius={80}
-                      strokeWidth={0}>
-                      {devices.map((_, i) => (
-                        <Cell key={i} fill={DEVICE_COLORS[i] ?? G.goldBrd} />
+                      cx="50%" cy="50%" innerRadius={44} outerRadius={72} strokeWidth={0}>
+                      {devices.map((_: any, i: number) => (
+                        <Cell key={i} fill={DEVICE_COLORS[i] ?? C.goldBrd} />
                       ))}
                     </Pie>
                     <Tooltip formatter={(v: any) => [fmt(v), 'Sessions']} />
                   </PieChart>
                 </ResponsiveContainer>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
-                  {devices.map((d, i) => {
-                    const total = devices.reduce((a, x) => a + x.sessions, 0)
-                    const pct = total > 0 ? Math.round((d.sessions / total) * 100) : 0
-                    return (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <div style={{ width: 10, height: 10, borderRadius: 2, flexShrink: 0,
-                          background: DEVICE_COLORS[i] ?? G.goldBrd }} />
-                        <span style={{ fontSize: 13, color: G.white, flex: 1, textTransform: 'capitalize' }}>
-                          {d.device}
-                        </span>
-                        <span style={{ fontSize: 13, color: G.gold, fontWeight: 700 }}>{pct}%</span>
-                      </div>
-                    )
-                  })}
+                  {devices.map((d: any, i: number) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ width: 9, height: 9, borderRadius: 2, flexShrink: 0,
+                        background: DEVICE_COLORS[i] ?? C.goldBrd }} />
+                      <span style={{ fontSize: 13, color: C.white, flex: 1, textTransform: 'capitalize' as const }}>
+                        {d.device}
+                      </span>
+                      <span style={{ fontSize: 13, color: C.gold, fontWeight: 700 }}>
+                        {totalDevSessions > 0 ? Math.round((d.sessions / totalDevSessions) * 100) : 0}%
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </>
             )}
-          </Section>
+          </Card>
 
-          <Section title="Conversions by Channel">
-            {loading ? <Spinner /> : (
+          <Card>
+            <SectionTitle>Conversions &amp; Users by Channel</SectionTitle>
+            {loading ? <Skeleton h={180} /> : (
               <ResponsiveContainer width="100%" height={220}>
-                <BarChart data={sources} margin={{ top: 4, right: 8, bottom: 20, left: -12 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={G.border} vertical={false} />
-                  <XAxis dataKey="channel" tick={{ fill: G.gray, fontSize: 11 }}
-                    tickLine={false} axisLine={false} angle={-25} textAnchor="end" />
-                  <YAxis tick={{ fill: G.gray, fontSize: 12 }} tickLine={false} axisLine={false} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="conversions" name="Conversions" radius={4} fill={G.gold} />
-                  <Bar dataKey="users" name="Users" radius={4} fill="rgba(212,175,55,0.25)" />
+                <BarChart data={sources} margin={{ top: 4, right: 8, bottom: 28, left: -20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false} />
+                  <XAxis dataKey="channel" tick={{ fill: C.gray, fontSize: 11 }}
+                    tickLine={false} axisLine={false} angle={-20} textAnchor="end" />
+                  <YAxis tick={{ fill: C.gray, fontSize: 11 }} tickLine={false} axisLine={false} />
+                  <Tooltip content={<Tip />} />
+                  <Bar dataKey="users" name="Users" radius={3} fill="rgba(212,175,55,0.22)" />
+                  <Bar dataKey="conversions" name="Conversions" radius={3} fill={C.gold} />
                 </BarChart>
               </ResponsiveContainer>
             )}
-          </Section>
-
+          </Card>
         </div>
       </div>
 
       <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 0.4; }
-          50% { opacity: 0.7; }
-        }
-        * { box-sizing: border-box; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 3px; }
+        @keyframes tfsPulse { 0%,100%{opacity:.35} 50%{opacity:.65} }
+        *{box-sizing:border-box}
+        ::-webkit-scrollbar{width:5px;height:5px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:rgba(212,175,55,0.3);border-radius:3px}
       `}</style>
     </div>
   )
 }
 
-// ── Root export ──────────────────────────────────────────────────────────────
+// ── Root ──────────────────────────────────────────────────────────────────────
 export default function Admin() {
   const [authed, setAuthed] = useState(
     () => sessionStorage.getItem('tfs_admin') === '1'
   )
-
-  const logout = () => {
-    sessionStorage.removeItem('tfs_admin')
-    setAuthed(false)
-  }
-
-  return authed
-    ? <Dashboard onLogout={logout} />
-    : <LoginGate onAuth={() => setAuthed(true)} />
+  if (!authed) return <Login onAuth={() => setAuthed(true)} />
+  return <Dashboard onLogout={() => { sessionStorage.removeItem('tfs_admin'); setAuthed(false) }} />
 }
