@@ -1801,6 +1801,8 @@ const SCRIPT = `
        HORIZONTAL PROCESS — bidirectional scroll hijack
        • Scrolling DOWN: hijacks at step 01, drives 01→02→03, releases.
        • Scrolling UP:   hijacks at step 03 (from below), drives 03→02→01, releases.
+       Uses capture phase on document so mouse position doesn't matter —
+       the event is intercepted before the browser routes it to any element.
     ============================================================ */
     (function() {
       if (window.innerWidth <= 768) return;
@@ -1809,22 +1811,21 @@ const SCRIPT = `
       var dots    = document.querySelectorAll('.hiw-dot');
       if (!section || !wrap) return;
 
-      var progress  = 0;     // 0=step01  1=step03
-      var hijacked  = false;
-      var doneDown  = false; // true after forward pass completes (prevents re-lock going down)
-      var doneUp    = false; // true after reverse pass completes (prevents re-lock going up)
+      var progress = 0;      // 0 = step 01, 1 = step 03
+      var hijacked = false;
+      var doneDown = false;  // forward pass completed — don't re-lock scrolling down
+      var doneUp   = false;  // reverse pass completed — don't re-lock scrolling up
 
       function apply(p) {
         progress = Math.max(0, Math.min(1, p));
-        /* .hiw-pin-wrap is 300% wide (each panel = 100% of .hiw-right).
-           To advance from panel 1 to panel 3 we shift by -200% of .hiw-right.
-           As % of .hiw-pin-wrap that's -66.666% per full progress sweep. */
+        /* .hiw-pin-wrap = 300% of .hiw-right; shift 0 → -66.667% to traverse all 3 panels */
         wrap.style.transform = 'translateX(' + (-progress * 66.6667) + '%)';
         var idx = Math.min(2, Math.floor(progress * 3));
         dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
       }
 
       function lock(snapProgress) {
+        /* Snap page so section top aligns with viewport top */
         var rect = section.getBoundingClientRect();
         window.scrollTo(0, window.scrollY + rect.top);
         document.documentElement.style.overflow = 'hidden';
@@ -1837,48 +1838,42 @@ const SCRIPT = `
         hijacked = false;
       }
 
-      window.addEventListener('wheel', function(e) {
-        var rect   = section.getBoundingClientRect();
-        /* section is 100vh — it "fills" the viewport when top ≈ 0 */
-        var atTop  = rect.top > -8 && rect.top < 8;
+      /* ---- Capture-phase listener: fires regardless of which element the mouse is over ---- */
+      document.addEventListener('wheel', function(e) {
+        var rect  = section.getBoundingClientRect();
+        /* Generous ±80px tolerance — catches natural scroll inertia stopping near-top */
+        var nearTop = rect.top > -80 && rect.top < 80;
 
-        /* ---- Forward hijack: section at top, scrolling DOWN ---- */
-        if (!hijacked && !doneDown && atTop && e.deltaY > 0) {
-          doneUp = false;   // allow reverse pass on the way back up
+        /* Already hijacked — own every wheel event until we release */
+        if (hijacked) {
+          e.preventDefault();
+          var raw = e.deltaMode === 1 ? e.deltaY * 40
+                  : e.deltaMode === 2 ? e.deltaY * window.innerHeight
+                  : e.deltaY;
+          apply(progress + raw / window.innerWidth);
+          if (progress >= 1 && e.deltaY > 0) { doneDown = true;  unlock(); }
+          else if (progress <= 0 && e.deltaY < 0) { doneUp = true; unlock(); }
+          return;
+        }
+
+        /* Forward hijack: section near top, user scrolling DOWN */
+        if (!doneDown && nearTop && e.deltaY > 0) {
+          e.preventDefault();
+          doneUp = false;
           lock(0);
+          return;
         }
 
-        /* ---- Reverse hijack: section at top, scrolling UP ---- */
-        if (!hijacked && !doneUp && atTop && e.deltaY < 0) {
-          doneDown = false; // allow forward pass on the way back down
+        /* Reverse hijack: section near top, user scrolling UP */
+        if (!doneUp && nearTop && e.deltaY < 0) {
+          e.preventDefault();
+          doneDown = false;
           lock(1);
-        }
-
-        if (!hijacked) return;
-        e.preventDefault();
-
-        var raw = e.deltaMode === 1 ? e.deltaY * 40
-                : e.deltaMode === 2 ? e.deltaY * window.innerHeight
-                : e.deltaY;
-
-        apply(progress + raw / window.innerWidth);
-
-        /* Reached step 03 going forward → release */
-        if (progress >= 1 && e.deltaY > 0) {
-          doneDown = true;
-          unlock();
           return;
         }
+      }, { passive: false, capture: true });
 
-        /* Reached step 01 going backward → release */
-        if (progress <= 0 && e.deltaY < 0) {
-          doneUp = true;
-          unlock();
-          return;
-        }
-      }, { passive: false });
-
-      /* Reset state when section scrolls far above the fold */
+      /* Reset when section scrolls well above the fold */
       window.addEventListener('scroll', function() {
         if (hijacked) return;
         var rect = section.getBoundingClientRect();
