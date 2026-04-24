@@ -2806,7 +2806,7 @@ TikTok
 </div>
 <div class="footer-bottom">
 <span class="footer-copy">© 2026 TriFactor Scaling. All rights reserved.</span>
-<span class="footer-built">Built by <span>teens</span>. Powered by results.</span>
+
 </div>
 </div>
 </footer>

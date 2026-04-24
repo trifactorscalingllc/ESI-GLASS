@@ -1196,7 +1196,7 @@ const HTML = `
 <div class="cta-actions reveal">
 <a class="btn-gold" href="/apply">Book Your Free Growth Audit →</a>
 </div>
-<p class="cta-sub reveal">Or email us at <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a></p>
+<p class="cta-sub reveal">Or email us at <a href="mailto:contact@trifactorscaling.com">contact@trifactorscaling.com</a></p>
 </div>
 </div>
 </section>
@@ -1208,7 +1208,7 @@ const HTML = `
 <div class="footer-brand">
 <img alt="TriFactor Scaling" class="footer-logo-img" src="./TFS-Logo-Transparent.png"/>
 <p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
-<a class="footer-contact-link" href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com →</a>
+<a class="footer-contact-link" href="mailto:contact@trifactorscaling.com">contact@trifactorscaling.com →</a>
 </div>
 <div>
 <div class="footer-col-label">Pages</div>
@@ -1226,13 +1226,13 @@ const HTML = `
 <a href="/apply">Apply for Growth Ops</a>
 <a href="/results">See Client Results</a>
 <a href="/services">What We Build</a>
-<a href="mailto:trifactorscaling@gmail.com">Send Us an Email</a>
+<a href="mailto:contact@trifactorscaling.com">Send Us an Email</a>
 </div>
 </div>
 </div>
 <div class="footer-bottom">
 <span class="footer-copy">© 2026 TriFactor Scaling. All rights reserved.</span>
-<span class="footer-built">Built by <span>teens</span>. Powered by results.</span>
+
 </div>
 </div>
 </footer>

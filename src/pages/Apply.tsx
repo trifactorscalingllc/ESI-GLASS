@@ -711,11 +711,11 @@ const HTML = `
 <iframe id="booking-iframe-success" scrolling="yes" src="https://api.leadconnectorhq.com/widget/bookings/tfs-calender" style="width:100%; height:680px; border:none; display:block; background:#0d0d0d;" title="Book Your Free Growth Audit">
 </iframe>
 </div>
-<p style="font-size:0.78rem; color:var(--gray); margin-top:14px;">Can't find a time? Email us at <a href="mailto:trifactorscaling@gmail.com" style="color:var(--gold); text-decoration:none;">trifactorscaling@gmail.com</a></p>
+<p style="font-size:0.78rem; color:var(--gray); margin-top:14px;">Can't find a time? Email us at <a href="mailto:contact@trifactorscaling.com" style="color:var(--gold); text-decoration:none;">contact@trifactorscaling.com</a></p>
 </div>
 <!-- ERROR STATE (hidden until needed) -->
 <div id="form-error" style="display:none; border:1px solid rgba(220,50,50,0.3); background:rgba(220,50,50,0.05); border-radius:2px; padding:16px 20px; margin-bottom:20px;">
-<p style="font-size:0.85rem; color:#f87171; margin:0;">Something went wrong. Please try again or email us directly at <a href="mailto:trifactorscaling@gmail.com" style="color:var(--gold);">trifactorscaling@gmail.com</a></p>
+<p style="font-size:0.85rem; color:#f87171; margin:0;">Something went wrong. Please try again or email us directly at <a href="mailto:contact@trifactorscaling.com" style="color:var(--gold);">contact@trifactorscaling.com</a></p>
 </div>
 <form action="https://formspree.io/f/xnjlobal" id="apply-form" method="POST">
 <!-- Formspree config -->
@@ -787,7 +787,7 @@ const HTML = `
 </form>
 <p class="form-note">
               Your info goes directly to Evan and Gavin. We'll respond within 24 hours.<br/>
-              Prefer to email? <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a>
+              Prefer to email? <a href="mailto:contact@trifactorscaling.com">contact@trifactorscaling.com</a>
 </p>
 </div>
 </div>
@@ -842,7 +842,7 @@ const HTML = `
 <div class="apply-direct">
 <h3>Prefer to email?</h3>
 <p>Send "Growth Audit Request" with your business name and biggest challenge.</p>
-<a class="email-link" href="mailto:trifactorscaling@gmail.com?subject=Growth%20Audit%20Request">trifactorscaling@gmail.com</a>
+<a class="email-link" href="mailto:contact@trifactorscaling.com?subject=Growth%20Audit%20Request">contact@trifactorscaling.com</a>
 </div>
 </div>
 </div>
@@ -856,7 +856,7 @@ const HTML = `
 <span class="eyebrow"><span class="eline"></span>FAQ</span>
 <h2>Questions about applying.</h2>
 <p>Still unsure? Book the call — we'll answer everything in person with zero pressure.</p>
-<a class="btn-outline" href="mailto:trifactorscaling@gmail.com" style="display:inline-flex;margin-top:4px;">Email Us Instead →</a>
+<a class="btn-outline" href="mailto:contact@trifactorscaling.com" style="display:inline-flex;margin-top:4px;">Email Us Instead →</a>
 </div>
 <div class="faq-list reveal-right">
 <div class="faq-item">
@@ -913,7 +913,7 @@ const HTML = `
 <div class="footer-brand">
 <img alt="TriFactor Scaling" class="footer-logo-img" src="./TFS-Logo-Transparent.png"/>
 <p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
-<a class="footer-contact-link" href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com →</a>
+<a class="footer-contact-link" href="mailto:contact@trifactorscaling.com">contact@trifactorscaling.com →</a>
 </div>
 <div>
 <div class="footer-col-label">Pages</div>
@@ -931,13 +931,13 @@ const HTML = `
 <a href="/apply">Apply for Growth Ops</a>
 <a href="/results">See Client Results</a>
 <a href="/services">What We Build</a>
-<a href="mailto:trifactorscaling@gmail.com">Send Us an Email</a>
+<a href="mailto:contact@trifactorscaling.com">Send Us an Email</a>
 </div>
 </div>
 </div>
 <div class="footer-bottom">
 <span class="footer-copy">© 2026 TriFactor Scaling. All rights reserved.</span>
-<span class="footer-built">Built by <span>teens</span>. Powered by results.</span>
+
 </div>
 </div>
 </footer>

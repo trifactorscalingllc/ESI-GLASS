@@ -11,6 +11,9 @@ import Results from "./pages/Results.tsx";
 import Apply from "./pages/Apply.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Admin from "./pages/Admin.tsx";
+import WebsiteFunnel from "./pages/WebsiteFunnel.tsx";
+import GrowthOps from "./pages/GrowthOps.tsx";
+import MarketingPage from "./pages/Marketing.tsx";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +27,9 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/services/website-funnel" element={<WebsiteFunnel />} />
+          <Route path="/services/growth-operations" element={<GrowthOps />} />
+          <Route path="/services/marketing" element={<MarketingPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/results" element={<Results />} />
           <Route path="/apply" element={<Apply />} />
