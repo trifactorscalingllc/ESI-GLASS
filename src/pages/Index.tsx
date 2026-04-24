@@ -818,28 +818,19 @@ const CSS = `
       box-sizing: border-box;
     }
 
-    /* Step label: "Step 01" pill */
-    .hiw-step-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--fb);
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+    /* Ghost step number — large, subtle background watermark */
+    .hiw-num-ghost {
+      font-family: var(--fh);
+      font-size: clamp(5rem, 11vw, 9rem);
+      font-weight: 800;
       color: var(--gold);
-      border: 1px solid rgba(212,175,55,0.3);
-      border-radius: 4px;
-      padding: 5px 12px;
-      margin-bottom: 28px;
-    }
-    .hiw-step-label::before {
-      content: '';
-      display: inline-block;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--gold);
+      opacity: 0.06;
+      line-height: 1;
+      letter-spacing: -0.06em;
+      margin-bottom: -1.4rem;
+      display: block;
+      user-select: none;
+      pointer-events: none;
     }
 
     /* Title */
@@ -873,7 +864,7 @@ const CSS = `
     /* Bullet list */
     .hiw-step-list {
       list-style: none;
-      padding: 0; margin: 0 0 32px;
+      padding: 0; margin: 0;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -892,25 +883,6 @@ const CSS = `
       color: var(--gold);
       flex-shrink: 0;
       margin-top: 5px;
-    }
-
-    /* Bottom callout strip */
-    .hiw-step-meta {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(212,175,55,0.07);
-      border: 1px solid rgba(212,175,55,0.2);
-      border-radius: 6px;
-      padding: 9px 16px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--gold);
-      letter-spacing: 0.04em;
-    }
-    .hiw-step-meta-sep {
-      opacity: 0.4;
-      margin: 0 2px;
     }
 
     /* Progress dots — bottom of right-side column */
@@ -939,7 +911,6 @@ const CSS = `
       .hiw-pin-wrap { position: static; flex-direction: column; width: 100%; transform: none !important; }
       .hiw-step { width: 100%; padding: 40px 24px 0; }
       .hiw-step p { max-width: 100%; }
-      .hiw-step-meta { flex-wrap: wrap; }
       .hiw-dots { position: static; margin: 32px 0 0 24px; }
     }
 
@@ -969,42 +940,41 @@ const CSS = `
 
     .svc-grid {
       display: grid; grid-template-columns: repeat(3,1fr);
-      gap: 1px; background: var(--border); border: 1px solid var(--border);
+      gap: 1px; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.15);
     }
+
+    /* ── Per-card gold outer shimmer (staggered) ── */
+    @keyframes cardGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(212,175,55,0), 0 4px 28px rgba(212,175,55,0.03); }
+      50%       { box-shadow: 0 0 18px 3px rgba(212,175,55,0.13), 0 4px 40px rgba(212,175,55,0.09); }
+    }
+
+    /* ── Scroll pop-up: cards start hidden, .card-in shows them ── */
     .svc-card {
       background: var(--black); padding: 48px 34px;
       display: flex; flex-direction: column; position: relative;
-      transition: background 0.25s ease;
+      opacity: 0;
+      transform: translateY(52px) scale(0.97);
+      transition: opacity 0.6s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.6s cubic-bezier(0.22,1,0.36,1),
+                  background 0.25s ease;
     }
-    .svc-card:hover { background: #030303; }
+    .svc-card.card-in {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .svc-card:hover { background: #040400; }
 
-    /* Animated gold border on featured card */
-    .svc-card.featured {
-      background: #090900;
-      border: none;
-      position: relative;
-    }
-    .svc-card.featured::before {
-      content: ''; position: absolute; inset: 0;
-      border: 1px solid var(--gold-border);
-      pointer-events: none;
-      transition: border-color 0.3s ease;
-    }
-    .svc-card.featured:hover::before { border-color: var(--gold); }
+    /* Staggered glow — applied after card-in so glow doesn't run while hidden */
+    .svc-card.card-in:nth-child(1) { animation: cardGlow 4.5s ease-in-out infinite 0s; }
+    .svc-card.card-in:nth-child(2) { animation: cardGlow 4.5s ease-in-out infinite 1.5s; }
+    .svc-card.card-in:nth-child(3) { animation: cardGlow 4.5s ease-in-out infinite 3s; }
 
-    .svc-badge {
-      position: absolute; top: 0; left: 0; right: 0;
-      background: var(--gold); color: var(--black);
-      font-family: var(--fb); font-size: 0.58rem; font-weight: 700;
-      letter-spacing: 0.2em; text-align: center; padding: 6px;
-    }
-    .svc-card.featured { padding-top: 58px; }
-
+    /* All Pillar labels are gold — no exceptions */
     .svc-tier {
       font-family: var(--fb); font-size: 0.67rem; font-weight: 600;
-      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 10px;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
     }
-    .svc-card.featured .svc-tier { color: var(--gold); }
 
     .svc-name {
       font-family: var(--fh); font-size: 1.55rem; font-weight: 800;
@@ -1027,33 +997,12 @@ const CSS = `
     .svc-note { text-align: center; margin-top: 44px; font-size: 0.84rem; color: var(--gray); font-style: italic; }
     .svc-note a { color: var(--gold); text-decoration: none; }
 
-    /* ── Pillar flow animation — subtle outline only ── */
-    @keyframes pillarOutline {
-      0%, 100% { border-color: var(--border); }
-      50%      { border-color: rgba(212,175,55,0.45); }
-    }
-
-    .svc-grid-flow .svc-card:nth-child(1) {
-      animation: pillarOutline 4.5s ease-in-out infinite;
-      animation-delay: 0s;
-    }
-    .svc-grid-flow .svc-card.featured {
-      animation: pillarOutline 4.5s ease-in-out infinite !important;
-      animation-delay: 1.5s !important;
-    }
-    .svc-grid-flow .svc-card:nth-child(3) {
-      animation: pillarOutline 4.5s ease-in-out infinite;
-      animation-delay: 3s;
-    }
-
     @media (max-width: 900px) {
-      .svc-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; background: transparent; border: none; }
-      .svc-card { border: 1px solid var(--border); }
-      .svc-card.featured { border: 1px solid var(--gold-border); }
-      .svc-card.featured::before { display: none; }
-      .svc-grid-flow .svc-card:nth-child(1),
-      .svc-grid-flow .svc-card.featured,
-      .svc-grid-flow .svc-card:nth-child(3) { animation: none !important; }
+      .svc-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; background: transparent; border: 1px solid rgba(212,175,55,0.15); }
+      .svc-card { border-bottom: 1px solid rgba(212,175,55,0.1); }
+      .svc-card.card-in:nth-child(1),
+      .svc-card.card-in:nth-child(2),
+      .svc-card.card-in:nth-child(3) { animation: none; }
     }
 
     /* ======================== SECTION: WHY TRIFACTOR ======================== */
@@ -1867,6 +1816,22 @@ const SCRIPT = `
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revObs.observe(el));
+
+    /* ── Service card pop-up: staggered per-card scroll reveal ── */
+    (function() {
+      var cardObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('card-in');
+            cardObs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08 });
+      document.querySelectorAll('.svc-card').forEach(function(card, i) {
+        card.style.transitionDelay = (i * 0.14) + 's';
+        cardObs.observe(card);
+      });
+    })();
 
     /* ============================================================
        HORIZONTAL PROCESS — bidirectional scroll hijack
@@ -2700,7 +2665,7 @@ const HTML = `
 <div class="hiw-pin-wrap" id="hiwPinWrap">
 
 <div class="hiw-step" id="hiwStep0">
-<span class="hiw-step-label">Step 01</span>
+<span class="hiw-num-ghost">01</span>
 <h3>Growth Audit</h3>
 <div class="hiw-step-rule"></div>
 <p>We map your entire business — lead flow, conversion points, revenue leaks, and untapped opportunities — and hand you a custom Growth System Blueprint.</p>
@@ -2709,11 +2674,10 @@ const HTML = `
 <li>Revenue leak identification</li>
 <li>Custom Growth System Blueprint delivered</li>
 </ul>
-<span class="hiw-step-meta">Free <span class="hiw-step-meta-sep">·</span> 45 minutes <span class="hiw-step-meta-sep">·</span> No pitch, no obligation</span>
 </div>
 
 <div class="hiw-step" id="hiwStep1">
-<span class="hiw-step-label">Step 02</span>
+<span class="hiw-num-ghost">02</span>
 <h3>System Integration</h3>
 <div class="hiw-step-rule"></div>
 <p>We build and install your complete growth stack — funnels, CRM, automations, and a live tracking dashboard — wired directly into your operations from day one.</p>
@@ -2722,11 +2686,10 @@ const HTML = `
 <li>Automated lead sequences &amp; CRM pipeline</li>
 <li>Live performance dashboard</li>
 </ul>
-<span class="hiw-step-meta">Most builds complete in <span class="hiw-step-meta-sep">·</span> 4–6 weeks</span>
 </div>
 
 <div class="hiw-step" id="hiwStep2">
-<span class="hiw-step-label">Step 03</span>
+<span class="hiw-num-ghost">03</span>
 <h3>Optimize &amp; Scale</h3>
 <div class="hiw-step-rule"></div>
 <p>We stay in the trenches — monthly strategy calls, performance reviews, and continuous iteration until your system is compounding revenue, month over month.</p>
@@ -2735,7 +2698,6 @@ const HTML = `
 <li>Continuous funnel &amp; automation optimization</li>
 <li>Ongoing support &amp; iteration</li>
 </ul>
-<span class="hiw-step-meta">Ongoing <span class="hiw-step-meta-sep">·</span> Monthly cadence <span class="hiw-step-meta-sep">·</span> No set-and-forget</span>
 </div>
 
 </div>
@@ -2755,7 +2717,7 @@ const HTML = `
 <h2>Start where you are.<br/>Scale as you grow.</h2>
 </div>
 
-<div class="svc-grid svc-grid-flow reveal">
+<div class="svc-grid svc-grid-flow">
 
 <!-- Pillar 01: Website & Funnel -->
 <div class="svc-card">
@@ -2774,7 +2736,7 @@ const HTML = `
 </div>
 
 <!-- Pillar 02: Growth Operations (FEATURED) -->
-<div class="svc-card featured">
+<div class="svc-card">
 <div class="svc-tier">Pillar 02</div>
 <div class="svc-name">Growth Operations</div>
 <p class="svc-target">The system that turns leads into revenue. CRM, automations, follow-up — built once, running forever.</p>
