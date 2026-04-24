@@ -749,29 +749,28 @@ const CSS = `
     }
 
     /* ======================== SECTION: HOW IT WORKS ======================== */
+    /* Section is exactly one viewport tall — JS hijacks scroll while it's active */
     #how-it-works {
       background: var(--black);
       border-bottom: 1px solid var(--border);
-      height: 300vh;
+      height: 100vh;
       padding: 0;
+      overflow: hidden;
     }
 
-    /* Sticks to viewport while parent scrolls */
     .hiw-pin-sticky {
-      position: sticky;
-      top: 0;
-      height: 100vh;
+      height: 100%;
       width: 100%;
       overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
-    /* Header at the top, centered */
+    /* Header */
     .hiw-head {
       flex-shrink: 0;
       text-align: center;
-      padding: 60px 20px 36px;
+      padding: 60px 20px 32px;
     }
     .hiw-head h2 {
       font-size: clamp(1.9rem, 3.6vw, 2.85rem);
@@ -782,17 +781,16 @@ const CSS = `
       margin-right: auto;
     }
 
-    /* Three-panel horizontal strip — JS sets translateX */
+    /* Horizontal strip — JS drives translateX, no transition so it tracks scroll 1:1 */
     .hiw-pin-wrap {
       display: flex;
       flex-direction: row;
       width: 300vw;
       flex: 1;
       will-change: transform;
-      transition: transform 0.05s linear;
     }
 
-    /* Each panel = exactly one viewport width, vertically centered */
+    /* One panel per step, full viewport width */
     .hiw-step {
       width: 100vw;
       flex-shrink: 0;
@@ -805,7 +803,6 @@ const CSS = `
       box-sizing: border-box;
     }
 
-    /* Ghost numbers */
     .hiw-num-ghost {
       font-family: var(--fh);
       font-size: clamp(5rem, 13vw, 10rem);
@@ -838,24 +835,21 @@ const CSS = `
       display: flex;
       gap: 10px;
       justify-content: center;
-      padding: 28px 0;
+      padding: 24px 0;
     }
     .hiw-dot {
       width: 7px; height: 7px; border-radius: 50%;
       background: var(--border-mid);
-      transition: background 0.35s, transform 0.35s;
+      transition: background 0.3s, transform 0.3s;
     }
-    .hiw-dot.active {
-      background: var(--gold);
-      transform: scale(1.5);
-    }
+    .hiw-dot.active { background: var(--gold); transform: scale(1.5); }
 
-    /* Mobile: revert to simple vertical layout */
+    /* Mobile: normal vertical stack, no hijack */
     @media (max-width: 768px) {
-      #how-it-works { height: auto; }
-      .hiw-pin-sticky { position: static; height: auto; overflow: visible; padding: 72px 0; }
-      .hiw-pin-wrap { flex-direction: column; width: 100%; transition: none; transform: none !important; }
-      .hiw-step { width: 100%; padding: 48px 28px 0; justify-content: flex-start; }
+      #how-it-works { height: auto; overflow: visible; }
+      .hiw-pin-sticky { height: auto; overflow: visible; padding: 72px 0; }
+      .hiw-pin-wrap { flex-direction: column; width: 100%; transform: none !important; }
+      .hiw-step { width: 100%; padding: 40px 28px 0; justify-content: flex-start; }
       .hiw-dots { display: none; }
     }
 
@@ -1785,35 +1779,82 @@ const SCRIPT = `
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revObs.observe(el));
 
     /* ============================================================
-       HORIZONTAL PROCESS SCROLL — pure JS, getBoundingClientRect
+       HORIZONTAL PROCESS — scroll hijack
+       Page scroll freezes when section is at the top of the viewport.
+       Wheel delta drives horizontal strip. Releases when done.
     ============================================================ */
     (function() {
       if (window.innerWidth <= 768) return;
-      const section = document.getElementById('how-it-works');
-      const wrap    = document.getElementById('hiwPinWrap');
-      const dots    = document.querySelectorAll('.hiw-dot');
+      var section = document.getElementById('how-it-works');
+      var wrap    = document.getElementById('hiwPinWrap');
+      var dots    = document.querySelectorAll('.hiw-dot');
       if (!section || !wrap) return;
 
-      function update() {
-        const rect = section.getBoundingClientRect();
-        /* rect.top is 0 when section top = viewport top (sticky just locked)
-           rect.top is negative as we scroll down through the section          */
-        const scrolledIn  = -rect.top;                          // px scrolled into section
-        const totalTravel = section.offsetHeight - window.innerHeight; // 300vh in px
-        const pct = Math.max(0, Math.min(1, scrolledIn / totalTravel));
+      var progress = 0;   // 0 → 1
+      var hijacked = false;
 
-        /* Slide strip from 0 → -200vw */
-        wrap.style.transform = 'translateX(' + (pct * -200) + 'vw)';
-
-        /* Progress dots */
-        const idx = Math.min(2, Math.floor(pct * 3));
+      /* Apply progress 0→1, translating strip 0 → -200vw */
+      function apply(p) {
+        progress = Math.max(0, Math.min(1, p));
+        wrap.style.transform = 'translateX(' + (-progress * 200) + 'vw)';
+        var idx = Math.min(2, Math.floor(progress * 3));
         dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
       }
 
-      window.addEventListener('scroll', update, { passive: true });
-      window.addEventListener('resize', update);
-      /* Run once after layout settles */
-      requestAnimationFrame(update);
+      /* Lock the page at the section top */
+      function lock() {
+        var rect = section.getBoundingClientRect();
+        /* Snap scroll so section top is exactly at viewport top */
+        window.scrollTo({ top: window.scrollY + rect.top });
+        document.documentElement.style.overflow = 'hidden';
+        hijacked = true;
+      }
+
+      /* Release the page scroll */
+      function unlock() {
+        document.documentElement.style.overflow = '';
+        hijacked = false;
+      }
+
+      window.addEventListener('wheel', function(e) {
+        var rect = section.getBoundingClientRect();
+        var atTop = rect.top > -10 && rect.top < 10; /* section aligned to viewport top */
+
+        /* ── Activate hijack when section hits viewport top scrolling down ── */
+        if (!hijacked && atTop && e.deltaY > 0) {
+          lock();
+          apply(0);
+        }
+
+        if (!hijacked) return;
+
+        e.preventDefault();
+
+        /* Normalise delta across mouse wheel, trackpad, Firefox line mode */
+        var raw = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
+
+        /* Each full viewport width of scroll ≈ one panel */
+        apply(progress + raw / window.innerWidth);
+
+        /* Release forward — next scroll naturally carries the page down */
+        if (progress >= 1 && e.deltaY > 0) {
+          unlock();
+          return;
+        }
+
+        /* Release backward — let user scroll back up normally */
+        if (progress <= 0 && e.deltaY < 0) {
+          unlock();
+          return;
+        }
+      }, { passive: false });
+
+      /* Reset progress when user scrolls back above the section */
+      window.addEventListener('scroll', function() {
+        if (hijacked) return;
+        var rect = section.getBoundingClientRect();
+        if (rect.top > 50) apply(0); /* section is below the fold — reset */
+      }, { passive: true });
     })();
 
     /* ============================================================
