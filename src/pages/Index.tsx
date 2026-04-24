@@ -818,30 +818,99 @@ const CSS = `
       box-sizing: border-box;
     }
 
-    .hiw-num-ghost {
-      font-family: var(--fh);
-      font-size: clamp(5rem, 11vw, 9rem);
-      font-weight: 800;
+    /* Step label: "Step 01" pill */
+    .hiw-step-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--fb);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
       color: var(--gold);
-      opacity: 0.07;
-      line-height: 1;
-      letter-spacing: -0.06em;
-      margin-bottom: -1.6rem;
-      display: block;
-      user-select: none;
-      pointer-events: none;
+      border: 1px solid rgba(212,175,55,0.3);
+      border-radius: 4px;
+      padding: 5px 12px;
+      margin-bottom: 28px;
     }
+    .hiw-step-label::before {
+      content: '';
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    /* Title */
     .hiw-step h3 {
       font-family: var(--fh);
-      font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+      font-size: clamp(1.6rem, 2.8vw, 2.4rem);
       font-weight: 800;
-      margin-bottom: 18px;
+      line-height: 1.1;
+      margin: 0 0 20px;
+      letter-spacing: -0.02em;
     }
+
+    /* Gold rule beneath title */
+    .hiw-step-rule {
+      width: 40px;
+      height: 2px;
+      background: var(--gold);
+      margin-bottom: 24px;
+      border-radius: 2px;
+    }
+
+    /* Body copy */
     .hiw-step p {
-      font-size: clamp(0.88rem, 1.2vw, 1rem);
+      font-size: clamp(0.88rem, 1.1vw, 0.97rem);
       color: var(--gray-light);
       line-height: 1.8;
-      max-width: 440px;
+      max-width: 420px;
+      margin-bottom: 28px;
+    }
+
+    /* Bullet list */
+    .hiw-step-list {
+      list-style: none;
+      padding: 0; margin: 0 0 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .hiw-step-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: clamp(0.82rem, 1vw, 0.92rem);
+      color: var(--white);
+      line-height: 1.5;
+    }
+    .hiw-step-list li::before {
+      content: '◆';
+      font-size: 0.45rem;
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    /* Bottom callout strip */
+    .hiw-step-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(212,175,55,0.07);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 6px;
+      padding: 9px 16px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+    }
+    .hiw-step-meta-sep {
+      opacity: 0.4;
+      margin: 0 2px;
     }
 
     /* Progress dots — bottom of right-side column */
@@ -869,6 +938,8 @@ const CSS = `
       .hiw-right { flex: none; overflow: visible; }
       .hiw-pin-wrap { position: static; flex-direction: column; width: 100%; transform: none !important; }
       .hiw-step { width: 100%; padding: 40px 24px 0; }
+      .hiw-step p { max-width: 100%; }
+      .hiw-step-meta { flex-wrap: wrap; }
       .hiw-dots { position: static; margin: 32px 0 0 24px; }
     }
 
@@ -2627,21 +2698,46 @@ const HTML = `
 </div>
 <div class="hiw-right">
 <div class="hiw-pin-wrap" id="hiwPinWrap">
+
 <div class="hiw-step" id="hiwStep0">
-<span class="hiw-num-ghost">01</span>
+<span class="hiw-step-label">Step 01</span>
 <h3>Growth Audit</h3>
-<p>We map your entire business — lead flow, conversion points, revenue leaks, and missed opportunities. You leave with a custom Growth System Blueprint whether you work with us or not. Free, 45 minutes, no pitch.</p>
+<div class="hiw-step-rule"></div>
+<p>We map your entire business — lead flow, conversion points, revenue leaks, and untapped opportunities — and hand you a custom Growth System Blueprint.</p>
+<ul class="hiw-step-list">
+<li>Full funnel &amp; lead flow analysis</li>
+<li>Revenue leak identification</li>
+<li>Custom Growth System Blueprint delivered</li>
+</ul>
+<span class="hiw-step-meta">Free <span class="hiw-step-meta-sep">·</span> 45 minutes <span class="hiw-step-meta-sep">·</span> No pitch, no obligation</span>
 </div>
+
 <div class="hiw-step" id="hiwStep1">
-<span class="hiw-num-ghost">02</span>
+<span class="hiw-step-label">Step 02</span>
 <h3>System Integration</h3>
-<p>We build and install your full growth stack: GHL funnel ecosystem, automated lead sequences, CRM pipeline, and tracking dashboard — wired directly into your operations from day one. Most builds are complete in 4–6 weeks.</p>
+<div class="hiw-step-rule"></div>
+<p>We build and install your complete growth stack — funnels, CRM, automations, and a live tracking dashboard — wired directly into your operations from day one.</p>
+<ul class="hiw-step-list">
+<li>GHL funnel ecosystem &amp; landing pages</li>
+<li>Automated lead sequences &amp; CRM pipeline</li>
+<li>Live performance dashboard</li>
+</ul>
+<span class="hiw-step-meta">Most builds complete in <span class="hiw-step-meta-sep">·</span> 4–6 weeks</span>
 </div>
+
 <div class="hiw-step" id="hiwStep2">
-<span class="hiw-num-ghost">03</span>
+<span class="hiw-step-label">Step 03</span>
 <h3>Optimize &amp; Scale</h3>
-<p>Monthly strategy calls, performance reviews, and continuous iteration. We don't set it and forget it — we stay in the trenches until your system is compounding revenue consistently, month over month.</p>
+<div class="hiw-step-rule"></div>
+<p>We stay in the trenches — monthly strategy calls, performance reviews, and continuous iteration until your system is compounding revenue, month over month.</p>
+<ul class="hiw-step-list">
+<li>Monthly strategy &amp; performance reviews</li>
+<li>Continuous funnel &amp; automation optimization</li>
+<li>Ongoing support &amp; iteration</li>
+</ul>
+<span class="hiw-step-meta">Ongoing <span class="hiw-step-meta-sep">·</span> Monthly cadence <span class="hiw-step-meta-sep">·</span> No set-and-forget</span>
 </div>
+
 </div>
 <div class="hiw-dots" id="hiwDots">
 <div class="hiw-dot active" id="hiwDot0"></div>
