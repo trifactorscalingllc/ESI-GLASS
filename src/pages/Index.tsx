@@ -2462,7 +2462,7 @@ const HTML = `
 </div>
 </div><!-- end demo-panel-wrap -->
 <p class="sdemo-caption reveal" style="transition-delay:0.25s">
-        Every system above runs in a real client's business. <strong>Built once. Runs forever. Compounds monthly.</strong>
+        <strong>Built once. Runs forever. Compounds monthly.</strong>
 </p>
 </div>
 </section>
