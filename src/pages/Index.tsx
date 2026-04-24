@@ -752,7 +752,7 @@ const CSS = `
     #how-it-works {
       background: var(--black);
       border-bottom: 1px solid var(--border);
-      height: 400vh;
+      height: 300vh;
       padding: 0;
     }
 
@@ -1785,7 +1785,7 @@ const SCRIPT = `
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revObs.observe(el));
 
     /* ============================================================
-       HORIZONTAL PROCESS SCROLL — pure JS scroll math
+       HORIZONTAL PROCESS SCROLL — pure JS, getBoundingClientRect
     ============================================================ */
     (function() {
       if (window.innerWidth <= 768) return;
@@ -1795,22 +1795,25 @@ const SCRIPT = `
       if (!section || !wrap) return;
 
       function update() {
-        /* How far the user has scrolled past the section's top edge */
-        const scrolled   = window.scrollY - section.offsetTop;
-        /* Total scrollable distance within the section */
-        const scrollable = section.offsetHeight - window.innerHeight;
-        /* Clamp 0→1 */
-        const pct = Math.max(0, Math.min(1, scrolled / scrollable));
-        /* Slide the 300vw strip: 0 at start, -200vw at end */
+        const rect = section.getBoundingClientRect();
+        /* rect.top is 0 when section top = viewport top (sticky just locked)
+           rect.top is negative as we scroll down through the section          */
+        const scrolledIn  = -rect.top;                          // px scrolled into section
+        const totalTravel = section.offsetHeight - window.innerHeight; // 300vh in px
+        const pct = Math.max(0, Math.min(1, scrolledIn / totalTravel));
+
+        /* Slide strip from 0 → -200vw */
         wrap.style.transform = 'translateX(' + (pct * -200) + 'vw)';
-        /* Update dots */
+
+        /* Progress dots */
         const idx = Math.min(2, Math.floor(pct * 3));
         dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
       }
 
       window.addEventListener('scroll', update, { passive: true });
       window.addEventListener('resize', update);
-      update();
+      /* Run once after layout settles */
+      requestAnimationFrame(update);
     })();
 
     /* ============================================================
