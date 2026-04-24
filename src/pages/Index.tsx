@@ -949,57 +949,6 @@ const CSS = `
       max-width: 440px; margin-left: auto; margin-right: auto; line-height: 1.75;
     }
 
-    /* ── Pillar flow progression bar ── */
-    .svc-flow {
-      display: flex;
-      align-items: center;
-      margin-bottom: 36px;
-    }
-    .svc-flow-node {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      flex: 0 0 auto;
-    }
-    .svc-flow-circle {
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      border: 1px solid rgba(212,175,55,0.4);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--fb); font-size: 0.68rem; font-weight: 700;
-      color: var(--gold); letter-spacing: 0.08em;
-      background: rgba(212,175,55,0.05);
-      transition: background 0.3s ease, border-color 0.3s ease;
-    }
-    .svc-flow-node:hover .svc-flow-circle {
-      background: rgba(212,175,55,0.12); border-color: var(--gold);
-    }
-    .svc-flow-label {
-      font-family: var(--fb); font-size: 0.6rem; font-weight: 600;
-      color: var(--gray); letter-spacing: 0.12em; text-transform: uppercase;
-      white-space: nowrap;
-    }
-    .svc-flow-line {
-      flex: 1;
-      height: 1px;
-      position: relative;
-      margin-bottom: 22px; /* aligns with circle centre */
-      overflow: visible;
-    }
-    .svc-flow-line::before {
-      content: '';
-      position: absolute; top: 0; left: 4px; right: 4px;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(212,175,55,0.3) 0%, rgba(212,175,55,0.12) 100%);
-    }
-    .svc-flow-line::after {
-      content: '›';
-      position: absolute; right: -2px; top: -7px;
-      color: var(--gold); opacity: 0.4; font-size: 0.9rem; line-height: 1;
-    }
-    @media (max-width: 900px) { .svc-flow { display: none; } }
-
     .svc-grid {
       display: grid; grid-template-columns: repeat(3,1fr);
       gap: 1px; background: var(--border); border: 1px solid var(--border);
@@ -2056,7 +2005,7 @@ const SCRIPT = `
     /* ============================================================
        FAQ ACCORDION
     ============================================================ */
-    function toggleFAQ(btn) {
+    window.toggleFAQ = function(btn) {
       const item = btn.parentElement;
       const ans  = item.querySelector('.faq-a');
       const open = item.classList.contains('open');
@@ -2068,7 +2017,7 @@ const SCRIPT = `
         item.classList.add('open');
         ans.style.maxHeight = ans.scrollHeight + 40 + 'px';
       }
-    }
+    };
 
     /* ============================================================
        SYSTEMS DEMO — Tab controller + animation runners
@@ -2786,24 +2735,6 @@ const HTML = `
 <h2>Start where you are.<br/>Scale as you grow.</h2>
 </div>
 
-<!-- Pillar progression flow bar -->
-<div class="svc-flow reveal">
-<div class="svc-flow-node">
-<div class="svc-flow-circle">01</div>
-<span class="svc-flow-label">Foundation</span>
-</div>
-<div class="svc-flow-line"></div>
-<div class="svc-flow-node">
-<div class="svc-flow-circle">02</div>
-<span class="svc-flow-label">Growth Engine</span>
-</div>
-<div class="svc-flow-line"></div>
-<div class="svc-flow-node">
-<div class="svc-flow-circle">03</div>
-<span class="svc-flow-label">Scale</span>
-</div>
-</div>
-
 <div class="svc-grid svc-grid-flow">
 
 <!-- Pillar 01: Website & Funnel -->
@@ -2916,11 +2847,11 @@ const HTML = `
 </div>
 </div>
 <!-- Full-bleed scrolling marquee — cards duplicated for seamless loop -->
-<div class=”testi-marquee-wrap”>
-<div class=”testi-track” id=”testiTrack”>
+<div class=”testi-marquee-wrap” style=”overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent 0%,black 8%,black 92%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,black 8%,black 92%,transparent 100%);”>
+<div class=”testi-track” id=”testiTrack” style=”display:flex;flex-direction:row;flex-wrap:nowrap;width:max-content;gap:20px;animation:testiScroll 44s linear infinite;will-change:transform;”>
 
 <!-- SET 1 -->
-<div class=”testi-card”>
+<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>I reached out to Evan to get him to build our website. I was very impressed with the pricing and the simple process of working with him and his team. The website is absolutely amazing — we will be using their services again.</p>
 <div class=”testi-divider”></div>
@@ -2928,7 +2859,7 @@ const HTML = `
 <div class=”testi-author-company”>Mectrix Media</div>
 </div>
 
-<div class=”testi-card”>
+<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>Evan and Gavin helped me scale my product into a brand. I can't thank them enough for the help they gave — the whole process was seamless and the results spoke for themselves.</p>
 <div class=”testi-divider”></div>
@@ -2936,7 +2867,7 @@ const HTML = `
 <div class=”testi-author-company”>Lumina Sphere</div>
 </div>
 
-<div class=”testi-card”>
+<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>Good service, scaled my brand up from nothing. They know what they're doing and actually deliver — which is rare. Would recommend without hesitation.</p>
 <div class=”testi-divider”></div>
@@ -2944,7 +2875,7 @@ const HTML = `
 <div class=”testi-author-company”>Brand &amp; Creative</div>
 </div>
 
-<div class=”testi-card”>
+<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>The booking system they built basically runs our follow-up on autopilot. We stopped losing clients to slow response times the week it went live.</p>
 <div class=”testi-divider”></div>
@@ -2953,7 +2884,7 @@ const HTML = `
 </div>
 
 <!-- SET 2 — exact duplicate for seamless loop -->
-<div class=”testi-card”>
+<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>I reached out to Evan to get him to build our website. I was very impressed with the pricing and the simple process of working with him and his team. The website is absolutely amazing — we will be using their services again.</p>
 <div class=”testi-divider”></div>
@@ -2961,7 +2892,7 @@ const HTML = `
 <div class=”testi-author-company”>Mectrix Media</div>
 </div>
 
-<div class=”testi-card”>
+<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>Evan and Gavin helped me scale my product into a brand. I can't thank them enough for the help they gave — the whole process was seamless and the results spoke for themselves.</p>
 <div class=”testi-divider”></div>
@@ -2969,7 +2900,7 @@ const HTML = `
 <div class=”testi-author-company”>Lumina Sphere</div>
 </div>
 
-<div class=”testi-card”>
+<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>Good service, scaled my brand up from nothing. They know what they're doing and actually deliver — which is rare. Would recommend without hesitation.</p>
 <div class=”testi-divider”></div>
@@ -2977,7 +2908,7 @@ const HTML = `
 <div class=”testi-author-company”>Brand &amp; Creative</div>
 </div>
 
-<div class=”testi-card”>
+<div class=”testi-card” style=”display:flex;flex-direction:column;flex-shrink:0;width:340px;min-width:340px;max-width:340px;white-space:normal;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.09);padding:32px 28px;box-sizing:border-box;vertical-align:top;”>
 <span class=”testi-mark”>”</span>
 <p class=”testi-quote”>The booking system they built basically runs our follow-up on autopilot. We stopped losing clients to slow response times the week it went live.</p>
 <div class=”testi-divider”></div>
@@ -2995,7 +2926,7 @@ const HTML = `
 <div class="faq-left reveal-left">
 <span class="eyebrow">FAQ</span>
 <h2>Common questions.</h2>
-<p>Still have questions? Book a free Growth Audit — we'll walk through everything on the call with zero pressure.</p>
+<p>Still have questions? Book a free Growth Audit — we'll walk through everything on the call with zero pressure. Or email us directly at <a href="mailto:contact@trifactorscaling.com" style="color:var(--gold);text-decoration:none;">contact@trifactorscaling.com</a></p>
 <a class="btn-gold" href="#cta" style="display:inline-flex;margin-top:4px;">Book a Call →</a>
 </div>
 <div class="faq-list reveal-right">
@@ -3071,22 +3002,25 @@ const HTML = `
 <div class="cta-glow"></div>
 <div class="cta-glow-b"></div>
 <div class="container">
-<div class="reveal">
-<span class="eyebrow">Apply Now</span>
+<div style="display:flex;flex-direction:row;align-items:flex-start;gap:clamp(32px,5vw,80px);flex-wrap:wrap;">
+  <!-- Left: text -->
+  <div style="flex:1 1 300px;min-width:260px;display:flex;flex-direction:column;justify-content:center;padding-top:8px;">
+    <div class="reveal"><span class="eyebrow">Apply Now</span></div>
+    <h2 class="reveal" style="transition-delay:0.1s;font-size:clamp(1.8rem,3.2vw,3rem);font-weight:800;line-height:1.15;margin-top:14px;text-align:left;">
+      Stop running your business.<br/>Start building a <span style="background:linear-gradient(90deg,var(--gold) 0%,var(--gold-light) 50%,var(--gold) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite;">system that does.</span>
+    </h2>
+    <p class="reveal" style="transition-delay:0.2s;margin-top:20px;font-size:1rem;color:var(--muted);line-height:1.7;text-align:left;">
+      We take on a limited number of new clients each month. Book your free Growth Audit and we'll map out exactly what's holding your revenue back — no pitch, no pressure.
+    </p>
+    <p class="cta-sub reveal" style="transition-delay:0.3s;margin-top:16px;text-align:left;">
+      Prefer email? <a href="mailto:contact@trifactorscaling.com">contact@trifactorscaling.com</a>
+    </p>
+  </div>
+  <!-- Right: booking calendar -->
+  <div class="reveal" style="transition-delay:0.2s;flex:1 1 360px;min-width:300px;border:1px solid var(--border-mid);border-radius:6px;overflow:hidden;">
+    <iframe scrolling="yes" src="https://api.leadconnectorhq.com/widget/bookings/tfs-calender" style="width:100%;height:620px;border:none;display:block;background:#0a0a0a;" title="Book Your Free Growth Audit"></iframe>
+  </div>
 </div>
-<h2 class="reveal" style="transition-delay:0.1s;font-size:clamp(2.6rem,6.8vw,6.5rem);font-weight:800;line-height:1.08;">
-        Stop running your business.<br/>Start building a <span style="background:linear-gradient(90deg,var(--gold) 0%,var(--gold-light) 50%,var(--gold) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite;">system that does.</span>
-</h2>
-<p class="reveal" style="transition-delay:0.2s;">
-</p>
-<!-- Inline GHL booking calendar -->
-<div class="reveal" style="transition-delay:0.3s; max-width:780px; margin:36px auto 0; border:1px solid var(--border-mid); border-radius:6px; overflow:hidden;">
-<iframe scrolling="yes" src="https://api.leadconnectorhq.com/widget/bookings/tfs-calender" style="width:100%; height:680px; border:none; display:block; background:#0a0a0a;" title="Book Your Free Growth Audit">
-</iframe>
-</div>
-<p class="cta-sub reveal" style="transition-delay:0.4s; margin-top:20px;">
-        Prefer email? <a href="mailto:contact@trifactorscaling.com">contact@trifactorscaling.com</a>
-</p>
 </div>
 </section>
 <!-- ======================== FOOTER ======================== -->
