@@ -2477,8 +2477,7 @@ const HTML = `
 <div class="hiw-step reveal" style="transition-delay:0.05s">
 <span class="hiw-num-ghost">01</span>
 <h3>Growth Audit</h3>
-<p>We map your entire business — lead flow, conversion points, revenue leaks, and missed opportunities. You leave with a custom Growth System Blueprint whether you work with us or not. No pitch. No pressure.</p>
-<span class="step-badge">Free — 45 Minutes</span>
+<p>We map your entire business — lead flow, conversion points, revenue leaks, and missed opportunities. You leave with a custom Growth System Blueprint whether you work with us or not. Free, 45 minutes, no pitch.</p>
 </div>
 <div aria-hidden="true" class="hiw-connector">
 <div class="hiw-conn-line"></div>
@@ -2488,8 +2487,7 @@ const HTML = `
 <div class="hiw-step reveal" style="transition-delay:0.18s">
 <span class="hiw-num-ghost">02</span>
 <h3>System Integration</h3>
-<p>We build and install your full growth stack: GHL funnel ecosystem, automated lead sequences, CRM pipeline, and AppSheet tracking dashboard — wired directly into your operations from day one.</p>
-<span class="step-badge">4–6 Week Build</span>
+<p>We build and install your full growth stack: GHL funnel ecosystem, automated lead sequences, CRM pipeline, and tracking dashboard — wired directly into your operations from day one. Most builds are complete in 4–6 weeks.</p>
 </div>
 <div aria-hidden="true" class="hiw-connector">
 <div class="hiw-conn-line"></div>
@@ -2500,7 +2498,6 @@ const HTML = `
 <span class="hiw-num-ghost">03</span>
 <h3>Optimize &amp; Scale</h3>
 <p>Monthly strategy calls, performance reviews, and continuous iteration. We don't set it and forget it — we stay in the trenches until your system is compounding revenue consistently, month over month.</p>
-<span class="step-badge">Ongoing — Monthly</span>
 </div>
 </div>
 </div>
