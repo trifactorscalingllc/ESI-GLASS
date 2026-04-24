@@ -5,7 +5,9 @@ import {
 } from 'recharts'
 
 // ── Config ──────────────────────────────────────────────────────────────────
-const EDGE_URL = 'https://qamvvvwlpzkjvxoomjno.supabase.co/functions/v1/ga4-report'
+const EDGE_URL   = 'https://qamvvvwlpzkjvxoomjno.supabase.co/functions/v1/ga4-report'
+// Paste your anon key from: supabase.com/dashboard/project/qamvvvwlpzkjvxoomjno/settings/api
+const ANON_KEY   = 'PASTE_ANON_KEY_HERE'
 const ADMIN_PASS = 'tfs-admin-2026'
 
 // ── Brand ────────────────────────────────────────────────────────────────────
@@ -34,11 +36,21 @@ const fmtPct  = (v: number) => `${(v * 100).toFixed(1)}%`
 async function fetchReport(report: string, startDate: string, endDate: string) {
   const res = await fetch(EDGE_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': ANON_KEY,
+      'Authorization': `Bearer ${ANON_KEY}`,
+    },
     body: JSON.stringify({ report, startDate, endDate }),
   })
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`
+    try { const j = await res.json(); msg = j.message ?? j.error ?? msg } catch {}
+    throw new Error(msg)
+  }
   const json = await res.json()
   if (json.error) throw new Error(json.error)
+  if (json.data === undefined) throw new Error(`No data returned for report: ${report}`)
   return json.data
 }
 
@@ -229,8 +241,8 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     return () => clearInterval(id)
   }, [start, end])
 
-  const totalSessions = sources.reduce((a, s) => a + s.sessions, 0)
-  const totalDevSessions = devices.reduce((a, d) => a + d.sessions, 0)
+  const totalSessions    = (sources ?? []).reduce((a: number, s: any) => a + (s.sessions ?? 0), 0)
+  const totalDevSessions = (devices ?? []).reduce((a: number, d: any) => a + (d.sessions ?? 0), 0)
 
   return (
     <div style={{ minHeight: '100vh', background: C.black,
