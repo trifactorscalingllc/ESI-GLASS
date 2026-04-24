@@ -406,44 +406,19 @@ const CSS = `
     .tier-apply-fill { background: var(--gold); color: var(--black); border-color: var(--gold); }
     .tier-apply-fill:hover { background: #e8c840; border-color: #e8c840; color: var(--black); }
 
-    /* ── Pillar flow animation (same as homepage) ── */
-    @keyframes pillarFlowStrip {
-      0%   { transform: translateX(0%);   opacity: 0; }
-      6%   { opacity: 1; }
-      27%  { opacity: 1; }
-      33%  { transform: translateX(0%);   opacity: 0; }
-      39%  { transform: translateX(100%); opacity: 0; }
-      45%  { opacity: 1; }
-      61%  { opacity: 1; }
-      66%  { transform: translateX(100%); opacity: 0; }
-      72%  { transform: translateX(200%); opacity: 0; }
-      78%  { opacity: 1; }
-      92%  { opacity: 1; }
-      100% { transform: translateX(200%); opacity: 0; }
-    }
-    @keyframes pillarCardPulse {
-      0%, 100% { background: var(--black); }
-      50%      { background: rgba(212,175,55,0.035); }
-    }
-    @keyframes pillarFeaturedPulse {
-      0%, 100% { box-shadow: none; }
-      50%      { box-shadow: 0 0 48px rgba(212,175,55,0.13); }
-    }
-    .svc-grid-flow { position: relative; overflow: hidden; }
-    .svc-grid-flow::before {
-      content: ''; position: absolute; top: 0; left: 0;
-      width: 33.34%; height: 2px; z-index: 2; pointer-events: none;
-      background: linear-gradient(90deg, transparent 0%, var(--gold) 35%, var(--gold) 65%, transparent 100%);
-      animation: pillarFlowStrip 4.5s ease-in-out infinite;
+    /* ── Pillar flow animation — subtle outline only ── */
+    @keyframes pillarOutline {
+      0%, 100% { border-color: var(--border); }
+      50%      { border-color: rgba(212,175,55,0.45); }
     }
     .svc-grid-flow .tier-card:nth-child(1) {
-      animation: pillarCardPulse 4.5s ease-in-out infinite; animation-delay: 0s;
+      animation: pillarOutline 4.5s ease-in-out infinite; animation-delay: 0s;
     }
     .svc-grid-flow .tier-card-featured {
-      animation: pillarFeaturedPulse 4.5s ease-in-out infinite !important; animation-delay: 1.5s !important;
+      animation: pillarOutline 4.5s ease-in-out infinite !important; animation-delay: 1.5s !important;
     }
     .svc-grid-flow .tier-card:nth-child(3) {
-      animation: pillarCardPulse 4.5s ease-in-out infinite; animation-delay: 3s;
+      animation: pillarOutline 4.5s ease-in-out infinite; animation-delay: 3s;
     }
 
     @media (max-width: 900px) {
@@ -451,7 +426,6 @@ const CSS = `
       .tier-card { border: 1px solid var(--border); }
       .tier-card-featured { border: 1px solid var(--gold-border); }
       .tier-card-featured::before { display: none; }
-      .svc-grid-flow::before { display: none; }
       .svc-grid-flow .tier-card:nth-child(1),
       .svc-grid-flow .tier-card-featured,
       .svc-grid-flow .tier-card:nth-child(3) { animation: none !important; }
