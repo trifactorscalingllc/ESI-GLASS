@@ -41,18 +41,17 @@ async function getAccessToken(): Promise<string> {
   const signingInput = `${header}.${payload}`
 
   // Parse PEM → raw DER bytes
-  // Strip all whitespace variants (\n, \r, spaces) and PEM headers robustly
+  // Strip headers, then keep ONLY valid base64 chars (handles any stray whitespace/quotes/etc)
   const b64 = privateKeyPem
-    .replace(/\\n/g, '\n')            // unescape literal \n from JSON/env storage
     .replace(/-----BEGIN PRIVATE KEY-----/g, '')
     .replace(/-----END PRIVATE KEY-----/g, '')
-    .replace(/[\r\n\s]/g, '')         // strip ALL whitespace chars including \r
+    .replace(/[^A-Za-z0-9+/=]/g, '')  // strip everything that isn't valid base64
 
   let der: Uint8Array
   try {
     der = Uint8Array.from(atob(b64), c => c.charCodeAt(0))
-  } catch {
-    throw new Error(`Failed to decode base64 — check GA4_PRIVATE_KEY secret format (b64 length: ${b64.length})`)
+  } catch (e) {
+    throw new Error(`Failed to decode private key base64 (len=${b64.length}, mod4=${b64.length%4}): ${e}`)
   }
 
   const key = await crypto.subtle.importKey(
