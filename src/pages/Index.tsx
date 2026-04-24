@@ -751,8 +751,18 @@ const CSS = `
     /* ======================== SECTION: HOW IT WORKS ======================== */
     #how-it-works { background: var(--black); border-bottom: 1px solid var(--border); padding: 110px 0; }
 
-    .hiw-head { margin-bottom: 80px; }
-    .hiw-head h2 { font-size: clamp(1.9rem, 3.6vw, 2.85rem); font-weight: 800; margin-top: 18px; max-width: 520px; }
+    .hiw-head { margin-bottom: 80px; text-align: center; }
+    .hiw-head h2 { font-size: clamp(1.9rem, 3.6vw, 2.85rem); font-weight: 800; margin-top: 18px; max-width: 520px; margin-left: auto; margin-right: auto; }
+
+    /* Ghost number shimmer on scroll-reveal */
+    @keyframes ghostShimmer {
+      0%   { opacity: 0.055; }
+      40%  { opacity: 0.18; color: var(--gold-light); }
+      100% { opacity: 0.055; }
+    }
+    .hiw-step.visible .hiw-num-ghost {
+      animation: ghostShimmer 1.6s ease-out forwards;
+    }
 
     /* Horizontal 3-step layout with ghost numbers */
     .hiw-steps {
