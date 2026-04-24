@@ -900,7 +900,7 @@ const CSS = `
     /* Progress dots — bottom center of whole section */
     .hiw-dots {
       position: absolute;
-      bottom: 36px;
+      bottom: 96px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -2276,11 +2276,8 @@ const HTML = `
 <!-- ======================== HOW IT WORKS ======================== -->
 <section id="how-it-works">
 <div class="hiw-pin-sticky">
-<!-- Eyebrow pinned top-center across the whole section -->
-<div style="position:absolute;top:32px;left:50%;transform:translateX(-50%);z-index:20;pointer-events:none;">
-<span class="eyebrow" style="white-space:nowrap;">The Process</span>
-</div>
 <div class="hiw-head">
+<span class="eyebrow">The Process</span>
 <h2>From audit to automated revenue<br/>in three moves.</h2>
 </div>
 <div class="hiw-right">
