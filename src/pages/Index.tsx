@@ -757,26 +757,24 @@ const CSS = `
       padding: 0;
     }
 
-    /* Sticky viewport container */
+    /* Sticky container — plain block so strip starts at left: 0 */
     .hiw-pin-sticky {
       position: sticky;
       top: 0;
       height: 100vh;
       width: 100%;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      padding-top: 64px;
+      box-sizing: border-box;
     }
 
-    /* Header stays centered at top of sticky view */
+    /* Header centered via auto margins */
     .hiw-head {
       text-align: center;
-      margin-bottom: 56px;
-      flex-shrink: 0;
+      margin-bottom: 52px;
       width: 100%;
       padding: 0 20px;
+      box-sizing: border-box;
     }
     .hiw-head h2 {
       font-size: clamp(1.9rem, 3.6vw, 2.85rem);
@@ -787,16 +785,15 @@ const CSS = `
       margin-right: auto;
     }
 
-    /* Wide horizontal strip — translated by WAAPI */
+    /* Wide horizontal strip — WAAPI drives translateX */
     .hiw-pin-wrap {
       display: flex;
       flex-direction: row;
       width: 300vw;
       will-change: transform;
-      flex-shrink: 0;
     }
 
-    /* Each step is one full viewport panel */
+    /* Each step = one 100vw panel, content centered inside */
     .hiw-step {
       width: 100vw;
       flex-shrink: 0;
@@ -805,26 +802,16 @@ const CSS = `
       align-items: center;
       text-align: center;
       padding: 0 clamp(40px, 12vw, 220px);
-      position: relative;
+      box-sizing: border-box;
     }
 
-    /* Ghost number shimmer on entry */
-    @keyframes ghostShimmer {
-      0%   { opacity: 0; transform: translateY(12px); }
-      40%  { opacity: 0.22; color: var(--gold-light); transform: translateY(0); }
-      100% { opacity: 0.08; transform: translateY(0); }
-    }
+    /* Ghost numbers — static, no shimmer */
     .hiw-num-ghost {
       font-family: var(--fh); font-size: clamp(6rem, 15vw, 11rem);
-      font-weight: 800; color: var(--gold); opacity: 0.08;
+      font-weight: 800; color: var(--gold); opacity: 0.07;
       line-height: 1; letter-spacing: -0.06em;
       margin-bottom: -2.5rem; display: block;
       user-select: none; pointer-events: none;
-      animation: ghostShimmer 1s ease-out both;
-      animation-play-state: paused;
-    }
-    .hiw-step.hiw-active .hiw-num-ghost {
-      animation-play-state: running;
     }
     .hiw-step h3 {
       font-family: var(--fh); font-size: clamp(1.3rem, 2.4vw, 1.9rem); font-weight: 800;
@@ -838,7 +825,7 @@ const CSS = `
 
     /* Progress dots */
     .hiw-dots {
-      display: flex; gap: 8px; margin-top: 48px; flex-shrink: 0;
+      display: flex; gap: 8px; margin-top: 40px; justify-content: center;
     }
     .hiw-dot {
       width: 6px; height: 6px; border-radius: 50%;
@@ -848,10 +835,10 @@ const CSS = `
       background: var(--gold); transform: scale(1.4);
     }
 
-    /* Mobile: fall back to vertical stacked layout */
+    /* Mobile fallback: vertical stack */
     @media (max-width: 768px) {
       #how-it-works { height: auto; padding: 80px 0; }
-      .hiw-pin-sticky { position: relative; height: auto; overflow: visible; }
+      .hiw-pin-sticky { position: relative; height: auto; overflow: visible; padding-top: 0; }
       .hiw-pin-wrap { flex-direction: column; width: 100%; }
       .hiw-step { width: 100%; padding: 0 24px 60px; }
       .hiw-dots { display: none; }
@@ -1786,45 +1773,39 @@ const SCRIPT = `
        HORIZONTAL PROCESS SCROLL (WAAPI ViewTimeline)
     ============================================================ */
     (function() {
-      const section  = document.querySelector('#how-it-works');
-      const wrap     = document.querySelector('#hiwPinWrap');
-      const steps    = document.querySelectorAll('.hiw-step');
-      const dots     = document.querySelectorAll('.hiw-dot');
+      const section = document.querySelector('#how-it-works');
+      const wrap    = document.querySelector('#hiwPinWrap');
+      const dots    = document.querySelectorAll('.hiw-dot');
       if (!section || !wrap) return;
 
-      /* ── Desktop: scroll-driven horizontal pan ── */
       if (window.innerWidth > 768 && 'ViewTimeline' in window) {
+        /* Scroll-linked horizontal pan: 0 → -200vw over the 400vh scroll */
         wrap.animate(
-          { transform: ['translateX(0vw)', 'translateX(-200vw)'] },
+          { transform: ['translateX(0px)', 'translateX(calc(-200vw))'] },
           {
             timeline: new ViewTimeline({ subject: section, axis: 'block' }),
             fill: 'both',
-            rangeStart: 'contain 0%',
-            rangeEnd:   'contain 100%',
+            rangeStart: 'entry 0%',
+            rangeEnd:   'exit 100%',
           }
         );
 
-        /* Dot & ghost-number tracking via scroll position */
-        function updateActive() {
+        /* Update progress dots based on scroll position */
+        function updateDots() {
           const rect  = section.getBoundingClientRect();
           const total = section.offsetHeight - window.innerHeight;
           const pct   = Math.max(0, Math.min(1, -rect.top / total));
           const idx   = Math.min(2, Math.floor(pct * 3));
-          dots.forEach((d, i)  => d.classList.toggle('active', i === idx));
-          steps.forEach((s, i) => {
-            if (i === idx && !s.classList.contains('hiw-active')) {
-              s.classList.add('hiw-active');
-            }
-          });
+          dots.forEach((d, i) => d.classList.toggle('active', i === idx));
         }
-        window.addEventListener('scroll', updateActive, { passive: true });
-        updateActive();
+        window.addEventListener('scroll', updateDots, { passive: true });
+        updateDots();
 
       } else {
-        /* ── Mobile/no-support: just stack vertically (CSS handles it) ── */
+        /* Mobile / unsupported: CSS handles vertical stacking */
         section.style.height = 'auto';
         const sticky = document.querySelector('.hiw-pin-sticky');
-        if (sticky) { sticky.style.position = 'relative'; sticky.style.height = 'auto'; }
+        if (sticky) { sticky.style.position = 'relative'; sticky.style.height = 'auto'; sticky.style.paddingTop = '80px'; }
       }
     })();
 
