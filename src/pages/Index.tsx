@@ -2359,317 +2359,41 @@ const HTML = `
 <div class="wwd-grid">
 <div class="wwd-left reveal-left">
 <span class="eyebrow">What We Do</span>
-<h2>We don't run campaigns.<br/>We build pipelines.</h2>
-<p>Most service business owners don't have a marketing problem — they have a systems problem. Leads come in and fall through the cracks. Follow-up never happens. There's no way to see what's actually working.</p>
-<p>We fix that. TriFactor automates your intake, follow-up, and tracking — so every lead is captured, every inquiry is handled, and you always know where your revenue is coming from.</p>
+<h2>Your business should be booking clients on autopilot.<br/><span class="gold-shimmer">Most aren't — yet.</span></h2>
+<p>If you're manually following up on leads, losing track of inquiries, or unsure where your next client is coming from — that's a systems problem, not a you problem.</p>
+<p>We build the fix. TriFactor builds the automated intake, follow-up, and tracking infrastructure that turns your lead flow into a predictable revenue engine — then we run it for you every month.</p>
 </div>
 <div class="wwd-pillars reveal-right">
 <div class="pillar">
 <div class="pillar-num">01</div>
 <div class="pillar-content">
-<h4>Systems First</h4>
-<p>We build infrastructure before campaigns. Every engagement starts with a complete growth architecture designed around your specific business model.</p>
+<h4>Free Growth Audit</h4>
+<p>We look at how your business currently captures and follows up on leads. We show you exactly where revenue is slipping — before you spend a dollar.</p>
 </div>
 </div>
 <div class="pillar">
 <div class="pillar-num">02</div>
 <div class="pillar-content">
-<h4>Automated Revenue</h4>
-<p>GHL funnels, automated follow-up sequences, and CRM pipelines that capture, nurture, and close leads around the clock without you lifting a finger.</p>
+<h4>We Build Your System</h4>
+<p>We set up your intake forms, automated follow-up sequences, and CRM pipeline. Every lead is captured. Every inquiry gets followed up. Automatically.</p>
 </div>
 </div>
 <div class="pillar">
 <div class="pillar-num">03</div>
 <div class="pillar-content">
-<h4>Operators, Not Marketers</h4>
-<p>We think in business outcomes and revenue. Vanity metrics don't pay your bills — we optimize for the numbers that do.</p>
+<h4>We Run It Every Month</h4>
+<p>We don't hand you off. We actively manage, optimize, and improve your system monthly — so your results compound over time instead of stalling out.</p>
 </div>
 </div>
 <div class="pillar">
 <div class="pillar-num">04</div>
 <div class="pillar-content">
-<h4>AppSheet Intelligence</h4>
-<p>Custom tracking dashboards so you always see in real time exactly what's working, what's not, and where to put more fuel on the fire.</p>
+<h4>You See Every Number</h4>
+<p>A live dashboard shows you exactly how many leads came in, how many were followed up, and what your system is generating in revenue. No guessing.</p>
 </div>
 </div>
 </div>
 </div>
-</div>
-</section>
-<!-- ======================== SYSTEMS DEMO ======================== -->
-<section id="systems-demo">
-<div aria-hidden="true" class="sdemo-vignette"></div>
-<div class="container">
-<div class="sdemo-header reveal">
-<span class="eyebrow">Systems In Action</span>
-<h2>Click any system. Watch it<br/><span class="gold-shimmer">run in real time.</span></h2>
-<p>Every automation below is live inside a client's business right now. This is exactly what we build.</p>
-</div>
-<!-- TAB NAVIGATION — centered inline -->
-<div class="demo-nav reveal" style="transition-delay:0.1s">
-<div class="demo-tabs-wrap" id="demoTabsWrap">
-<!-- Sliding indicator -->
-<div class="demo-tab-indicator" id="demoTabIndicator"></div>
-<div class="demo-tabs">
-<button class="demo-tab active" id="dtab-lead" onclick="switchDemo('lead',this)">
-<span class="demo-tab-num">01</span>
-<span class="demo-tab-label">Lead Alert</span>
-</button>
-<button class="demo-tab" id="dtab-followup" onclick="switchDemo('followup',this)">
-<span class="demo-tab-num">02</span>
-<span class="demo-tab-label">Follow-Up Chain</span>
-</button>
-<button class="demo-tab" id="dtab-crm" onclick="switchDemo('crm',this)">
-<span class="demo-tab-num">03</span>
-<span class="demo-tab-label">CRM Pipeline</span>
-</button>
-<button class="demo-tab" id="dtab-booking" onclick="switchDemo('booking',this)">
-<span class="demo-tab-num">04</span>
-<span class="demo-tab-label">Booking System</span>
-</button>
-<button class="demo-tab" id="dtab-review" onclick="switchDemo('review',this)">
-<span class="demo-tab-num">05</span>
-<span class="demo-tab-label">Review Request</span>
-</button>
-</div>
-</div>
-</div>
-<div class="demo-panel-wrap reveal" style="transition-delay:0.15s">
-<!-- Loop progress bar -->
-<div class="demo-loop-bar" id="demoLoopBar"></div>
-<!-- STATUS BAR -->
-<div class="demo-panel-status">
-<div class="demo-status-dot"></div>
-<span class="demo-status-text">System Active — <span class="demo-status-name" id="demoStatusLabel">Lead Alert</span></span>
-<span class="demo-status-live">● Live</span>
-</div>
-<!-- ==================== PANEL 1: LEAD ALERT ==================== -->
-<div class="demo-panel active" id="panel-lead">
-<div class="la-grid">
-<!-- Form -->
-<div class="la-form">
-<div class="la-form-label"><div class="la-dot"></div>Service Request Form</div>
-<div class="la-field"><div class="la-field-lbl">Full Name</div><div class="la-field-val">James Harrington</div></div>
-<div class="la-field"><div class="la-field-lbl">Phone</div><div class="la-field-val">(647) 391-2844</div></div>
-<div class="la-field"><div class="la-field-lbl">Service</div><div class="la-field-val">Vehicle Inspection + Oil Change</div></div>
-<div class="la-field"><div class="la-field-lbl">Vehicle</div><div class="la-field-val">2021 Honda Accord</div></div>
-<button class="la-btn">Submit Request ✓</button>
-</div>
-<!-- Connector -->
-<div class="la-connector">
-<div class="la-timing">&lt; 1s</div>
-<div class="la-arrow">
-<div class="la-arrow-line"></div>
-<div class="la-arrow-head"></div>
-</div>
-</div>
-<!-- Phone -->
-<div class="dp-phone-wrap">
-<div class="dp-phone">
-<div class="dp-screen">
-<div class="dp-status"><span>9:41</span><span>●●●</span></div>
-<div class="dp-body">
-<div class="la-notif">
-<div class="la-notif-top">
-<div class="la-notif-icon">TF</div>
-<div class="la-notif-src">Messages · TriFactor Alert</div>
-<div class="la-notif-ts">now</div>
-</div>
-<div class="la-notif-body">
-                        🔔 <span class="gh">New Lead</span><br/>
-<span class="gh">James Harrington</span><br/>
-                        (647) 391-2844<br/>
-                        Service: Inspection + Oil Change
-                      </div>
-</div>
-<div class="la-read">Delivered ✓</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- ==================== PANEL 2: FOLLOW-UP CHAIN ==================== -->
-<div class="demo-panel" id="panel-followup">
-<div class="fu-layout">
-<!-- Timeline -->
-<div class="fu-steps">
-<div class="fu-step" id="fu1">
-<div class="fu-step-time">Immediate</div>
-<div class="fu-step-info">
-<h4>First Touch SMS</h4>
-<p>Auto-text fires the moment a lead comes in — personalized, booking link included.</p>
-</div>
-</div>
-<div class="fu-step" id="fu2">
-<div class="fu-step-time">2 Hours</div>
-<div class="fu-step-info">
-<h4>Value Follow-Up</h4>
-<p>If no reply, a second message asks a specific question to restart the conversation.</p>
-</div>
-</div>
-<div class="fu-step" id="fu3">
-<div class="fu-step-time">Day 3</div>
-<div class="fu-step-info">
-<h4>Social Proof Message</h4>
-<p>Sends a client result to build trust — zero effort from the owner.</p>
-</div>
-</div>
-<div class="fu-step" id="fu4">
-<div class="fu-step-time">Day 7</div>
-<div class="fu-step-info">
-<h4>Last Chance + Offer</h4>
-<p>Final message creates urgency. Most leads convert by this point.</p>
-</div>
-</div>
-</div>
-<!-- Phone SMS conversation -->
-<div class="dp-phone-wrap">
-<div class="dp-phone">
-<div class="dp-screen">
-<div class="dp-status"><span>9:41</span><span>●●●</span></div>
-<div class="dp-body" style="display:flex;flex-direction:column;gap:4px;overflow:hidden;">
-<div class="fu-msg" id="fum0"><span class="sms-label">Rampal Restores Automated</span></div>
-<div class="fu-msg" id="fum1"><span class="sms-in">"Hey Marcus! It's Yash from Rampal Restores. We got your request — book your free estimate:<br/><span class="sms-gold">rampalrestores.as.me</span> 👇"</span></div>
-<div class="fu-msg" id="fum2"><span class="sms-in">"Quick question — is it water damage or mold? We handle both same week 🙌"</span></div>
-<div class="fu-msg" id="fum3"><span class="sms-in">"Just finished a full basement restore nearby — 3 days ✅ Want before/after photos?"</span></div>
-<div class="fu-msg" id="fum4"><span class="sms-in">"Last message Marcus — spots filling up this week. Grab yours now 👇"</span></div>
-<div class="fu-reply" id="fureply"><span class="sms-out">"Let's book it!"</span></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- ==================== PANEL 3: CRM PIPELINE ==================== -->
-<div class="demo-panel" id="panel-crm">
-<div class="crm-layout">
-<div class="crm-lead-info">
-<div class="crm-lead-avatar">JH</div>
-<div>
-<div class="crm-lead-name">James Harrington</div>
-<div class="crm-lead-sub">Vehicle Inspection · (647) 391-2844</div>
-</div>
-<div class="crm-progress">
-<div class="crm-progress-fill" id="crmProgress"></div>
-</div>
-</div>
-<div class="crm-board-wrap">
-<div class="crm-board">
-<div class="crm-stage" id="crm-0">
-<div class="crm-stage-head"><div class="crm-stage-name">New Lead</div><div class="crm-stage-dot"></div></div>
-<div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Submitted form</div><div class="crm-card-badge">🔔 New</div></div>
-</div>
-<div class="crm-stage" id="crm-1">
-<div class="crm-stage-head"><div class="crm-stage-name">Contacted</div><div class="crm-stage-dot"></div></div>
-<div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">SMS sent</div><div class="crm-card-badge">📱 Texted</div></div>
-</div>
-<div class="crm-stage" id="crm-2">
-<div class="crm-stage-head"><div class="crm-stage-name">Qualified</div><div class="crm-stage-dot"></div></div>
-<div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Replied &amp; interested</div><div class="crm-card-badge">✅ Warm</div></div>
-</div>
-<div class="crm-stage" id="crm-3">
-<div class="crm-stage-head"><div class="crm-stage-name">Booked</div><div class="crm-stage-dot"></div></div>
-<div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Appointment set</div><div class="crm-card-badge">📅 Booked</div></div>
-</div>
-<div class="crm-stage" id="crm-4">
-<div class="crm-stage-head"><div class="crm-stage-name">Won</div><div class="crm-stage-dot"></div></div>
-<div class="crm-card"><div class="crm-card-name">James H.</div><div class="crm-card-sub">Job complete</div><div class="crm-card-badge">🏆 Closed</div></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- ==================== PANEL 4: BOOKING SYSTEM ==================== -->
-<div class="demo-panel" id="panel-booking">
-<div class="bk-layout">
-<!-- Steps -->
-<div class="bk-steps">
-<div class="bk-step" id="bk1">
-<div class="bk-step-num">1</div>
-<div class="bk-step-content">
-<h4>Booking Link Sent</h4>
-<p>Fires the moment a lead replies. Personalized link goes out instantly.</p>
-</div>
-</div>
-<div class="bk-step" id="bk2">
-<div class="bk-step-num">2</div>
-<div class="bk-step-content">
-<h4>Appointment Confirmed</h4>
-<p>Client picks a slot. Confirmation SMS fires. Calendar blocks automatically.</p>
-</div>
-</div>
-<div class="bk-step" id="bk3">
-<div class="bk-step-num">3</div>
-<div class="bk-step-content">
-<h4>24-Hour Reminder Sent</h4>
-<p>Auto-reminder reduces no-shows by 60%+. Zero effort from you.</p>
-</div>
-</div>
-</div>
-<!-- Phone -->
-<div class="dp-phone-wrap">
-<div class="dp-phone">
-<div class="dp-screen">
-<div class="dp-status"><span>9:41</span><span>●●●</span></div>
-<div class="dp-body" style="display:flex;flex-direction:column;gap:5px;overflow:hidden;">
-<span class="sms-label">CutByDack Bookings</span>
-<div class="bk-msg" id="bkm1"><span class="sms-in">"Marcus, book your spot here 👇<br/><span class="sms-gold">cutbydack.as.me</span><br/>Takes 60 seconds ⚡"</span></div>
-<div class="bk-msg" id="bkm2"><span class="sms-in" style="background:rgba(62,207,110,0.18);color:#3ecf6e;">✅ Booked!<br/>Thu May 2 @ 3:00 PM<br/>CutByDack — 214 King St W</span></div>
-<div class="bk-msg" id="bkm3"><span class="sms-in">"⏰ Reminder: Tomorrow @ 3:00 PM with Dack. Reply CANCEL if plans change."</span></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- ==================== PANEL 5: REVIEW REQUEST ==================== -->
-<div class="demo-panel" id="panel-review">
-<div class="rv-layout">
-<!-- Left: trigger + stars + result -->
-<div class="rv-left">
-<div class="rv-trigger" id="rvTrigger">
-<div class="rv-trigger-icon">✅</div>
-<div class="rv-trigger-text">
-<h4>Job Marked Complete</h4>
-<p>Owner taps "Complete" in GHL — review request fires in seconds.</p>
-</div>
-</div>
-<div class="rv-stars-wrap" id="rvStarsWrap">
-<span class="rv-stars-label">Client rates their experience</span>
-<div class="rv-stars">
-<span class="rv-star" id="rs1">★</span>
-<span class="rv-star" id="rs2">★</span>
-<span class="rv-star" id="rs3">★</span>
-<span class="rv-star" id="rs4">★</span>
-<span class="rv-star" id="rs5">★</span>
-</div>
-</div>
-<div class="rv-result" id="rvResult">
-<div class="rv-result-stars">★★★★★</div>
-<div class="rv-result-quote">"Rampal Restores did an incredible job on our basement. Fast, professional, spotless. Would 100% recommend."</div>
-<div class="rv-result-name">— Sarah T. · Google Review</div>
-</div>
-</div>
-<!-- Phone -->
-<div class="dp-phone-wrap">
-<div class="dp-phone">
-<div class="dp-screen">
-<div class="dp-status"><span>9:41</span><span>●●●</span></div>
-<div class="dp-body" style="display:flex;flex-direction:column;gap:5px;overflow:hidden;">
-<span class="sms-label">Rampal Restores</span>
-<div class="rv-msg" id="rvm1"><span class="sms-in">"Hi Sarah! Happy with your restore? 👋<br/><br/>Leave us a quick Google review:<br/><span class="sms-gold">g.page/rampal ⭐</span><br/><br/>— Yash @ Rampal Restores"</span></div>
-<div class="rv-msg" id="rvm2"><span class="sms-out">"Absolutely! Just left you 5 stars 🙌"</span></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><!-- end demo-panel-wrap -->
-<p class="sdemo-caption reveal" style="transition-delay:0.25s">
-        <strong>Built once. Runs forever. Compounds monthly.</strong>
-</p>
 </div>
 </section>
 <!-- ======================== HOW IT WORKS ======================== -->
