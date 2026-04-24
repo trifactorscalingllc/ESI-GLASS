@@ -358,6 +358,76 @@ const CSS = `
       .service-grid.reversed .service-right { order: 0; }
     }
 
+    /* ── Pillar tier cards (Pillar 01) ── */
+    .tier-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border); border: 1px solid var(--border);
+    }
+    .tier-card {
+      background: var(--black); padding: 44px 32px;
+      display: flex; flex-direction: column; position: relative;
+      transition: background 0.25s ease;
+    }
+    .tier-card:hover { background: #030303; }
+    .tier-card-featured { background: #090900; padding-top: 54px; }
+    .tier-card-featured::before {
+      content: ''; position: absolute; inset: 0;
+      border: 1px solid var(--gold-border); pointer-events: none;
+      transition: border-color 0.3s ease;
+    }
+    .tier-card-featured:hover::before { border-color: var(--gold); }
+    .tier-badge {
+      position: absolute; top: 0; left: 0; right: 0;
+      background: var(--gold); color: var(--black);
+      font-family: var(--fb); font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.2em; text-align: center; padding: 6px;
+    }
+    .tier-eyebrow {
+      font-family: var(--fb); font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 8px;
+    }
+    .tier-card-featured .tier-eyebrow { color: var(--gold); }
+    .tier-name {
+      font-family: var(--fh); font-size: 1.45rem; font-weight: 800;
+      letter-spacing: -0.01em; color: var(--white); margin-bottom: 8px;
+    }
+    .tier-desc {
+      font-size: 0.83rem; color: var(--gray-light); line-height: 1.6;
+      margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .tier-apply {
+      display: inline-block; margin-top: auto; padding: 12px 20px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--gray-light); font-family: var(--fb); font-size: 0.75rem;
+      font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none; transition: all 0.2s ease; cursor: pointer;
+    }
+    .tier-apply:hover { border-color: var(--gold); color: var(--gold); }
+    .tier-apply-fill { background: var(--gold); color: var(--black); border-color: var(--gold); }
+    .tier-apply-fill:hover { background: #e8c840; border-color: #e8c840; color: var(--black); }
+
+    /* Pillar header label */
+    .pillar-eyebrow-row {
+      display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;
+      margin-bottom: 40px; padding-bottom: 18px; border-bottom: 1px solid var(--border);
+    }
+    .pillar-eyebrow-num {
+      font-family: var(--fb); font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
+    }
+    .pillar-eyebrow-name {
+      font-family: var(--fh); font-size: 1.1rem; font-weight: 800; color: var(--white);
+    }
+    .pillar-eyebrow-desc { font-size: 0.82rem; color: var(--gray); margin-left: auto; }
+
+    @media (max-width: 900px) {
+      .tier-grid { grid-template-columns: 1fr; background: transparent; border: none; }
+      .tier-card { border: 1px solid var(--border); }
+      .tier-card-featured { border: 1px solid var(--gold-border); }
+      .tier-card-featured::before { display: none; }
+      .pillar-eyebrow-desc { display: none; }
+    }
+
     /* ======================== FULL STACK SECTION ======================== */
     #full-stack {
       background: var(--surface);
@@ -996,50 +1066,97 @@ const HTML = `
 </div>
 </div>
 </section>
-<!-- ======================== SECTION 2: SERVICE 01 — GHL REVENUE SYSTEM ======================== -->
+<!-- ======================== SECTION 2: PILLAR 01 — WEBSITE & FUNNEL ======================== -->
 <section class="service-section bg-black">
+<div class="container">
+<div class="pillar-eyebrow-row reveal">
+<span class="pillar-eyebrow-num">Pillar 01</span>
+<span class="pillar-eyebrow-name">Website &amp; Funnel</span>
+<span class="pillar-eyebrow-desc">Your online presence, engineered to convert.</span>
+</div>
+<div class="tier-grid reveal" style="transition-delay:0.08s">
+<!-- Launch -->
+<div class="tier-card">
+<div class="tier-eyebrow">Launch</div>
+<div class="tier-name">Launch</div>
+<p class="tier-desc">A fast, credible website that captures leads from day one.</p>
+<ul class="feature-list" style="flex:1">
+<li><span class="feature-check">✦</span> Homepage, services, about, and contact pages</li>
+<li><span class="feature-check">✦</span> Lead capture form connected to your CRM</li>
+<li><span class="feature-check">✦</span> Mobile-optimized and Google-indexed</li>
+<li><span class="feature-check">✦</span> Monthly maintenance included</li>
+</ul>
+<a class="tier-apply" href="mailto:contact@trifactorscaling.com?subject=Launch%20Inquiry">Apply for Launch →</a>
+</div>
+<!-- Build (featured) -->
+<div class="tier-card tier-card-featured">
+<div class="tier-badge">MOST POPULAR</div>
+<div class="tier-eyebrow">Build</div>
+<div class="tier-name">Build</div>
+<p class="tier-desc">A full website plus a dedicated lead pipeline.</p>
+<ul class="feature-list" style="flex:1">
+<li><span class="feature-check">✦</span> Everything in Launch</li>
+<li><span class="feature-check">✦</span> Up to 8 pages including campaign landing pages</li>
+<li><span class="feature-check">✦</span> Lead funnel with automated follow-up</li>
+<li><span class="feature-check">✦</span> Booking and calendar integration</li>
+<li><span class="feature-check">✦</span> Analytics and conversion tracking</li>
+</ul>
+<a class="tier-apply tier-apply-fill" href="mailto:contact@trifactorscaling.com?subject=Build%20Inquiry">Apply for Build →</a>
+</div>
+<!-- Full Funnel Op -->
+<div class="tier-card">
+<div class="tier-eyebrow">Full Funnel Op</div>
+<div class="tier-name">Full Funnel Op</div>
+<p class="tier-desc">A complete funnel ecosystem, continuously optimized for revenue.</p>
+<ul class="feature-list" style="flex:1">
+<li><span class="feature-check">✦</span> Everything in Build</li>
+<li><span class="feature-check">✦</span> Multiple funnels for different offers or audiences</li>
+<li><span class="feature-check">✦</span> A/B testing and monthly CRO</li>
+<li><span class="feature-check">✦</span> Retargeting pixel setup</li>
+<li><span class="feature-check">✦</span> Full revenue attribution — know exactly what's converting</li>
+</ul>
+<a class="tier-apply" href="mailto:contact@trifactorscaling.com?subject=Full%20Funnel%20Op%20Inquiry">Apply for Full Funnel Op →</a>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================== SECTION 3: PILLAR 02 — GROWTH OPERATIONS ======================== -->
+<section class="service-section bg-surface">
 <div class="container">
 <div class="service-grid">
 <div class="service-left reveal-left">
 <div class="service-eyebrow">
-<span class="eyebrow"><span class="eline"></span>System 01</span>
+<span class="eyebrow"><span class="eline"></span>Pillar 02</span>
 </div>
-<h2 class="service-title">GHL Revenue System</h2>
-<p class="service-lead">Your entire business backend, built on GoHighLevel. CRM, pipeline, automations, notifications — everything configured from scratch and handed to you running. Not a template. A system engineered around how your business actually sells.</p>
+<h2 class="service-title">Growth Operations</h2>
+<p class="service-lead">The system that turns leads into revenue. CRM, automations, follow-up sequences, and booking flows — all built and managed for you so no lead ever slips through.</p>
 <p style="font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-family:var(--fb);">What's Included</p>
 <ul class="feature-list">
-<li><span class="feature-check">✦</span> Full GoHighLevel CRM setup and configuration</li>
-<li><span class="feature-check">✦</span> Custom pipeline stages mapped to your sales process</li>
-<li><span class="feature-check">✦</span> Lead tagging, segmentation, and scoring rules</li>
-<li><span class="feature-check">✦</span> Workflow automations — triggers, actions, conditions</li>
-<li><span class="feature-check">✦</span> Team notification system — no lead slips through</li>
-<li><span class="feature-check">✦</span> 7-touch follow-up sequence built and live</li>
-<li><span class="feature-check">✦</span> Monthly optimization reviews</li>
+<li><span class="feature-check">✦</span> CRM setup and pipeline management</li>
+<li><span class="feature-check">✦</span> Automated follow-up via email and SMS</li>
+<li><span class="feature-check">✦</span> Lead nurture sequences</li>
+<li><span class="feature-check">✦</span> Booking flows and appointment automation</li>
+<li><span class="feature-check">✦</span> Reporting dashboard so nothing falls through</li>
 </ul>
-<div class="timeline-badge">
-<span class="timeline-badge-dot"></span>
-<span>2–3 Weeks</span>
-<span class="timeline-badge-label">to full deployment</span>
-</div>
+<a class="tier-apply" href="mailto:contact@trifactorscaling.com?subject=Growth%20Operations%20Inquiry" style="display:inline-block;margin-top:8px;">Apply for Growth Ops →</a>
 </div>
 <div class="service-right reveal-right">
 <div class="info-cards">
 <div class="info-card">
 <div class="info-card-label">Who It's For</div>
-<p>Any service business processing more than 10 leads per month that has no central place to track them. If you're running leads through your personal inbox or a spreadsheet, this is the foundation you're missing.</p>
+<p>Any service business generating leads but losing them to slow follow-up, no-shows, or disorganized pipelines. If you're running your leads through a personal inbox or spreadsheet, this is the infrastructure you're missing.</p>
 </div>
 <div class="info-card">
 <div class="info-card-label">Why It Matters</div>
-<p>Without a CRM, every lead you don't close immediately is a lead you're losing. The average business forgets to follow up after 2 touches. Our systems run 7. This is the foundation everything else is built on — and the single highest-ROI build we do.</p>
+<p>The average business follows up with a lead twice. Our systems run 7+ touches — automated, timed, and personalized. The businesses that convert the most aren't the ones with the best service. They're the ones who follow up fastest and most consistently.</p>
 </div>
 <div style="background:var(--card);border:1px solid var(--border);padding:22px 24px;border-radius:2px;">
 <p style="font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gray);margin-bottom:12px;font-family:var(--fb);">System Coverage</p>
 <div style="display:flex;flex-wrap:wrap;gap:8px;">
 <span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">CRM</span>
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Pipelines</span>
 <span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Automations</span>
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Follow-Up</span>
 <span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">SMS/Email</span>
+<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Booking</span>
 <span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Reporting</span>
 </div>
 </div>
@@ -1048,202 +1165,47 @@ const HTML = `
 </div>
 </div>
 </section>
-<!-- ======================== SECTION 3: SERVICE 02 — LEAD CAPTURE ======================== -->
-<section class="service-section bg-surface">
-<div class="container">
-<div class="service-grid reversed">
-<div class="service-left reveal-left">
-<div class="info-cards">
-<div class="info-card">
-<div class="info-card-label">Who It's For</div>
-<p>Businesses running paid ads or needing a consistent inbound lead source. If you're sending Meta or Google traffic to your homepage, you're burning budget — this funnel gives that spend somewhere to land and convert.</p>
-</div>
-<div class="info-card">
-<div class="info-card-label">Why It Matters</div>
-<p>Your ad spend is wasted without a funnel that converts. A generic homepage converts at 1–2%. A purpose-built landing page converts at 8–15%. This is the difference between a profitable ad account and a money pit.</p>
-</div>
-<div style="background:var(--card);border:1px solid var(--border);padding:22px 24px;border-radius:2px;">
-<p style="font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gray);margin-bottom:12px;font-family:var(--fb);">Integrates With</p>
-<div style="display:flex;flex-wrap:wrap;gap:8px;">
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Meta Ads</span>
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Google Ads</span>
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">GHL CRM</span>
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Source Tracking</span>
-</div>
-</div>
-</div>
-</div>
-<div class="service-right reveal-right">
-<div class="service-eyebrow">
-<span class="eyebrow"><span class="eline"></span>System 02</span>
-</div>
-<h2 class="service-title">Lead Capture &amp; Funnel System</h2>
-<p class="service-lead">A purpose-built landing page and form system that captures leads, triggers instant follow-up, and pushes everything into your CRM automatically. Every click is tracked, tagged, and followed up — without you lifting a finger.</p>
-<p style="font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-family:var(--fb);">What's Included</p>
-<ul class="feature-list">
-<li><span class="feature-check">✦</span> Custom landing page designed for conversion</li>
-<li><span class="feature-check">✦</span> Lead capture form with field validation</li>
-<li><span class="feature-check">✦</span> GHL integration — every submission auto-enters your pipeline</li>
-<li><span class="feature-check">✦</span> Instant follow-up trigger fires on submission</li>
-<li><span class="feature-check">✦</span> Source tracking — know exactly where every lead came from</li>
-<li><span class="feature-check">✦</span> A/B testing setup for continuous improvement</li>
-<li><span class="feature-check">✦</span> Ad platform integration (Meta, Google)</li>
-</ul>
-<div class="timeline-badge">
-<span class="timeline-badge-dot"></span>
-<span>1–2 Weeks</span>
-<span class="timeline-badge-label">to full deployment</span>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- ======================== SECTION 4: SERVICE 03 — BOOKING SYSTEM ======================== -->
+<!-- ======================== SECTION 4: PILLAR 03 — MARKETING ======================== -->
 <section class="service-section bg-black">
 <div class="container">
-<div class="service-grid">
-<div class="service-left reveal-left">
-<div class="service-eyebrow">
-<span class="eyebrow"><span class="eline"></span>System 03</span>
-</div>
-<h2 class="service-title">Automated Booking System</h2>
-<p class="service-lead">A fully automated appointment flow — from booking link to calendar block to 24-hour reminder — that runs without you touching it. Clients book, get confirmed, get reminded, and show up. You focus on the work, not the logistics.</p>
-<p style="font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-family:var(--fb);">What's Included</p>
-<ul class="feature-list">
-<li><span class="feature-check">✦</span> Custom booking page with your brand and availability</li>
-<li><span class="feature-check">✦</span> Instant confirmation SMS and email on booking</li>
-<li><span class="feature-check">✦</span> 24-hour reminder sequence — reduces no-shows 60%+</li>
-<li><span class="feature-check">✦</span> Staff calendar sync and conflict prevention</li>
-<li><span class="feature-check">✦</span> Post-appointment follow-up trigger</li>
-<li><span class="feature-check">✦</span> Rebooking automation for repeat clients</li>
-<li><span class="feature-check">✦</span> All integrated directly with your GHL pipeline</li>
-</ul>
-<div class="timeline-badge">
-<span class="timeline-badge-dot"></span>
-<span>1–2 Weeks</span>
-<span class="timeline-badge-label">to full deployment</span>
-</div>
-</div>
-<div class="service-right reveal-right">
-<div class="info-cards">
-<div class="info-card">
-<div class="info-card-label">Who It's For</div>
-<p>Any appointment-based service business — barbershops, restoration, coaching, trades, beauty. If you're confirming bookings manually by phone or DM, this system reclaims hours every week and dramatically reduces the no-show rate.</p>
-</div>
-<div class="info-card">
-<div class="info-card-label">Why It Matters</div>
-<p>No-shows kill revenue. A single missed appointment costs you the slot and the client. Manual booking wastes your time before and after. This system handles both — automated confirmations cut no-shows by 60% or more on average across our clients.</p>
-</div>
-<div style="background:var(--card);border:1px solid var(--border);padding:22px 24px;border-radius:2px;">
-<p style="font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gray);margin-bottom:8px;font-family:var(--fb);">Proven With</p>
-<p style="font-size:0.83rem;color:var(--gray-light);line-height:1.7;">Barbershops, home restoration companies, coaching practices, Dionet Academy, CutByDack — and every client with a calendar.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- ======================== SECTION 5: SERVICE 04 — REVIEW ENGINE ======================== -->
-<section class="service-section bg-surface">
-<div class="container">
 <div class="service-grid reversed">
 <div class="service-left reveal-left">
 <div class="info-cards">
 <div class="info-card">
 <div class="info-card-label">Who It's For</div>
-<p>Local service businesses where Google reviews directly drive new business — trades, restoration, barbershops, home services. If your Google rating is under 4.7 or you have fewer than 50 reviews, you're losing business to competitors every single day.</p>
+<p>Businesses with a proven offer and a functioning lead system that are ready to pour fuel on the fire. If your funnel is converting but your volume is low, paid traffic is the fastest lever.</p>
 </div>
 <div class="info-card">
 <div class="info-card-label">Why It Matters</div>
-<p>87% of buyers check Google reviews before contacting a local business. One review system built today compounds for years. The businesses we've seen grow fastest didn't out-advertise their competitors — they out-reputationed them.</p>
+<p>Most ad agencies hand you a pretty report and move on. We stay in the account daily — testing, cutting, scaling. We don't just run the ads. We own the outcome. Your spend either compounds or we cut what's not working.</p>
 </div>
 <div style="background:var(--card);border:1px solid var(--border);padding:22px 24px;border-radius:2px;">
-<p style="font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gray);margin-bottom:8px;font-family:var(--fb);">Stat That Matters</p>
-<p style="font-family:var(--fh);font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1;margin-bottom:6px;">87%</p>
-<p style="font-size:0.82rem;color:var(--gray-light);">of buyers check Google reviews before contacting a local business.</p>
+<p style="font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gray);margin-bottom:12px;font-family:var(--fb);">Channels</p>
+<div style="display:flex;flex-wrap:wrap;gap:8px;">
+<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Meta Ads</span>
+<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">TikTok Ads</span>
+<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Retargeting</span>
+<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Organic Content</span>
+</div>
 </div>
 </div>
 </div>
 <div class="service-right reveal-right">
 <div class="service-eyebrow">
-<span class="eyebrow"><span class="eline"></span>System 04</span>
+<span class="eyebrow"><span class="eline"></span>Pillar 03</span>
 </div>
-<h2 class="service-title">Review &amp; Reputation Engine</h2>
-<p class="service-lead">Every completed job automatically triggers a Google review request. Your reputation builds on autopilot while you focus on the next job — and negative feedback gets caught before it goes public.</p>
+<h2 class="service-title">Marketing</h2>
+<p class="service-lead">Traffic on demand. Meta and TikTok ads built to perform — strategy, creative, daily optimization, and full reporting so you know exactly what your spend is producing.</p>
 <p style="font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-family:var(--fb);">What's Included</p>
 <ul class="feature-list">
-<li><span class="feature-check">✦</span> Post-service review request SMS — triggered by job completion</li>
-<li><span class="feature-check">✦</span> Google Business Profile integration</li>
-<li><span class="feature-check">✦</span> 5-star review routing — 4-star or below goes to private feedback</li>
-<li><span class="feature-check">✦</span> Review response templates for consistent brand voice</li>
-<li><span class="feature-check">✦</span> Monthly reputation report</li>
-<li><span class="feature-check">✦</span> Low-rating alert to catch and address issues fast</li>
+<li><span class="feature-check">✦</span> Campaign strategy, ad copy, and creative direction</li>
+<li><span class="feature-check">✦</span> Audience targeting and campaign buildout</li>
+<li><span class="feature-check">✦</span> Daily optimization and retargeting</li>
+<li><span class="feature-check">✦</span> Organic content strategy</li>
+<li><span class="feature-check">✦</span> Monthly ROI reporting</li>
 </ul>
-<div class="timeline-badge">
-<span class="timeline-badge-dot"></span>
-<span>1 Week</span>
-<span class="timeline-badge-label">to full deployment</span>
+<a class="tier-apply" href="mailto:contact@trifactorscaling.com?subject=Marketing%20Inquiry" style="display:inline-block;margin-top:8px;">Apply for Marketing →</a>
 </div>
-</div>
-</div>
-</div>
-</section>
-<!-- ======================== SECTION 6: THE FULL STACK ======================== -->
-<section id="full-stack">
-<div class="container">
-<div class="fullstack-header reveal">
-<span class="eyebrow"><span class="eline"></span>The Full Picture<span class="eline"></span></span>
-<h2 style="margin-top:18px;">When all four run together</h2>
-<p style="margin-top:16px;">These aren't four separate tools — they're one integrated system. A lead hits your funnel, enters your CRM, books automatically, gets followed up with if they don't, completes the job, and leaves a 5-star review. Without you touching a single step.</p>
-</div>
-<div class="pipeline-flow reveal">
-<div class="pipeline-stage">
-<div class="pipeline-stage-box">
-<div class="pipeline-stage-num">01</div>
-<div class="pipeline-stage-name">CAPTURE</div>
-<div class="pipeline-stage-sub">Funnel &amp; form<br/>fires instantly</div>
-</div>
-<div class="pipeline-stage-label">Lead Capture System</div>
-</div>
-<div class="pipeline-connector">
-<div class="pipeline-line"></div>
-<div class="pipeline-arrow"></div>
-</div>
-<div class="pipeline-stage">
-<div class="pipeline-stage-box">
-<div class="pipeline-stage-num">02</div>
-<div class="pipeline-stage-name">QUALIFY</div>
-<div class="pipeline-stage-sub">CRM tags &amp;<br/>follow-up runs</div>
-</div>
-<div class="pipeline-stage-label">GHL Revenue System</div>
-</div>
-<div class="pipeline-connector">
-<div class="pipeline-line"></div>
-<div class="pipeline-arrow"></div>
-</div>
-<div class="pipeline-stage">
-<div class="pipeline-stage-box">
-<div class="pipeline-stage-num">03</div>
-<div class="pipeline-stage-name">BOOK</div>
-<div class="pipeline-stage-sub">Auto-confirmed,<br/>reminder sent</div>
-</div>
-<div class="pipeline-stage-label">Booking System</div>
-</div>
-<div class="pipeline-connector">
-<div class="pipeline-line"></div>
-<div class="pipeline-arrow"></div>
-</div>
-<div class="pipeline-stage">
-<div class="pipeline-stage-box">
-<div class="pipeline-stage-num">04</div>
-<div class="pipeline-stage-name">REVIEW</div>
-<div class="pipeline-stage-sub">Job done, Google<br/>review requested</div>
-</div>
-<div class="pipeline-stage-label">Reputation Engine</div>
-</div>
-</div>
-<div class="reveal" style="text-align:center;margin-top:48px;">
-<p style="font-size:0.85rem;color:var(--gray);max-width:520px;margin:0 auto;line-height:1.8;">Every stage feeds the next. Every system compounds. The whole stack takes 4–6 weeks to build — then it runs on its own, month after month.</p>
 </div>
 </div>
 </section>

@@ -892,11 +892,39 @@ const CSS = `
     .svc-note { text-align: center; margin-top: 44px; font-size: 0.84rem; color: var(--gray); font-style: italic; }
     .svc-note a { color: var(--gold); text-decoration: none; }
 
+    /* ── Pillar layout ── */
+    .pillar-block { margin-bottom: 2px; }
+    .pillar-header {
+      display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;
+      margin-bottom: 28px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+    }
+    .pillar-num {
+      font-family: var(--fb); font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); white-space: nowrap;
+    }
+    .pillar-name {
+      font-family: var(--fh); font-size: 1.15rem; font-weight: 800; color: var(--white); letter-spacing: -0.01em;
+    }
+    .pillar-desc { font-size: 0.82rem; color: var(--gray); margin-left: auto; }
+    .pillar-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 1px;
+    }
+    .pillar-card {
+      background: var(--black); padding: 44px 36px;
+      display: flex; flex-direction: column; transition: background 0.25s ease;
+    }
+    .pillar-card:hover { background: #030303; }
+    .pillar-card .pillar-header { margin-bottom: 0; }
+
     @media (max-width: 900px) {
       .svc-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; background: transparent; border: none; }
       .svc-card { border: 1px solid var(--border); }
       .svc-card.featured { border: 1px solid var(--gold-border); }
       .svc-card.featured::before { display: none; }
+      .pillar-row { grid-template-columns: 1fr; }
+      .pillar-desc { display: none; }
+      .pillar-card { padding: 36px 24px; }
     }
 
     /* ======================== SECTION: WHY TRIFACTOR ======================== */
@@ -2489,53 +2517,91 @@ const HTML = `
 <div class="container">
 <div class="svc-header reveal">
 <span class="eyebrow"><span class="eline"></span>Services</span>
-<h2>Three ways to build your growth system.</h2>
-<p>Every tier starts with a custom audit and a system built around your business specifically.</p>
+<h2>Three pillars.<br/>One growth system.</h2>
+<p>Every engagement starts with a custom audit. We build what your business actually needs.</p>
+</div>
+
+<!-- PILLAR 01: Website & Funnel -->
+<div class="pillar-block reveal">
+<div class="pillar-header">
+<span class="pillar-num">Pillar 01</span>
+<span class="pillar-name">Website &amp; Funnel</span>
+<span class="pillar-desc">Your online presence, engineered to convert.</span>
 </div>
 <div class="svc-grid">
-<div class="svc-card reveal" style="transition-delay:0.08s">
-<div class="svc-tier">Starter</div>
-<div class="svc-name">Foundation</div>
-<p class="svc-target">For businesses ready to stop losing leads and build a reliable, automated follow-up system for the first time.</p>
+<div class="svc-card">
+<div class="svc-tier">Launch</div>
+<p class="svc-target">A fast, credible website that captures leads from day one.</p>
 <ul class="svc-features">
-<li><span class="svc-check">◆</span>GHL CRM setup and full configuration</li>
-<li><span class="svc-check">◆</span>1 high-converting lead capture funnel</li>
-<li><span class="svc-check">◆</span>Automated follow-up sequences (x5)</li>
-<li><span class="svc-check">◆</span>Monthly performance report</li>
-<li><span class="svc-check">◆</span>Email support</li>
+<li><span class="svc-check">◆</span>Homepage, services, about, and contact pages</li>
+<li><span class="svc-check">◆</span>Lead capture form connected to your CRM</li>
+<li><span class="svc-check">◆</span>Mobile-optimized and Google-indexed</li>
+<li><span class="svc-check">◆</span>Monthly maintenance included</li>
 </ul>
-<a class="btn-apply" href="mailto:trifactorscaling@gmail.com?subject=Foundation%20Service%20Application">Apply for Foundation →</a>
+<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Launch%20Service%20Inquiry">Apply for Launch →</a>
 </div>
-<div class="svc-card featured reveal" style="transition-delay:0.2s">
-<div class="svc-badge">MOST SELECTED</div>
-<div class="svc-tier">Growth</div>
-<div class="svc-name">Growth Engine</div>
-<p class="svc-target">For established businesses ready to stack paid traffic on top of a proven organic lead system and see compounding results.</p>
+<div class="svc-card featured">
+<div class="svc-badge">MOST POPULAR</div>
+<div class="svc-tier">Build</div>
+<p class="svc-target">A full website plus a dedicated lead pipeline.</p>
 <ul class="svc-features">
-<li><span class="svc-check">◆</span>Everything in Foundation</li>
-<li><span class="svc-check">◆</span>Paid ads management (Facebook and Google)</li>
-<li><span class="svc-check">◆</span>AppSheet tracking dashboard</li>
-<li><span class="svc-check">◆</span>Bi-weekly strategy calls</li>
-<li><span class="svc-check">◆</span>Lead optimization and A/B testing</li>
-<li><span class="svc-check">◆</span>Priority support</li>
+<li><span class="svc-check">◆</span>Everything in Launch</li>
+<li><span class="svc-check">◆</span>Up to 8 pages including campaign landing pages</li>
+<li><span class="svc-check">◆</span>Lead funnel with automated follow-up</li>
+<li><span class="svc-check">◆</span>Booking and calendar integration</li>
+<li><span class="svc-check">◆</span>Analytics and conversion tracking</li>
 </ul>
-<a class="btn-apply btn-apply-fill" href="mailto:trifactorscaling@gmail.com?subject=Growth%20Engine%20Application">Apply for Growth Engine →</a>
+<a class="btn-apply btn-apply-fill" href="mailto:contact@trifactorscaling.com?subject=Build%20Service%20Inquiry">Apply for Build →</a>
 </div>
-<div class="svc-card reveal" style="transition-delay:0.32s">
-<div class="svc-tier">Scale</div>
-<div class="svc-name">Full Scale</div>
-<p class="svc-target">For high-revenue operations ready for a fully dedicated growth ops team with complete accountability and revenue alignment.</p>
+<div class="svc-card">
+<div class="svc-tier">Full Funnel Op</div>
+<p class="svc-target">A complete funnel ecosystem, continuously optimized for revenue.</p>
 <ul class="svc-features">
-<li><span class="svc-check">◆</span>Everything in Growth Engine</li>
-<li><span class="svc-check">◆</span>Multi-funnel ecosystem build</li>
-<li><span class="svc-check">◆</span>Revenue share model — aligned incentives</li>
-<li><span class="svc-check">◆</span>Dedicated ops specialist</li>
-<li><span class="svc-check">◆</span>Weekly optimization reviews</li>
-<li><span class="svc-check">◆</span>24-hour response support</li>
+<li><span class="svc-check">◆</span>Everything in Build</li>
+<li><span class="svc-check">◆</span>Multiple funnels for different offers or audiences</li>
+<li><span class="svc-check">◆</span>A/B testing and monthly CRO</li>
+<li><span class="svc-check">◆</span>Retargeting pixel setup</li>
+<li><span class="svc-check">◆</span>Full revenue attribution — know exactly what's converting</li>
 </ul>
-<a class="btn-apply" href="mailto:trifactorscaling@gmail.com?subject=Full%20Scale%20Application">Apply for Full Scale →</a>
+<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Full%20Funnel%20Op%20Inquiry">Apply for Full Funnel Op →</a>
 </div>
 </div>
+</div>
+
+<!-- PILLARS 02 + 03 -->
+<div class="pillar-row reveal" style="transition-delay:0.12s">
+<div class="pillar-card">
+<div class="pillar-header">
+<span class="pillar-num">Pillar 02</span>
+<span class="pillar-name">Growth Operations</span>
+</div>
+<p style="font-size:0.83rem;color:var(--gray-light);line-height:1.65;margin:20px 0 24px;padding-bottom:20px;border-bottom:1px solid var(--border);">The system that turns leads into revenue.</p>
+<ul class="svc-features" style="flex:1">
+<li><span class="svc-check">◆</span>CRM setup and pipeline management</li>
+<li><span class="svc-check">◆</span>Automated follow-up via email and SMS</li>
+<li><span class="svc-check">◆</span>Lead nurture sequences</li>
+<li><span class="svc-check">◆</span>Booking flows and appointment automation</li>
+<li><span class="svc-check">◆</span>Reporting dashboard so nothing falls through</li>
+</ul>
+<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Growth%20Operations%20Inquiry" style="margin-top:32px">Apply for Growth Ops →</a>
+</div>
+<div class="pillar-card">
+<div class="pillar-header">
+<span class="pillar-num">Pillar 03</span>
+<span class="pillar-name">Marketing</span>
+</div>
+<p style="font-size:0.83rem;color:var(--gray-light);line-height:1.65;margin:20px 0 24px;padding-bottom:20px;border-bottom:1px solid var(--border);">Traffic on demand. Meta and TikTok ads built to perform.</p>
+<ul class="svc-features" style="flex:1">
+<li><span class="svc-check">◆</span>Campaign strategy, ad copy, and creative direction</li>
+<li><span class="svc-check">◆</span>Audience targeting and campaign buildout</li>
+<li><span class="svc-check">◆</span>Daily optimization and retargeting</li>
+<li><span class="svc-check">◆</span>Organic content strategy</li>
+<li><span class="svc-check">◆</span>Monthly ROI reporting</li>
+</ul>
+<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Marketing%20Inquiry" style="margin-top:32px">Apply for Marketing →</a>
+</div>
+</div>
+
 <p class="svc-note reveal" style="transition-delay:0.44s">
         Unsure if we're a fit for you?<br/>Email us directly at <a href="mailto:contact@trifactorscaling.com">contact@trifactorscaling.com</a>
       </p>
