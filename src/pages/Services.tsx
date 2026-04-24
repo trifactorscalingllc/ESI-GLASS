@@ -1046,20 +1046,11 @@ const HTML = `
 <div class="page-hero-glow"></div>
 <div class="container">
 <div class="page-hero-inner">
-<h1>Four systems. One compounding revenue machine.</h1>
-<p class="page-hero-sub">Every service we offer is a piece of infrastructure — not a campaign, not a deliverable. Built once, runs forever, compounds monthly.</p>
+<h1>Our Services</h1>
 <div class="hero-stats-row">
-<div class="hstat">
-<span class="hstat-val">4</span>
-<span class="hstat-lbl">Core Systems</span>
-</div>
 <div class="hstat">
 <span class="hstat-val">4–6 wk</span>
 <span class="hstat-lbl">Build Timeline</span>
-</div>
-<div class="hstat">
-<span class="hstat-val">GHL + AS</span>
-<span class="hstat-lbl">GHL + AppSheet Stack</span>
 </div>
 <div class="hstat">
 <span class="hstat-val">6+</span>
