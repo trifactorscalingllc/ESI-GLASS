@@ -2649,7 +2649,7 @@ const HTML = `
 <div class="faq-grid">
 <div class="faq-left reveal-left">
 <span class="eyebrow">FAQ</span>
-<h2>Common questions, straight answers.</h2>
+<h2>Common questions.</h2>
 <p>Still have questions? Book a free Growth Audit — we'll walk through everything on the call with zero pressure.</p>
 <a class="btn-gold" href="#cta" style="display:inline-flex;margin-top:4px;">Book a Call →</a>
 </div>
