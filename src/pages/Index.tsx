@@ -813,25 +813,36 @@ const CSS = `
       display: flex;
       flex-direction: column;
       justify-content: center;
+      position: relative;
+      overflow: hidden;
       text-align: left;
       padding: 0 clamp(32px, 5vw, 72px);
       box-sizing: border-box;
     }
 
-    /* Ghost step number — large, subtle background watermark */
+    /* Ghost step number — absolutely positioned right side of slide */
     .hiw-num-ghost {
+      position: absolute;
+      right: clamp(16px, 5vw, 56px);
+      top: 50%;
+      transform: translateY(-50%);
       font-family: var(--fh);
-      font-size: clamp(5rem, 11vw, 9rem);
+      font-size: clamp(8rem, 20vw, 16rem);
       font-weight: 800;
       color: var(--gold);
-      opacity: 0.06;
+      opacity: 0.04;
       line-height: 1;
       letter-spacing: -0.06em;
-      margin-bottom: -1.4rem;
-      display: block;
       user-select: none;
       pointer-events: none;
+      z-index: 0;
     }
+
+    /* Ensure text content sits above the ghost number */
+    .hiw-step h3,
+    .hiw-step-rule,
+    .hiw-step p,
+    .hiw-step-list { position: relative; z-index: 1; }
 
     /* Title */
     .hiw-step h3 {
@@ -938,15 +949,60 @@ const CSS = `
       max-width: 440px; margin-left: auto; margin-right: auto; line-height: 1.75;
     }
 
+    /* ── Pillar flow progression bar ── */
+    .svc-flow {
+      display: flex;
+      align-items: center;
+      margin-bottom: 36px;
+    }
+    .svc-flow-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+    .svc-flow-circle {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(212,175,55,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--fb); font-size: 0.68rem; font-weight: 700;
+      color: var(--gold); letter-spacing: 0.08em;
+      background: rgba(212,175,55,0.05);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    .svc-flow-node:hover .svc-flow-circle {
+      background: rgba(212,175,55,0.12); border-color: var(--gold);
+    }
+    .svc-flow-label {
+      font-family: var(--fb); font-size: 0.6rem; font-weight: 600;
+      color: var(--gray); letter-spacing: 0.12em; text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .svc-flow-line {
+      flex: 1;
+      height: 1px;
+      position: relative;
+      margin-bottom: 22px; /* aligns with circle centre */
+      overflow: visible;
+    }
+    .svc-flow-line::before {
+      content: '';
+      position: absolute; top: 0; left: 4px; right: 4px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(212,175,55,0.3) 0%, rgba(212,175,55,0.12) 100%);
+    }
+    .svc-flow-line::after {
+      content: '›';
+      position: absolute; right: -2px; top: -7px;
+      color: var(--gold); opacity: 0.4; font-size: 0.9rem; line-height: 1;
+    }
+    @media (max-width: 900px) { .svc-flow { display: none; } }
+
     .svc-grid {
       display: grid; grid-template-columns: repeat(3,1fr);
-      gap: 1px; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.15);
-    }
-
-    /* ── Per-card gold outer shimmer (staggered) ── */
-    @keyframes cardGlow {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(212,175,55,0), 0 4px 28px rgba(212,175,55,0.03); }
-      50%       { box-shadow: 0 0 18px 3px rgba(212,175,55,0.13), 0 4px 40px rgba(212,175,55,0.09); }
+      gap: 1px; background: var(--border); border: 1px solid var(--border);
     }
 
     /* ── Scroll pop-up: cards start hidden, .card-in shows them ── */
@@ -963,12 +1019,7 @@ const CSS = `
       opacity: 1;
       transform: translateY(0) scale(1);
     }
-    .svc-card:hover { background: #040400; }
-
-    /* Staggered glow — applied after card-in so glow doesn't run while hidden */
-    .svc-card.card-in:nth-child(1) { animation: cardGlow 4.5s ease-in-out infinite 0s; }
-    .svc-card.card-in:nth-child(2) { animation: cardGlow 4.5s ease-in-out infinite 1.5s; }
-    .svc-card.card-in:nth-child(3) { animation: cardGlow 4.5s ease-in-out infinite 3s; }
+    .svc-card:hover { background: #060503; }
 
     /* All Pillar labels are gold — no exceptions */
     .svc-tier {
@@ -998,8 +1049,8 @@ const CSS = `
     .svc-note a { color: var(--gold); text-decoration: none; }
 
     @media (max-width: 900px) {
-      .svc-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; background: transparent; border: 1px solid rgba(212,175,55,0.15); }
-      .svc-card { border-bottom: 1px solid rgba(212,175,55,0.1); }
+      .svc-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; background: transparent; border: none; }
+      .svc-card { border: 1px solid var(--border); }
       .svc-card.card-in:nth-child(1),
       .svc-card.card-in:nth-child(2),
       .svc-card.card-in:nth-child(3) { animation: none; }
@@ -1186,30 +1237,39 @@ const CSS = `
       );
     }
 
-    /* Scrolling track — contains cards × 2 for seamless loop */
+    /* Scrolling track — inline-flex so it naturally sizes to content width */
     @keyframes testiScroll {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
     }
 
     .testi-track {
-      display: flex;
-      width: max-content;
+      display: inline-flex;    /* inline-flex auto-sizes to content; avoids width:max-content issues */
+      flex-direction: row;
+      flex-wrap: nowrap;
       gap: 20px;
       animation: testiScroll 42s linear infinite;
       will-change: transform;
+      white-space: nowrap;     /* prevents any inherited word-wrap from breaking layout */
     }
     .testi-track:hover { animation-play-state: paused; }
 
+    /* Wrapper must allow the inline-flex track to overflow */
+    .testi-marquee-wrap { white-space: nowrap; }
+
     /* Individual review cards */
     .testi-card {
-      width: clamp(280px, 30vw, 380px);
+      display: inline-flex !important; /* override global max-width:100% block rule */
+      flex-direction: column;
       flex-shrink: 0;
+      width: 340px !important;         /* explicit px — wins over max-width:100% */
+      max-width: none !important;
+      white-space: normal;             /* restore text wrapping inside card */
       background: rgba(0,0,0,0.5);
       border: 1px solid var(--border);
       padding: 32px 28px;
-      display: flex;
-      flex-direction: column;
+      box-sizing: border-box;
+      vertical-align: top;
       transition: border-color 0.3s ease;
       cursor: default;
     }
@@ -1780,7 +1840,7 @@ const CSS = `
     }
 
     /* ── Cards: prevent horizontal overflow ── */
-    .svc-card, .why-item, .cl-card, .testi-card, .hiw-step,
+    .svc-card, .why-item, .cl-card, .hiw-step,
     .approach-item, .founder-card, .feat-case-card, .step-card {
       max-width: 100%;
       overflow: hidden;
@@ -2724,6 +2784,24 @@ const HTML = `
 <div class="svc-header reveal">
 <span class="eyebrow">Services</span>
 <h2>Start where you are.<br/>Scale as you grow.</h2>
+</div>
+
+<!-- Pillar progression flow bar -->
+<div class="svc-flow reveal">
+<div class="svc-flow-node">
+<div class="svc-flow-circle">01</div>
+<span class="svc-flow-label">Foundation</span>
+</div>
+<div class="svc-flow-line"></div>
+<div class="svc-flow-node">
+<div class="svc-flow-circle">02</div>
+<span class="svc-flow-label">Growth Engine</span>
+</div>
+<div class="svc-flow-line"></div>
+<div class="svc-flow-node">
+<div class="svc-flow-circle">03</div>
+<span class="svc-flow-label">Scale</span>
+</div>
 </div>
 
 <div class="svc-grid svc-grid-flow">
