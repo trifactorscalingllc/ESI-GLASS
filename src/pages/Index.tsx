@@ -749,73 +749,112 @@ const CSS = `
     }
 
     /* ======================== SECTION: HOW IT WORKS ======================== */
-    #how-it-works { background: var(--black); border-bottom: 1px solid var(--border); padding: 110px 0; }
+    #how-it-works {
+      background: var(--black);
+      border-bottom: 1px solid var(--border);
+      height: 400vh;
+      overflow: visible;
+      padding: 0;
+    }
 
-    .hiw-head { margin-bottom: 80px; text-align: center; }
-    .hiw-head h2 { font-size: clamp(1.9rem, 3.6vw, 2.85rem); font-weight: 800; margin-top: 18px; max-width: 520px; margin-left: auto; margin-right: auto; }
+    /* Sticky viewport container */
+    .hiw-pin-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
 
-    /* Ghost number shimmer on scroll-reveal */
+    /* Header stays centered at top of sticky view */
+    .hiw-head {
+      text-align: center;
+      margin-bottom: 56px;
+      flex-shrink: 0;
+      width: 100%;
+      padding: 0 20px;
+    }
+    .hiw-head h2 {
+      font-size: clamp(1.9rem, 3.6vw, 2.85rem);
+      font-weight: 800;
+      margin-top: 18px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Wide horizontal strip — translated by WAAPI */
+    .hiw-pin-wrap {
+      display: flex;
+      flex-direction: row;
+      width: 300vw;
+      will-change: transform;
+      flex-shrink: 0;
+    }
+
+    /* Each step is one full viewport panel */
+    .hiw-step {
+      width: 100vw;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 clamp(40px, 12vw, 220px);
+      position: relative;
+    }
+
+    /* Ghost number shimmer on entry */
     @keyframes ghostShimmer {
-      0%   { opacity: 0.055; }
-      40%  { opacity: 0.18; color: var(--gold-light); }
-      100% { opacity: 0.055; }
+      0%   { opacity: 0; transform: translateY(12px); }
+      40%  { opacity: 0.22; color: var(--gold-light); transform: translateY(0); }
+      100% { opacity: 0.08; transform: translateY(0); }
     }
-    .hiw-step.visible .hiw-num-ghost {
-      animation: ghostShimmer 1.6s ease-out forwards;
-    }
-
-    /* Horizontal 3-step layout with ghost numbers */
-    .hiw-steps {
-      display: grid;
-      grid-template-columns: 1fr 56px 1fr 56px 1fr;
-      align-items: start;
-    }
-    .hiw-step { position: relative; }
     .hiw-num-ghost {
-      font-family: var(--fh); font-size: clamp(4.5rem, 9vw, 8rem);
-      font-weight: 800; color: var(--gold); opacity: 0.055;
+      font-family: var(--fh); font-size: clamp(6rem, 15vw, 11rem);
+      font-weight: 800; color: var(--gold); opacity: 0.08;
       line-height: 1; letter-spacing: -0.06em;
-      margin-bottom: -2rem; display: block;
+      margin-bottom: -2.5rem; display: block;
       user-select: none; pointer-events: none;
+      animation: ghostShimmer 1s ease-out both;
+      animation-play-state: paused;
+    }
+    .hiw-step.hiw-active .hiw-num-ghost {
+      animation-play-state: running;
     }
     .hiw-step h3 {
-      font-family: var(--fh); font-size: 1.22rem; font-weight: 800;
-      margin-bottom: 14px; position: relative; z-index: 1;
+      font-family: var(--fh); font-size: clamp(1.3rem, 2.4vw, 1.9rem); font-weight: 800;
+      margin-bottom: 18px; position: relative; z-index: 1;
     }
     .hiw-step p {
-      font-size: 0.88rem; color: var(--gray-light);
+      font-size: clamp(0.88rem, 1.4vw, 1rem); color: var(--gray-light);
       line-height: 1.78; position: relative; z-index: 1;
-    }
-    .step-badge {
-      display: inline-block; margin-top: 22px; position: relative; z-index: 1;
-      background: var(--gold-dim); color: var(--gold);
-      font-family: var(--fb); font-size: 0.65rem; font-weight: 600;
-      letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px;
-    }
-    /* Arrow connector between steps */
-    .hiw-connector {
-      display: flex; flex-direction: column; align-items: center;
-      padding-top: 4.8rem; gap: 4px;
-    }
-    .hiw-conn-line {
-      width: 1px; height: 40px;
-      background: linear-gradient(to bottom, transparent, var(--border-mid) 50%, transparent);
-    }
-    .hiw-conn-dot {
-      width: 5px; height: 5px; border-radius: 50%;
-      background: var(--gold); opacity: 0.28;
+      max-width: 520px;
     }
 
-    @media (max-width: 820px) {
-      .hiw-steps { grid-template-columns: 1fr; }
-      .hiw-connector {
-        flex-direction: row; padding-top: 0; padding: 16px 0;
-        justify-content: flex-start; padding-left: 24px;
-      }
-      .hiw-conn-line {
-        width: 40px; height: 1px;
-        background: linear-gradient(to right, transparent, var(--border-mid) 50%, transparent);
-      }
+    /* Progress dots */
+    .hiw-dots {
+      display: flex; gap: 8px; margin-top: 48px; flex-shrink: 0;
+    }
+    .hiw-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--border-mid); transition: background 0.3s, transform 0.3s;
+    }
+    .hiw-dot.active {
+      background: var(--gold); transform: scale(1.4);
+    }
+
+    /* Mobile: fall back to vertical stacked layout */
+    @media (max-width: 768px) {
+      #how-it-works { height: auto; padding: 80px 0; }
+      .hiw-pin-sticky { position: relative; height: auto; overflow: visible; }
+      .hiw-pin-wrap { flex-direction: column; width: 100%; }
+      .hiw-step { width: 100%; padding: 0 24px 60px; }
+      .hiw-dots { display: none; }
     }
 
     /* ======================== SECTION: SERVICES ======================== */
@@ -1744,6 +1783,52 @@ const SCRIPT = `
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revObs.observe(el));
 
     /* ============================================================
+       HORIZONTAL PROCESS SCROLL (WAAPI ViewTimeline)
+    ============================================================ */
+    (function() {
+      const section  = document.querySelector('#how-it-works');
+      const wrap     = document.querySelector('#hiwPinWrap');
+      const steps    = document.querySelectorAll('.hiw-step');
+      const dots     = document.querySelectorAll('.hiw-dot');
+      if (!section || !wrap) return;
+
+      /* ── Desktop: scroll-driven horizontal pan ── */
+      if (window.innerWidth > 768 && 'ViewTimeline' in window) {
+        wrap.animate(
+          { transform: ['translateX(0vw)', 'translateX(-200vw)'] },
+          {
+            timeline: new ViewTimeline({ subject: section, axis: 'block' }),
+            fill: 'both',
+            rangeStart: 'contain 0%',
+            rangeEnd:   'contain 100%',
+          }
+        );
+
+        /* Dot & ghost-number tracking via scroll position */
+        function updateActive() {
+          const rect  = section.getBoundingClientRect();
+          const total = section.offsetHeight - window.innerHeight;
+          const pct   = Math.max(0, Math.min(1, -rect.top / total));
+          const idx   = Math.min(2, Math.floor(pct * 3));
+          dots.forEach((d, i)  => d.classList.toggle('active', i === idx));
+          steps.forEach((s, i) => {
+            if (i === idx && !s.classList.contains('hiw-active')) {
+              s.classList.add('hiw-active');
+            }
+          });
+        }
+        window.addEventListener('scroll', updateActive, { passive: true });
+        updateActive();
+
+      } else {
+        /* ── Mobile/no-support: just stack vertically (CSS handles it) ── */
+        section.style.height = 'auto';
+        const sticky = document.querySelector('.hiw-pin-sticky');
+        if (sticky) { sticky.style.position = 'relative'; sticky.style.height = 'auto'; }
+      }
+    })();
+
+    /* ============================================================
        STICKY CTA BAR
     ============================================================ */
     const bar  = document.getElementById('stickyBar');
@@ -2478,37 +2563,32 @@ const HTML = `
 </section>
 <!-- ======================== HOW IT WORKS ======================== -->
 <section id="how-it-works">
-<div class="container">
-<div class="hiw-head reveal">
+<div class="hiw-pin-sticky">
+<div class="hiw-head">
 <span class="eyebrow">The Process</span>
 <h2>From audit to automated revenue<br/>in three moves.</h2>
 </div>
-<div class="hiw-steps">
-<div class="hiw-step reveal" style="transition-delay:0.05s">
+<div class="hiw-pin-wrap" id="hiwPinWrap">
+<div class="hiw-step" id="hiwStep0">
 <span class="hiw-num-ghost">01</span>
 <h3>Growth Audit</h3>
 <p>We map your entire business — lead flow, conversion points, revenue leaks, and missed opportunities. You leave with a custom Growth System Blueprint whether you work with us or not. Free, 45 minutes, no pitch.</p>
 </div>
-<div aria-hidden="true" class="hiw-connector">
-<div class="hiw-conn-line"></div>
-<div class="hiw-conn-dot"></div>
-<div class="hiw-conn-line"></div>
-</div>
-<div class="hiw-step reveal" style="transition-delay:0.18s">
+<div class="hiw-step" id="hiwStep1">
 <span class="hiw-num-ghost">02</span>
 <h3>System Integration</h3>
 <p>We build and install your full growth stack: GHL funnel ecosystem, automated lead sequences, CRM pipeline, and tracking dashboard — wired directly into your operations from day one. Most builds are complete in 4–6 weeks.</p>
 </div>
-<div aria-hidden="true" class="hiw-connector">
-<div class="hiw-conn-line"></div>
-<div class="hiw-conn-dot"></div>
-<div class="hiw-conn-line"></div>
-</div>
-<div class="hiw-step reveal" style="transition-delay:0.31s">
+<div class="hiw-step" id="hiwStep2">
 <span class="hiw-num-ghost">03</span>
 <h3>Optimize &amp; Scale</h3>
 <p>Monthly strategy calls, performance reviews, and continuous iteration. We don't set it and forget it — we stay in the trenches until your system is compounding revenue consistently, month over month.</p>
 </div>
+</div>
+<div class="hiw-dots" id="hiwDots">
+<div class="hiw-dot active" id="hiwDot0"></div>
+<div class="hiw-dot" id="hiwDot1"></div>
+<div class="hiw-dot" id="hiwDot2"></div>
 </div>
 </div>
 </section>
