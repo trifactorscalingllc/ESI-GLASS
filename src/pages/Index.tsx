@@ -2091,7 +2091,7 @@ const HTML = `
 </span>
 </h1>
 <p class="hero-sub">
-          We find what's blocking your growth. We build the systems to fix it.
+          We find what's blocking your growth.<br/>We build the systems to fix it.
         </p>
 <div class="hero-actions">
 <a class="btn-gold" href="#cta">Book Your Free Growth Audit →</a>
@@ -2741,7 +2741,7 @@ const HTML = `
 </iframe>
 </div>
 <p class="cta-sub reveal" style="transition-delay:0.4s; margin-top:20px;">
-        Prefer email? <a href="mailto:trifactorscaling@gmail.com">trifactorscaling@gmail.com</a>
+        Prefer email? <a href="mailto:contact@trifactorscaling.com">contact@trifactorscaling.com</a>
 </p>
 </div>
 </section>
@@ -2753,9 +2753,9 @@ const HTML = `
 <!-- Brand -->
 <div class="footer-brand">
 <img alt="TriFactor Scaling" class="footer-logo-img" src="./TFS-Logo-Transparent.png"/>
-<p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
-<a class="footer-contact-link" href="mailto:trifactorscaling@gmail.com">
-            trifactorscaling@gmail.com →
+<p class="footer-tagline">We find what's blocking your growth. We build the systems to fix it.</p>
+<a class="footer-contact-link" href="mailto:contact@trifactorscaling.com">
+            contact@trifactorscaling.com →
           </a>
 </div>
 <!-- Pages -->
@@ -2776,7 +2776,7 @@ const HTML = `
 <a href="/apply">Apply for Growth Ops</a>
 <a href="/results">See Client Results</a>
 <a href="/services">What We Build</a>
-<a href="mailto:trifactorscaling@gmail.com">Send Us an Email</a>
+<a href="mailto:contact@trifactorscaling.com">Send Us an Email</a>
 </div>
 </div>
 <!-- Social -->
