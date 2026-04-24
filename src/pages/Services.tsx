@@ -1097,7 +1097,6 @@ const HTML = `
 
 <!-- Pillar 02: Growth Operations (FEATURED) -->
 <div class="tier-card tier-card-featured">
-<div class="tier-badge">CORE SYSTEM</div>
 <div class="tier-eyebrow">Pillar 02</div>
 <div class="tier-name">Growth Operations</div>
 <p class="tier-desc">The system that turns leads into revenue. CRM, automations, follow-up — built once, running forever.</p>

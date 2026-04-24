@@ -2535,7 +2535,6 @@ const HTML = `
 
 <!-- Pillar 02: Growth Operations (FEATURED) -->
 <div class="svc-card featured">
-<div class="svc-badge">CORE SYSTEM</div>
 <div class="svc-tier">Pillar 02</div>
 <div class="svc-name">Growth Operations</div>
 <p class="svc-target">The system that turns leads into revenue. CRM, automations, follow-up — built once, running forever.</p>
