@@ -749,7 +749,6 @@ const CSS = `
     }
 
     /* ======================== SECTION: HOW IT WORKS ======================== */
-    /* Section is exactly one viewport tall — JS hijacks scroll while it's active */
     #how-it-works {
       background: var(--black);
       border-bottom: 1px solid var(--border);
@@ -758,84 +757,96 @@ const CSS = `
       overflow: hidden;
     }
 
+    /* Full-height relative container */
     .hiw-pin-sticky {
+      position: relative;
       height: 100%;
       width: 100%;
       overflow: hidden;
+    }
+
+    /* LEFT: eyebrow top-left, H2 centred vertically — static overlay */
+    .hiw-head {
+      position: absolute;
+      z-index: 10;
+      top: 0; left: 0; bottom: 0;
+      width: clamp(260px, 42%, 500px);
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      padding: 0 48px 0 clamp(24px, 6vw, 80px);
+      /* fades into the sliding panels on the right */
+      background: linear-gradient(90deg, var(--black) 65%, transparent 100%);
     }
-
-    /* Header */
-    .hiw-head {
-      flex-shrink: 0;
-      text-align: center;
-      padding: 60px 20px 32px;
+    .hiw-head .eyebrow {
+      /* eyebrow already styled globally; position it toward the top of the column */
+      margin-bottom: 28px;
+      align-self: flex-start;
     }
     .hiw-head h2 {
-      font-size: clamp(1.9rem, 3.6vw, 2.85rem);
+      font-size: clamp(1.9rem, 3vw, 2.6rem);
       font-weight: 800;
-      margin-top: 14px;
-      max-width: 520px;
-      margin-left: auto;
-      margin-right: auto;
+      line-height: 1.12;
+      text-align: left;
+      margin: 0;
+      max-width: 380px;
     }
 
-    /* Horizontal strip — JS drives translateX, no transition so it tracks scroll 1:1 */
+    /* RIGHT: three full-width panels that translate left on scroll */
     .hiw-pin-wrap {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
       display: flex;
-      flex-direction: row;
       width: 300vw;
-      flex: 1;
       will-change: transform;
     }
 
-    /* One panel per step, full viewport width */
+    /* Each panel = 100vw; content lives in the right portion to clear the left overlay */
     .hiw-step {
       width: 100vw;
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: 0 clamp(40px, 12vw, 200px);
+      text-align: left;
+      padding: 0 clamp(40px, 6vw, 80px) 0 46%;
       box-sizing: border-box;
     }
 
     .hiw-num-ghost {
       font-family: var(--fh);
-      font-size: clamp(5rem, 13vw, 10rem);
+      font-size: clamp(5rem, 11vw, 9rem);
       font-weight: 800;
       color: var(--gold);
       opacity: 0.07;
       line-height: 1;
       letter-spacing: -0.06em;
-      margin-bottom: -2rem;
+      margin-bottom: -1.6rem;
       display: block;
       user-select: none;
       pointer-events: none;
     }
     .hiw-step h3 {
       font-family: var(--fh);
-      font-size: clamp(1.4rem, 2.6vw, 2rem);
+      font-size: clamp(1.3rem, 2.2vw, 1.8rem);
       font-weight: 800;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     .hiw-step p {
-      font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+      font-size: clamp(0.88rem, 1.2vw, 1rem);
       color: var(--gray-light);
       line-height: 1.8;
-      max-width: 500px;
+      max-width: 440px;
     }
 
-    /* Progress dots */
+    /* Progress dots — bottom of right-side content area */
     .hiw-dots {
-      flex-shrink: 0;
+      position: absolute;
+      bottom: 44px;
+      left: 46%;
       display: flex;
       gap: 10px;
-      justify-content: center;
-      padding: 24px 0;
+      z-index: 5;
     }
     .hiw-dot {
       width: 7px; height: 7px; border-radius: 50%;
@@ -844,13 +855,15 @@ const CSS = `
     }
     .hiw-dot.active { background: var(--gold); transform: scale(1.5); }
 
-    /* Mobile: normal vertical stack, no hijack */
+    /* Mobile: vertical stack */
     @media (max-width: 768px) {
       #how-it-works { height: auto; overflow: visible; }
-      .hiw-pin-sticky { height: auto; overflow: visible; padding: 72px 0; }
-      .hiw-pin-wrap { flex-direction: column; width: 100%; transform: none !important; }
-      .hiw-step { width: 100%; padding: 40px 28px 0; justify-content: flex-start; }
-      .hiw-dots { display: none; }
+      .hiw-pin-sticky { position: static; height: auto; overflow: visible; padding: 72px 0; }
+      .hiw-head { position: static; width: 100%; background: none; padding: 0 24px 40px; }
+      .hiw-head h2 { font-size: clamp(1.8rem, 6vw, 2.4rem); max-width: 100%; }
+      .hiw-pin-wrap { position: static; flex-direction: column; width: 100%; transform: none !important; }
+      .hiw-step { width: 100%; padding: 40px 24px 0; }
+      .hiw-dots { position: static; margin: 32px 0 0 24px; }
     }
 
     /* ======================== SECTION: SERVICES ======================== */
@@ -1780,8 +1793,8 @@ const SCRIPT = `
 
     /* ============================================================
        HORIZONTAL PROCESS — scroll hijack
-       Page scroll freezes when section is at the top of the viewport.
-       Wheel delta drives horizontal strip. Releases when done.
+       Locks page when section reaches viewport top. Wheel drives
+       horizontal strip 01→02→03. Releases once. No looping.
     ============================================================ */
     (function() {
       if (window.innerWidth <= 768) return;
@@ -1790,10 +1803,10 @@ const SCRIPT = `
       var dots    = document.querySelectorAll('.hiw-dot');
       if (!section || !wrap) return;
 
-      var progress = 0;   // 0 → 1
+      var progress = 0;    // 0 → 1
       var hijacked = false;
+      var completed = false; // true after user scrolls through all 3 panels
 
-      /* Apply progress 0→1, translating strip 0 → -200vw */
       function apply(p) {
         progress = Math.max(0, Math.min(1, p));
         wrap.style.transform = 'translateX(' + (-progress * 200) + 'vw)';
@@ -1801,16 +1814,13 @@ const SCRIPT = `
         dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
       }
 
-      /* Lock the page at the section top */
       function lock() {
         var rect = section.getBoundingClientRect();
-        /* Snap scroll so section top is exactly at viewport top */
-        window.scrollTo({ top: window.scrollY + rect.top });
+        window.scrollTo(0, window.scrollY + rect.top); // snap section to viewport top
         document.documentElement.style.overflow = 'hidden';
         hijacked = true;
       }
 
-      /* Release the page scroll */
       function unlock() {
         document.documentElement.style.overflow = '';
         hijacked = false;
@@ -1818,42 +1828,45 @@ const SCRIPT = `
 
       window.addEventListener('wheel', function(e) {
         var rect = section.getBoundingClientRect();
-        var atTop = rect.top > -10 && rect.top < 10; /* section aligned to viewport top */
+        var atTop = rect.top > -8 && rect.top < 8;
 
-        /* ── Activate hijack when section hits viewport top scrolling down ── */
-        if (!hijacked && atTop && e.deltaY > 0) {
+        /* Activate only if: not already done for this visit, section at top, scrolling down */
+        if (!hijacked && !completed && atTop && e.deltaY > 0) {
           lock();
           apply(0);
         }
 
         if (!hijacked) return;
-
         e.preventDefault();
 
-        /* Normalise delta across mouse wheel, trackpad, Firefox line mode */
-        var raw = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
+        var raw = e.deltaMode === 1 ? e.deltaY * 40
+                : e.deltaMode === 2 ? e.deltaY * window.innerHeight
+                : e.deltaY;
 
-        /* Each full viewport width of scroll ≈ one panel */
         apply(progress + raw / window.innerWidth);
 
-        /* Release forward — next scroll naturally carries the page down */
+        /* Reached the end → release and mark done so it doesn't re-lock */
         if (progress >= 1 && e.deltaY > 0) {
+          completed = true;
           unlock();
           return;
         }
 
-        /* Release backward — let user scroll back up normally */
+        /* Scrolled back to start → release so page can scroll up */
         if (progress <= 0 && e.deltaY < 0) {
           unlock();
           return;
         }
       }, { passive: false });
 
-      /* Reset progress when user scrolls back above the section */
+      /* When section scrolls back below the fold, reset so user can experience it again */
       window.addEventListener('scroll', function() {
         if (hijacked) return;
         var rect = section.getBoundingClientRect();
-        if (rect.top > 50) apply(0); /* section is below the fold — reset */
+        if (rect.top > window.innerHeight * 0.5) {
+          apply(0);
+          completed = false;
+        }
       }, { passive: true });
     })();
 
