@@ -323,7 +323,7 @@ const CSS = `
     @keyframes marquee { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
 
     /* ======================== SECTION: WHAT WE DO ======================== */
-    #what-we-do { background: var(--black); border-bottom: 1px solid var(--border); padding: 120px 0; }
+    #what-we-do { background: var(--black); padding: 120px 0; }
 
     .wwd-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
@@ -755,6 +755,7 @@ const CSS = `
       height: 100vh;
       padding: 0;
       overflow: hidden;
+      position: relative;
     }
 
     /* Full-height flex row: left column + right clipping column */
