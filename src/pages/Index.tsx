@@ -2490,7 +2490,7 @@ const HTML = `
 <div class="svc-header reveal">
 <span class="eyebrow"><span class="eline"></span>Services</span>
 <h2>Three ways to build your growth system.</h2>
-<p>Every tier starts with a custom audit and a system built around your business specifically — not a template. We take on 3 new clients per month across all tiers.</p>
+<p>Every tier starts with a custom audit and a system built around your business specifically.</p>
 </div>
 <div class="svc-grid">
 <div class="svc-card reveal" style="transition-delay:0.08s">
@@ -2537,105 +2537,8 @@ const HTML = `
 </div>
 </div>
 <p class="svc-note reveal" style="transition-delay:0.44s">
-        Unsure which tier fits your stage? <a href="#qualify">Check if you qualify</a> below or <a href="#cta">book a free Growth Audit</a> — we'll map it out together.
+        Unsure if we're a fit for you?<br/>Email us directly at <a href="mailto:contact@trifactorscaling.com">contact@trifactorscaling.com</a>
       </p>
-</div>
-</section>
-<!-- ======================== WHY TRIFACTOR ======================== -->
-<section id="why-tfs">
-<div class="container">
-<div class="why-statement reveal">
-<span class="eyebrow" style="justify-content:center;"><span class="eline"></span>Why TriFactor</span>
-<h2>Built by operators.<br/>Paid on results.</h2>
-<p>Three founders. No courses. No outside money. Built client by client, figuring out what actually moves the needle for service businesses. No overhead, no bureaucracy, no account handoffs — you get the founders building your system from day one. Our Full Scale model runs on revenue share. We only win when you win.</p>
-</div>
-<div class="why-proof reveal" style="transition-delay:0.1s">
-<div class="wstat">
-<span class="wstat-val" data-suffix="+" data-target="12">12+</span>
-<span class="wstat-lbl">Businesses Grown</span>
-</div>
-<div class="wstat">
-<span class="wstat-val" data-prefix="$" data-suffix="K+" data-target="250">$250K+</span>
-<span class="wstat-lbl">Client Revenue Built</span>
-</div>
-<div class="wstat">
-<span class="wstat-val">100%</span>
-<span class="wstat-lbl">Local Service Focused</span>
-</div>
-</div>
-<div class="why-items reveal" style="transition-delay:0.2s">
-<!-- 1: Lightning — We Move Fast -->
-<div class="why-item">
-<div class="wi-icon icon-bolt">
-<svg fill="none" height="20" viewbox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
-<path d="M11.5 2L4 11.5H10L8.5 18L16 8.5H10L11.5 2Z" fill="#D4AF37" stroke="#D4AF37" stroke-linejoin="round" stroke-width="0.5"></path>
-</svg>
-</div>
-<div>
-<div class="wi-title">We Move Fast</div>
-<div class="wi-desc">No agency bureaucracy. You work directly with the founders building your system — not an account manager reading off a script.</div>
-</div>
-</div>
-<!-- 2: Target rings — Skin in the Game -->
-<div class="why-item">
-<div class="wi-icon icon-target">
-<svg fill="none" height="22" viewbox="0 0 22 22" width="22" xmlns="http://www.w3.org/2000/svg">
-<circle cx="11" cy="11" fill="#D4AF37" r="3"></circle>
-<circle class="ring1" cx="11" cy="11" fill="none" opacity="0.5" r="6" stroke="#D4AF37" stroke-width="1.2"></circle>
-<circle class="ring2" cx="11" cy="11" fill="none" opacity="0.2" r="10" stroke="#D4AF37" stroke-width="0.8"></circle>
-</svg>
-</div>
-<div>
-<div class="wi-title">Skin in the Game</div>
-<div class="wi-desc">Our Full Scale tier is built on revenue share. We only win when your business wins — total alignment, no exceptions.</div>
-</div>
-</div>
-<!-- 3: Stacked layers — Enterprise Stack -->
-<div class="why-item">
-<div class="wi-icon icon-stack">
-<svg fill="none" height="16" viewbox="0 0 22 16" width="22" xmlns="http://www.w3.org/2000/svg">
-<rect class="layer3" fill="#D4AF37" height="4" opacity="0.35" rx="1" width="22" x="0" y="11"></rect>
-<rect class="layer2" fill="#D4AF37" height="4" opacity="0.62" rx="1" width="22" x="0" y="6"></rect>
-<rect class="layer1" fill="#D4AF37" height="4" opacity="1" rx="1" width="22" x="0" y="1"></rect>
-</svg>
-</div>
-<div>
-<div class="wi-title">Enterprise Stack, Accessible</div>
-<div class="wi-desc">GHL + AppSheet gives your business the same infrastructure Fortune 500 companies use — without the Fortune 500 price tag.</div>
-</div>
-</div>
-<!-- 4: Bar chart — Full Transparency -->
-<div class="why-item">
-<div class="wi-icon icon-chart">
-<svg fill="none" height="18" viewbox="0 0 22 18" width="22" xmlns="http://www.w3.org/2000/svg">
-<rect class="bar1" fill="#D4AF37" height="10" opacity="0.45" rx="1" width="5" x="0" y="8"></rect>
-<rect class="bar2" fill="#D4AF37" height="14" opacity="0.7" rx="1" width="5" x="8" y="4"></rect>
-<rect class="bar3" fill="#D4AF37" height="17" opacity="1" rx="1" width="5" x="16" y="1"></rect>
-</svg>
-</div>
-<div>
-<div class="wi-title">Full Transparency</div>
-<div class="wi-desc">Custom dashboards mean you see exactly what we're doing and what it's producing in real numbers, in real time.</div>
-</div>
-</div>
-<!-- 5: Circular arrows — Systems Compound -->
-<div class="why-item">
-<div class="wi-icon icon-cycle">
-<svg fill="none" height="22" viewbox="0 0 22 22" width="22" xmlns="http://www.w3.org/2000/svg">
-<g class="spin-group">
-<path d="M11 3C7.13 3 4 6.13 4 10" stroke="#D4AF37" stroke-linecap="round" stroke-width="1.8"></path>
-<path d="M4 6L4 10L8 10" stroke="#D4AF37" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
-<path d="M11 19C14.87 19 18 15.87 18 12" stroke="#D4AF37" stroke-linecap="round" stroke-width="1.8"></path>
-<path d="M18 16L18 12L14 12" stroke="#D4AF37" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
-</g>
-</svg>
-</div>
-<div>
-<div class="wi-title">Systems That Compound</div>
-<div class="wi-desc">We build once, optimize monthly. The longer the system runs, the more efficient and profitable it becomes — automatically.</div>
-</div>
-</div>
-</div>
 </div>
 </section>
 <!-- ======================== CLIENTS ======================== -->
@@ -2643,7 +2546,7 @@ const HTML = `
 <div class="container">
 <div class="cl-header reveal">
 <span class="eyebrow"><span class="eline"></span>Client Results</span>
-<h2>The systems we built.<br/>The problems they solved.</h2>
+<h2>Systems we build for businesses like yours.</h2>
 <p>Every client below has a live operation running right now.</p>
 </div>
 <!-- Featured wide card: CutByDack -->
@@ -2712,54 +2615,6 @@ const HTML = `
 <div class="testi-divider"></div>
 <div class="testi-author-name">Vultus Worldwide</div>
 <div class="testi-author-company"></div>
-</div>
-</div>
-</div>
-</section>
-<!-- ======================== QUALIFY ======================== -->
-<section id="qualify">
-<div class="container">
-<div class="qualify-split">
-<!-- LEFT: criteria list -->
-<div class="qualify-criteria reveal-left">
-<span class="eyebrow"><span class="eline"></span>Who We Work With</span>
-<h2>Built for one type of business.</h2>
-<p>Local service businesses — trades, barbershops, restoration, coaching, home services — with real clients but no real system behind lead capture or follow-up.</p>
-<div class="qualify-list">
-<div class="qualify-item">
-<div class="qualify-check"><div class="qualify-check-mark"></div></div>
-<p>You run a local service business with existing, paying clients</p>
-</div>
-<div class="qualify-item">
-<div class="qualify-check"><div class="qualify-check-mark"></div></div>
-<p>You're generating revenue but know you're leaving money on the table</p>
-</div>
-<div class="qualify-item">
-<div class="qualify-check"><div class="qualify-check-mark"></div></div>
-<p>You don't have time to build and manage systems yourself</p>
-</div>
-<div class="qualify-item">
-<div class="qualify-check"><div class="qualify-check-mark"></div></div>
-<p>You want your lead flow predictable and automated</p>
-</div>
-<div class="qualify-item">
-<div class="qualify-check"><div class="qualify-check-mark"></div></div>
-<p>You're ready to invest seriously in a proven growth system</p>
-</div>
-<div class="qualify-item">
-<div class="qualify-check"><div class="qualify-check-mark"></div></div>
-<p>You want full transparency on where your revenue is coming from</p>
-</div>
-</div>
-</div>
-<!-- RIGHT: CTA box -->
-<div class="qualify-action reveal-right" style="transition-delay:0.15s">
-<div class="qa-box">
-<h3>If 4 or more of these are you—</h3>
-<p>Every week without a system is leads going cold. One call, 45 minutes. You walk away with a custom growth blueprint whether you hire us or not.</p>
-<a class="btn-gold" href="/apply">Book Your Free Audit →</a>
-<p class="qa-note"><strong>No pitch. No pressure.</strong> We map your gaps and hand you the plan. That's it.</p>
-</div>
 </div>
 </div>
 </div>
