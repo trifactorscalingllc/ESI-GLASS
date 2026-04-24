@@ -2729,7 +2729,7 @@ const HTML = `
 <div class="reveal">
 <span class="eyebrow">Apply Now</span>
 </div>
-<h2 class="reveal" style="transition-delay:0.1s;">
+<h2 class="reveal" style="transition-delay:0.1s;font-size:clamp(2.6rem,6.8vw,6.5rem);font-weight:800;line-height:1.08;">
         Stop running your business.<br/>Start building a <span style="background:linear-gradient(90deg,var(--gold) 0%,var(--gold-light) 50%,var(--gold) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite;">system that does.</span>
 </h2>
 <p class="reveal" style="transition-delay:0.2s;">
