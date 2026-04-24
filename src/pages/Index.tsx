@@ -2091,7 +2091,7 @@ const HTML = `
 </span>
 </h1>
 <p class="hero-sub">
-          We automate your intake, follow-up, and pipeline so every lead gets handled — while you stay focused on the work.
+          We find what's blocking your growth. We build the systems to fix it.
         </p>
 <div class="hero-actions">
 <a class="btn-gold" href="#cta">Book Your Free Growth Audit →</a>
