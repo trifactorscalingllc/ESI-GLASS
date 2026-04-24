@@ -5,10 +5,21 @@ import {
 } from 'recharts'
 
 // ── Config ──────────────────────────────────────────────────────────────────
-const EDGE_URL   = 'https://qamvvvwlpzkjvxoomjno.supabase.co/functions/v1/ga4-report'
-// Paste your anon key from: supabase.com/dashboard/project/qamvvvwlpzkjvxoomjno/settings/api
+const SUPA_URL   = 'https://qamvvvwlpzkjvxoomjno.supabase.co'
+const EDGE_URL   = `${SUPA_URL}/functions/v1/ga4-report`
+const BACKFILL_URL  = `${SUPA_URL}/functions/v1/ga4-backfill`
+const CLARITY_URL   = `${SUPA_URL}/functions/v1/clarity-sync`
 const ANON_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhbXZ2dndscHpranZ4b29tam5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5ODM1NjAsImV4cCI6MjA5MjU1OTU2MH0.gHY6FTV5gNiv7wCCw1fIlnCufgdE8XcvLW1qizHRbTQ'
 const ADMIN_PASS = 'tfs-admin-2026'
+
+// ── DB helpers (reads from Supabase REST API) ─────────────────────────────
+async function dbQuery(table: string, params = '') {
+  const res = await fetch(`${SUPA_URL}/rest/v1/${table}?${params}`, {
+    headers: { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}` },
+  })
+  if (!res.ok) throw new Error(`DB read ${table} failed: ${res.status}`)
+  return res.json()
+}
 
 // ── Brand ────────────────────────────────────────────────────────────────────
 const C = {
@@ -132,6 +143,126 @@ function KPI({ label, value, delta, display }: {
         </div>
       )}
     </Card>
+  )
+}
+
+// ── Sync Panel ───────────────────────────────────────────────────────────────
+type SyncState = 'idle' | 'running' | 'done' | 'error'
+
+function SyncPanel() {
+  const [ga4State,     setGa4State]     = useState<SyncState>('idle')
+  const [clarityState, setClarityState] = useState<SyncState>('idle')
+  const [ga4Msg,       setGa4Msg]       = useState('')
+  const [clarityMsg,   setClarityMsg]   = useState('')
+  const [lastSync,     setLastSync]     = useState<any[]>([])
+  const [open,         setOpen]         = useState(false)
+
+  useEffect(() => {
+    dbQuery('latest_sync', 'select=source,sync_type,records_processed,status,synced_at')
+      .then(rows => setLastSync(rows))
+      .catch(() => {})
+  }, [ga4State, clarityState])
+
+  const runSync = async (
+    url: string,
+    payload: object,
+    setState: (s: SyncState) => void,
+    setMsg: (m: string) => void,
+    label: string
+  ) => {
+    setState('running')
+    setMsg(`Running ${label} sync…`)
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}` },
+        body: JSON.stringify(payload),
+      })
+      const json = await res.json()
+      if (json.error) throw new Error(json.error)
+      setState('done')
+      setMsg(`✓ Synced ${json.records?.toLocaleString() ?? 0} records`)
+    } catch (e: any) {
+      setState('error')
+      setMsg(`✗ ${e.message}`)
+    }
+  }
+
+  const ga4Sync = () => runSync(BACKFILL_URL, { startDate: '2024-01-01' }, setGa4State, setGa4Msg, 'GA4')
+  const claritySync = () => runSync(CLARITY_URL, { startDate: '2024-01-01' }, setClarityState, setClarityMsg, 'Clarity')
+
+  const syncRow = lastSync.find((r: any) => r.source === 'ga4')
+  const clarityRow = lastSync.find((r: any) => r.source === 'clarity')
+
+  const btnStyle = (state: SyncState) => ({
+    padding: '9px 20px', borderRadius: 6, border: 'none', cursor: state === 'running' ? 'not-allowed' : 'pointer',
+    fontWeight: 700, fontSize: 13, fontFamily: "'Plus Jakarta Sans', sans-serif",
+    background: state === 'running' ? 'rgba(212,175,55,0.3)' : state === 'done' ? 'rgba(34,197,94,0.15)' : state === 'error' ? 'rgba(239,68,68,0.15)' : C.gold,
+    color: state === 'idle' ? C.black : state === 'done' ? C.green : state === 'error' ? C.red : C.gold,
+    border: `1px solid ${state === 'idle' ? 'transparent' : state === 'done' ? C.green : state === 'error' ? C.red : C.goldBrd}`,
+    opacity: state === 'running' ? 0.7 : 1,
+  })
+
+  return (
+    <div style={{ borderBottom: `1px solid ${C.border}`, background: 'rgba(212,175,55,0.03)' }}>
+      <div
+        onClick={() => setOpen(o => !o)}
+        style={{ padding: '12px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: C.gold }}>
+            Data Sync
+          </span>
+          {syncRow && (
+            <span style={{ fontSize: 11, color: C.gray }}>
+              GA4 last synced {new Date(syncRow.synced_at).toLocaleDateString()} · {syncRow.records_processed?.toLocaleString()} records
+            </span>
+          )}
+          {clarityRow && (
+            <span style={{ fontSize: 11, color: C.gray, marginLeft: 8 }}>
+              · Clarity {new Date(clarityRow.synced_at).toLocaleDateString()}
+            </span>
+          )}
+        </div>
+        <span style={{ color: C.gray, fontSize: 12 }}>{open ? '▲' : '▼'}</span>
+      </div>
+
+      {open && (
+        <div style={{ padding: '0 40px 20px', display: 'flex', gap: 20, flexWrap: 'wrap' as const }}>
+          {/* GA4 */}
+          <Card style={{ flex: 1, minWidth: 280 }}>
+            <SectionTitle>GA4 — Full Historical Backfill</SectionTitle>
+            <div style={{ fontSize: 13, color: C.gray, marginBottom: 14 }}>
+              Pulls all sessions, users, page views, sources, and device data from 2024-01-01 to today into Supabase.
+            </div>
+            <button
+              onClick={ga4Sync}
+              disabled={ga4State === 'running'}
+              style={btnStyle(ga4State) as any}
+            >
+              {ga4State === 'running' ? '⏳ Syncing GA4…' : ga4State === 'done' ? '✓ GA4 Synced' : '▶ Run GA4 Backfill'}
+            </button>
+            {ga4Msg && <div style={{ marginTop: 10, fontSize: 12, color: ga4State === 'error' ? C.red : C.green }}>{ga4Msg}</div>}
+          </Card>
+
+          {/* Clarity */}
+          <Card style={{ flex: 1, minWidth: 280 }}>
+            <SectionTitle>Microsoft Clarity — Session Data</SectionTitle>
+            <div style={{ fontSize: 13, color: C.gray, marginBottom: 14 }}>
+              Pulls Clarity sessions, rage clicks, dead clicks, and scroll data into Supabase.
+            </div>
+            <button
+              onClick={claritySync}
+              disabled={clarityState === 'running'}
+              style={btnStyle(clarityState) as any}
+            >
+              {clarityState === 'running' ? '⏳ Syncing Clarity…' : clarityState === 'done' ? '✓ Clarity Synced' : '▶ Run Clarity Sync'}
+            </button>
+            {clarityMsg && <div style={{ marginTop: 10, fontSize: 12, color: clarityState === 'error' ? C.red : C.green }}>{clarityMsg}</div>}
+          </Card>
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -280,6 +411,9 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           ))}
         </div>
       </div>
+
+      {/* Data Sync Panel */}
+      <SyncPanel />
 
       {/* Page body */}
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '40px 40px 80px' }}>

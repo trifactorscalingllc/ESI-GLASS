@@ -32,3 +32,9 @@ enable_signup = false
 
 [functions.ga4-report]
 verify_jwt = false
+
+[functions.ga4-backfill]
+verify_jwt = false
+
+[functions.clarity-sync]
+verify_jwt = false
