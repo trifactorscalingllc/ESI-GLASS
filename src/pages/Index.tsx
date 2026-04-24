@@ -753,94 +753,109 @@ const CSS = `
       background: var(--black);
       border-bottom: 1px solid var(--border);
       height: 400vh;
-      overflow: visible;
       padding: 0;
     }
 
-    /* Sticky container — plain block so strip starts at left: 0 */
+    /* Sticks to viewport while parent scrolls */
     .hiw-pin-sticky {
       position: sticky;
       top: 0;
       height: 100vh;
       width: 100%;
       overflow: hidden;
-      padding-top: 64px;
-      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* Header centered via auto margins */
+    /* Header at the top, centered */
     .hiw-head {
+      flex-shrink: 0;
       text-align: center;
-      margin-bottom: 52px;
-      width: 100%;
-      padding: 0 20px;
-      box-sizing: border-box;
+      padding: 60px 20px 36px;
     }
     .hiw-head h2 {
       font-size: clamp(1.9rem, 3.6vw, 2.85rem);
       font-weight: 800;
-      margin-top: 18px;
+      margin-top: 14px;
       max-width: 520px;
       margin-left: auto;
       margin-right: auto;
     }
 
-    /* Wide horizontal strip — WAAPI drives translateX */
+    /* Three-panel horizontal strip — JS sets translateX */
     .hiw-pin-wrap {
       display: flex;
       flex-direction: row;
       width: 300vw;
+      flex: 1;
       will-change: transform;
+      transition: transform 0.05s linear;
     }
 
-    /* Each step = one 100vw panel, content centered inside */
+    /* Each panel = exactly one viewport width, vertically centered */
     .hiw-step {
       width: 100vw;
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       text-align: center;
-      padding: 0 clamp(40px, 12vw, 220px);
+      padding: 0 clamp(40px, 12vw, 200px);
       box-sizing: border-box;
     }
 
-    /* Ghost numbers — static, no shimmer */
+    /* Ghost numbers */
     .hiw-num-ghost {
-      font-family: var(--fh); font-size: clamp(6rem, 15vw, 11rem);
-      font-weight: 800; color: var(--gold); opacity: 0.07;
-      line-height: 1; letter-spacing: -0.06em;
-      margin-bottom: -2.5rem; display: block;
-      user-select: none; pointer-events: none;
+      font-family: var(--fh);
+      font-size: clamp(5rem, 13vw, 10rem);
+      font-weight: 800;
+      color: var(--gold);
+      opacity: 0.07;
+      line-height: 1;
+      letter-spacing: -0.06em;
+      margin-bottom: -2rem;
+      display: block;
+      user-select: none;
+      pointer-events: none;
     }
     .hiw-step h3 {
-      font-family: var(--fh); font-size: clamp(1.3rem, 2.4vw, 1.9rem); font-weight: 800;
-      margin-bottom: 18px; position: relative; z-index: 1;
+      font-family: var(--fh);
+      font-size: clamp(1.4rem, 2.6vw, 2rem);
+      font-weight: 800;
+      margin-bottom: 20px;
     }
     .hiw-step p {
-      font-size: clamp(0.88rem, 1.4vw, 1rem); color: var(--gray-light);
-      line-height: 1.78; position: relative; z-index: 1;
-      max-width: 520px;
+      font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+      color: var(--gray-light);
+      line-height: 1.8;
+      max-width: 500px;
     }
 
     /* Progress dots */
     .hiw-dots {
-      display: flex; gap: 8px; margin-top: 40px; justify-content: center;
+      flex-shrink: 0;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 28px 0;
     }
     .hiw-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--border-mid); transition: background 0.3s, transform 0.3s;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--border-mid);
+      transition: background 0.35s, transform 0.35s;
     }
     .hiw-dot.active {
-      background: var(--gold); transform: scale(1.4);
+      background: var(--gold);
+      transform: scale(1.5);
     }
 
-    /* Mobile fallback: vertical stack */
+    /* Mobile: revert to simple vertical layout */
     @media (max-width: 768px) {
-      #how-it-works { height: auto; padding: 80px 0; }
-      .hiw-pin-sticky { position: relative; height: auto; overflow: visible; padding-top: 0; }
-      .hiw-pin-wrap { flex-direction: column; width: 100%; }
-      .hiw-step { width: 100%; padding: 0 24px 60px; }
+      #how-it-works { height: auto; }
+      .hiw-pin-sticky { position: static; height: auto; overflow: visible; padding: 72px 0; }
+      .hiw-pin-wrap { flex-direction: column; width: 100%; transition: none; transform: none !important; }
+      .hiw-step { width: 100%; padding: 48px 28px 0; justify-content: flex-start; }
       .hiw-dots { display: none; }
     }
 
@@ -1770,43 +1785,32 @@ const SCRIPT = `
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revObs.observe(el));
 
     /* ============================================================
-       HORIZONTAL PROCESS SCROLL (WAAPI ViewTimeline)
+       HORIZONTAL PROCESS SCROLL — pure JS scroll math
     ============================================================ */
     (function() {
-      const section = document.querySelector('#how-it-works');
-      const wrap    = document.querySelector('#hiwPinWrap');
+      if (window.innerWidth <= 768) return;
+      const section = document.getElementById('how-it-works');
+      const wrap    = document.getElementById('hiwPinWrap');
       const dots    = document.querySelectorAll('.hiw-dot');
       if (!section || !wrap) return;
 
-      if (window.innerWidth > 768 && 'ViewTimeline' in window) {
-        /* Scroll-linked horizontal pan: 0 → -200vw over the 400vh scroll */
-        wrap.animate(
-          { transform: ['translateX(0px)', 'translateX(calc(-200vw))'] },
-          {
-            timeline: new ViewTimeline({ subject: section, axis: 'block' }),
-            fill: 'both',
-            rangeStart: 'entry 0%',
-            rangeEnd:   'exit 100%',
-          }
-        );
-
-        /* Update progress dots based on scroll position */
-        function updateDots() {
-          const rect  = section.getBoundingClientRect();
-          const total = section.offsetHeight - window.innerHeight;
-          const pct   = Math.max(0, Math.min(1, -rect.top / total));
-          const idx   = Math.min(2, Math.floor(pct * 3));
-          dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-        }
-        window.addEventListener('scroll', updateDots, { passive: true });
-        updateDots();
-
-      } else {
-        /* Mobile / unsupported: CSS handles vertical stacking */
-        section.style.height = 'auto';
-        const sticky = document.querySelector('.hiw-pin-sticky');
-        if (sticky) { sticky.style.position = 'relative'; sticky.style.height = 'auto'; sticky.style.paddingTop = '80px'; }
+      function update() {
+        /* How far the user has scrolled past the section's top edge */
+        const scrolled   = window.scrollY - section.offsetTop;
+        /* Total scrollable distance within the section */
+        const scrollable = section.offsetHeight - window.innerHeight;
+        /* Clamp 0→1 */
+        const pct = Math.max(0, Math.min(1, scrolled / scrollable));
+        /* Slide the 300vw strip: 0 at start, -200vw at end */
+        wrap.style.transform = 'translateX(' + (pct * -200) + 'vw)';
+        /* Update dots */
+        const idx = Math.min(2, Math.floor(pct * 3));
+        dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
       }
+
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
     })();
 
     /* ============================================================
