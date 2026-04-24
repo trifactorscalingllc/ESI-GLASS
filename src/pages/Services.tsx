@@ -406,26 +406,55 @@ const CSS = `
     .tier-apply-fill { background: var(--gold); color: var(--black); border-color: var(--gold); }
     .tier-apply-fill:hover { background: #e8c840; border-color: #e8c840; color: var(--black); }
 
-    /* Pillar header label */
-    .pillar-eyebrow-row {
-      display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;
-      margin-bottom: 40px; padding-bottom: 18px; border-bottom: 1px solid var(--border);
+    /* ── Pillar flow animation (same as homepage) ── */
+    @keyframes pillarFlowStrip {
+      0%   { transform: translateX(0%);   opacity: 0; }
+      6%   { opacity: 1; }
+      27%  { opacity: 1; }
+      33%  { transform: translateX(0%);   opacity: 0; }
+      39%  { transform: translateX(100%); opacity: 0; }
+      45%  { opacity: 1; }
+      61%  { opacity: 1; }
+      66%  { transform: translateX(100%); opacity: 0; }
+      72%  { transform: translateX(200%); opacity: 0; }
+      78%  { opacity: 1; }
+      92%  { opacity: 1; }
+      100% { transform: translateX(200%); opacity: 0; }
     }
-    .pillar-eyebrow-num {
-      font-family: var(--fb); font-size: 0.62rem; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
+    @keyframes pillarCardPulse {
+      0%, 100% { background: var(--black); }
+      50%      { background: rgba(212,175,55,0.035); }
     }
-    .pillar-eyebrow-name {
-      font-family: var(--fh); font-size: 1.1rem; font-weight: 800; color: var(--white);
+    @keyframes pillarFeaturedPulse {
+      0%, 100% { box-shadow: none; }
+      50%      { box-shadow: 0 0 48px rgba(212,175,55,0.13); }
     }
-    .pillar-eyebrow-desc { font-size: 0.82rem; color: var(--gray); margin-left: auto; }
+    .svc-grid-flow { position: relative; overflow: hidden; }
+    .svc-grid-flow::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 33.34%; height: 2px; z-index: 2; pointer-events: none;
+      background: linear-gradient(90deg, transparent 0%, var(--gold) 35%, var(--gold) 65%, transparent 100%);
+      animation: pillarFlowStrip 4.5s ease-in-out infinite;
+    }
+    .svc-grid-flow .tier-card:nth-child(1) {
+      animation: pillarCardPulse 4.5s ease-in-out infinite; animation-delay: 0s;
+    }
+    .svc-grid-flow .tier-card-featured {
+      animation: pillarFeaturedPulse 4.5s ease-in-out infinite !important; animation-delay: 1.5s !important;
+    }
+    .svc-grid-flow .tier-card:nth-child(3) {
+      animation: pillarCardPulse 4.5s ease-in-out infinite; animation-delay: 3s;
+    }
 
     @media (max-width: 900px) {
       .tier-grid { grid-template-columns: 1fr; background: transparent; border: none; }
       .tier-card { border: 1px solid var(--border); }
       .tier-card-featured { border: 1px solid var(--gold-border); }
       .tier-card-featured::before { display: none; }
-      .pillar-eyebrow-desc { display: none; }
+      .svc-grid-flow::before { display: none; }
+      .svc-grid-flow .tier-card:nth-child(1),
+      .svc-grid-flow .tier-card-featured,
+      .svc-grid-flow .tier-card:nth-child(3) { animation: none !important; }
     }
 
     /* ======================== FULL STACK SECTION ======================== */
@@ -1066,146 +1095,63 @@ const HTML = `
 </div>
 </div>
 </section>
-<!-- ======================== SECTION 2: PILLAR 01 — WEBSITE & FUNNEL ======================== -->
+<!-- ======================== SECTION 2–4: THREE PILLARS ======================== -->
 <section class="service-section bg-black">
 <div class="container">
-<div class="pillar-eyebrow-row reveal">
-<span class="pillar-eyebrow-num">Pillar 01</span>
-<span class="pillar-eyebrow-name">Website &amp; Funnel</span>
-<span class="pillar-eyebrow-desc">Your online presence, engineered to convert.</span>
+<div class="reveal" style="text-align:center;margin-bottom:56px;">
+<span class="eyebrow" style="justify-content:center;"><span class="eline"></span>Services</span>
+<h2 style="font-size:clamp(1.9rem,3.6vw,2.85rem);font-weight:800;margin-top:18px;">Start where you are.<br/>Scale as you grow.</h2>
+<p style="margin-top:16px;font-size:0.94rem;color:var(--gray-light);max-width:480px;margin-left:auto;margin-right:auto;line-height:1.75;">Three pillars that build on each other naturally. Most clients begin with a Website &amp; Funnel, layer in Growth Ops, then pour fuel on it with Marketing.</p>
 </div>
-<div class="tier-grid reveal" style="transition-delay:0.08s">
-<!-- Launch -->
+<div class="tier-grid svc-grid-flow reveal" style="transition-delay:0.1s">
+
+<!-- Pillar 01: Website & Funnel -->
 <div class="tier-card">
-<div class="tier-eyebrow">Launch</div>
-<div class="tier-name">Launch</div>
-<p class="tier-desc">A fast, credible website that captures leads from day one.</p>
+<div class="tier-eyebrow">Pillar 01</div>
+<div class="tier-name">Website &amp; Funnel</div>
+<p class="tier-desc">Your online presence, engineered to convert. From first impression to first lead — built and maintained for you.</p>
 <ul class="feature-list" style="flex:1">
-<li><span class="feature-check">✦</span> Homepage, services, about, and contact pages</li>
+<li><span class="feature-check">✦</span> Homepage, services, about &amp; contact pages</li>
 <li><span class="feature-check">✦</span> Lead capture form connected to your CRM</li>
-<li><span class="feature-check">✦</span> Mobile-optimized and Google-indexed</li>
-<li><span class="feature-check">✦</span> Monthly maintenance included</li>
-</ul>
-<a class="tier-apply" href="mailto:contact@trifactorscaling.com?subject=Launch%20Inquiry">Apply for Launch →</a>
-</div>
-<!-- Build (featured) -->
-<div class="tier-card tier-card-featured">
-<div class="tier-badge">MOST POPULAR</div>
-<div class="tier-eyebrow">Build</div>
-<div class="tier-name">Build</div>
-<p class="tier-desc">A full website plus a dedicated lead pipeline.</p>
-<ul class="feature-list" style="flex:1">
-<li><span class="feature-check">✦</span> Everything in Launch</li>
-<li><span class="feature-check">✦</span> Up to 8 pages including campaign landing pages</li>
-<li><span class="feature-check">✦</span> Lead funnel with automated follow-up</li>
+<li><span class="feature-check">✦</span> Campaign landing pages &amp; lead funnels</li>
 <li><span class="feature-check">✦</span> Booking and calendar integration</li>
-<li><span class="feature-check">✦</span> Analytics and conversion tracking</li>
+<li><span class="feature-check">✦</span> Analytics, A/B testing &amp; retargeting pixel</li>
+<li><span class="feature-check">✦</span> Mobile-optimized, Google-indexed, monthly maintenance</li>
 </ul>
-<a class="tier-apply tier-apply-fill" href="mailto:contact@trifactorscaling.com?subject=Build%20Inquiry">Apply for Build →</a>
+<a class="tier-apply" href="mailto:contact@trifactorscaling.com?subject=Website%20%26%20Funnel%20Inquiry">Apply for Website &amp; Funnel →</a>
 </div>
-<!-- Full Funnel Op -->
-<div class="tier-card">
-<div class="tier-eyebrow">Full Funnel Op</div>
-<div class="tier-name">Full Funnel Op</div>
-<p class="tier-desc">A complete funnel ecosystem, continuously optimized for revenue.</p>
+
+<!-- Pillar 02: Growth Operations (FEATURED) -->
+<div class="tier-card tier-card-featured">
+<div class="tier-badge">CORE SYSTEM</div>
+<div class="tier-eyebrow">Pillar 02</div>
+<div class="tier-name">Growth Operations</div>
+<p class="tier-desc">The system that turns leads into revenue. CRM, automations, follow-up — built once, running forever.</p>
 <ul class="feature-list" style="flex:1">
-<li><span class="feature-check">✦</span> Everything in Build</li>
-<li><span class="feature-check">✦</span> Multiple funnels for different offers or audiences</li>
-<li><span class="feature-check">✦</span> A/B testing and monthly CRO</li>
-<li><span class="feature-check">✦</span> Retargeting pixel setup</li>
-<li><span class="feature-check">✦</span> Full revenue attribution — know exactly what's converting</li>
-</ul>
-<a class="tier-apply" href="mailto:contact@trifactorscaling.com?subject=Full%20Funnel%20Op%20Inquiry">Apply for Full Funnel Op →</a>
-</div>
-</div>
-</div>
-</section>
-<!-- ======================== SECTION 3: PILLAR 02 — GROWTH OPERATIONS ======================== -->
-<section class="service-section bg-surface">
-<div class="container">
-<div class="service-grid">
-<div class="service-left reveal-left">
-<div class="service-eyebrow">
-<span class="eyebrow"><span class="eline"></span>Pillar 02</span>
-</div>
-<h2 class="service-title">Growth Operations</h2>
-<p class="service-lead">The system that turns leads into revenue. CRM, automations, follow-up sequences, and booking flows — all built and managed for you so no lead ever slips through.</p>
-<p style="font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-family:var(--fb);">What's Included</p>
-<ul class="feature-list">
 <li><span class="feature-check">✦</span> CRM setup and pipeline management</li>
 <li><span class="feature-check">✦</span> Automated follow-up via email and SMS</li>
 <li><span class="feature-check">✦</span> Lead nurture sequences</li>
 <li><span class="feature-check">✦</span> Booking flows and appointment automation</li>
 <li><span class="feature-check">✦</span> Reporting dashboard so nothing falls through</li>
 </ul>
-<a class="tier-apply" href="mailto:contact@trifactorscaling.com?subject=Growth%20Operations%20Inquiry" style="display:inline-block;margin-top:8px;">Apply for Growth Ops →</a>
+<a class="tier-apply tier-apply-fill" href="mailto:contact@trifactorscaling.com?subject=Growth%20Operations%20Inquiry">Apply for Growth Ops →</a>
 </div>
-<div class="service-right reveal-right">
-<div class="info-cards">
-<div class="info-card">
-<div class="info-card-label">Who It's For</div>
-<p>Any service business generating leads but losing them to slow follow-up, no-shows, or disorganized pipelines. If you're running your leads through a personal inbox or spreadsheet, this is the infrastructure you're missing.</p>
-</div>
-<div class="info-card">
-<div class="info-card-label">Why It Matters</div>
-<p>The average business follows up with a lead twice. Our systems run 7+ touches — automated, timed, and personalized. The businesses that convert the most aren't the ones with the best service. They're the ones who follow up fastest and most consistently.</p>
-</div>
-<div style="background:var(--card);border:1px solid var(--border);padding:22px 24px;border-radius:2px;">
-<p style="font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gray);margin-bottom:12px;font-family:var(--fb);">System Coverage</p>
-<div style="display:flex;flex-wrap:wrap;gap:8px;">
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">CRM</span>
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Automations</span>
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">SMS/Email</span>
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Booking</span>
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Reporting</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- ======================== SECTION 4: PILLAR 03 — MARKETING ======================== -->
-<section class="service-section bg-black">
-<div class="container">
-<div class="service-grid reversed">
-<div class="service-left reveal-left">
-<div class="info-cards">
-<div class="info-card">
-<div class="info-card-label">Who It's For</div>
-<p>Businesses with a proven offer and a functioning lead system that are ready to pour fuel on the fire. If your funnel is converting but your volume is low, paid traffic is the fastest lever.</p>
-</div>
-<div class="info-card">
-<div class="info-card-label">Why It Matters</div>
-<p>Most ad agencies hand you a pretty report and move on. We stay in the account daily — testing, cutting, scaling. We don't just run the ads. We own the outcome. Your spend either compounds or we cut what's not working.</p>
-</div>
-<div style="background:var(--card);border:1px solid var(--border);padding:22px 24px;border-radius:2px;">
-<p style="font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gray);margin-bottom:12px;font-family:var(--fb);">Channels</p>
-<div style="display:flex;flex-wrap:wrap;gap:8px;">
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Meta Ads</span>
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">TikTok Ads</span>
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Retargeting</span>
-<span style="background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;font-size:0.72rem;color:var(--gold);font-weight:600;">Organic Content</span>
-</div>
-</div>
-</div>
-</div>
-<div class="service-right reveal-right">
-<div class="service-eyebrow">
-<span class="eyebrow"><span class="eline"></span>Pillar 03</span>
-</div>
-<h2 class="service-title">Marketing</h2>
-<p class="service-lead">Traffic on demand. Meta and TikTok ads built to perform — strategy, creative, daily optimization, and full reporting so you know exactly what your spend is producing.</p>
-<p style="font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-family:var(--fb);">What's Included</p>
-<ul class="feature-list">
-<li><span class="feature-check">✦</span> Campaign strategy, ad copy, and creative direction</li>
+
+<!-- Pillar 03: Marketing -->
+<div class="tier-card">
+<div class="tier-eyebrow">Pillar 03</div>
+<div class="tier-name">Marketing</div>
+<p class="tier-desc">Traffic on demand. Meta and TikTok ads built to perform — strategy, creative, and daily optimization.</p>
+<ul class="feature-list" style="flex:1">
+<li><span class="feature-check">✦</span> Campaign strategy, ad copy &amp; creative direction</li>
 <li><span class="feature-check">✦</span> Audience targeting and campaign buildout</li>
 <li><span class="feature-check">✦</span> Daily optimization and retargeting</li>
 <li><span class="feature-check">✦</span> Organic content strategy</li>
 <li><span class="feature-check">✦</span> Monthly ROI reporting</li>
 </ul>
-<a class="tier-apply" href="mailto:contact@trifactorscaling.com?subject=Marketing%20Inquiry" style="display:inline-block;margin-top:8px;">Apply for Marketing →</a>
+<a class="tier-apply" href="mailto:contact@trifactorscaling.com?subject=Marketing%20Inquiry">Apply for Marketing →</a>
 </div>
+
 </div>
 </div>
 </section>

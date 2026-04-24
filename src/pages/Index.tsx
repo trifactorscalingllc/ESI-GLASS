@@ -892,39 +892,59 @@ const CSS = `
     .svc-note { text-align: center; margin-top: 44px; font-size: 0.84rem; color: var(--gray); font-style: italic; }
     .svc-note a { color: var(--gold); text-decoration: none; }
 
-    /* ── Pillar layout ── */
-    .pillar-block { margin-bottom: 2px; }
-    .pillar-header {
-      display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;
-      margin-bottom: 28px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+    /* ── Pillar flow animation ── */
+    @keyframes pillarFlowStrip {
+      0%   { transform: translateX(0%);   opacity: 0; }
+      6%   { opacity: 1; }
+      27%  { opacity: 1; }
+      33%  { transform: translateX(0%);   opacity: 0; }
+      39%  { transform: translateX(100%); opacity: 0; }
+      45%  { opacity: 1; }
+      61%  { opacity: 1; }
+      66%  { transform: translateX(100%); opacity: 0; }
+      72%  { transform: translateX(200%); opacity: 0; }
+      78%  { opacity: 1; }
+      92%  { opacity: 1; }
+      100% { transform: translateX(200%); opacity: 0; }
     }
-    .pillar-num {
-      font-family: var(--fb); font-size: 0.6rem; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); white-space: nowrap;
+    @keyframes pillarCardPulse {
+      0%, 100% { background: var(--black); }
+      50%      { background: rgba(212,175,55,0.035); }
     }
-    .pillar-name {
-      font-family: var(--fh); font-size: 1.15rem; font-weight: 800; color: var(--white); letter-spacing: -0.01em;
+    @keyframes pillarFeaturedPulse {
+      0%, 100% { box-shadow: none; }
+      50%      { box-shadow: 0 0 48px rgba(212,175,55,0.13); }
     }
-    .pillar-desc { font-size: 0.82rem; color: var(--gray); margin-left: auto; }
-    .pillar-row {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 1px;
+
+    .svc-grid-flow { position: relative; overflow: hidden; }
+    .svc-grid-flow::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 33.34%; height: 2px; z-index: 2; pointer-events: none;
+      background: linear-gradient(90deg, transparent 0%, var(--gold) 35%, var(--gold) 65%, transparent 100%);
+      animation: pillarFlowStrip 4.5s ease-in-out infinite;
     }
-    .pillar-card {
-      background: var(--black); padding: 44px 36px;
-      display: flex; flex-direction: column; transition: background 0.25s ease;
+    .svc-grid-flow .svc-card:nth-child(1) {
+      animation: pillarCardPulse 4.5s ease-in-out infinite;
+      animation-delay: 0s;
     }
-    .pillar-card:hover { background: #030303; }
-    .pillar-card .pillar-header { margin-bottom: 0; }
+    .svc-grid-flow .svc-card.featured {
+      animation: pillarFeaturedPulse 4.5s ease-in-out infinite !important;
+      animation-delay: 1.5s !important;
+    }
+    .svc-grid-flow .svc-card:nth-child(3) {
+      animation: pillarCardPulse 4.5s ease-in-out infinite;
+      animation-delay: 3s;
+    }
 
     @media (max-width: 900px) {
       .svc-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; background: transparent; border: none; }
       .svc-card { border: 1px solid var(--border); }
       .svc-card.featured { border: 1px solid var(--gold-border); }
       .svc-card.featured::before { display: none; }
-      .pillar-row { grid-template-columns: 1fr; }
-      .pillar-desc { display: none; }
-      .pillar-card { padding: 36px 24px; }
+      .svc-grid-flow::before { display: none; }
+      .svc-grid-flow .svc-card:nth-child(1),
+      .svc-grid-flow .svc-card.featured,
+      .svc-grid-flow .svc-card:nth-child(3) { animation: none !important; }
     }
 
     /* ======================== SECTION: WHY TRIFACTOR ======================== */
@@ -2517,89 +2537,59 @@ const HTML = `
 <div class="container">
 <div class="svc-header reveal">
 <span class="eyebrow"><span class="eline"></span>Services</span>
-<h2>Three pillars.<br/>One growth system.</h2>
-<p>Every engagement starts with a custom audit. We build what your business actually needs.</p>
+<h2>Start where you are.<br/>Scale as you grow.</h2>
+<p>Three pillars that build on each other naturally. Most clients begin with a Website &amp; Funnel, layer in Growth Ops, then pour fuel on it with Marketing.</p>
 </div>
 
-<!-- PILLAR 01: Website & Funnel -->
-<div class="pillar-block reveal">
-<div class="pillar-header">
-<span class="pillar-num">Pillar 01</span>
-<span class="pillar-name">Website &amp; Funnel</span>
-<span class="pillar-desc">Your online presence, engineered to convert.</span>
-</div>
-<div class="svc-grid">
+<div class="svc-grid svc-grid-flow reveal">
+
+<!-- Pillar 01: Website & Funnel -->
 <div class="svc-card">
-<div class="svc-tier">Launch</div>
-<p class="svc-target">A fast, credible website that captures leads from day one.</p>
+<div class="svc-tier">Pillar 01</div>
+<div class="svc-name">Website &amp; Funnel</div>
+<p class="svc-target">Your online presence, engineered to convert. From first impression to first lead — built and maintained for you.</p>
 <ul class="svc-features">
-<li><span class="svc-check">◆</span>Homepage, services, about, and contact pages</li>
+<li><span class="svc-check">◆</span>Homepage, services, about &amp; contact pages</li>
 <li><span class="svc-check">◆</span>Lead capture form connected to your CRM</li>
-<li><span class="svc-check">◆</span>Mobile-optimized and Google-indexed</li>
-<li><span class="svc-check">◆</span>Monthly maintenance included</li>
-</ul>
-<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Launch%20Service%20Inquiry">Apply for Launch →</a>
-</div>
-<div class="svc-card featured">
-<div class="svc-badge">MOST POPULAR</div>
-<div class="svc-tier">Build</div>
-<p class="svc-target">A full website plus a dedicated lead pipeline.</p>
-<ul class="svc-features">
-<li><span class="svc-check">◆</span>Everything in Launch</li>
-<li><span class="svc-check">◆</span>Up to 8 pages including campaign landing pages</li>
-<li><span class="svc-check">◆</span>Lead funnel with automated follow-up</li>
+<li><span class="svc-check">◆</span>Campaign landing pages &amp; lead funnels</li>
 <li><span class="svc-check">◆</span>Booking and calendar integration</li>
-<li><span class="svc-check">◆</span>Analytics and conversion tracking</li>
+<li><span class="svc-check">◆</span>Analytics, A/B testing &amp; retargeting pixel</li>
+<li><span class="svc-check">◆</span>Mobile-optimized, Google-indexed, monthly maintenance</li>
 </ul>
-<a class="btn-apply btn-apply-fill" href="mailto:contact@trifactorscaling.com?subject=Build%20Service%20Inquiry">Apply for Build →</a>
-</div>
-<div class="svc-card">
-<div class="svc-tier">Full Funnel Op</div>
-<p class="svc-target">A complete funnel ecosystem, continuously optimized for revenue.</p>
-<ul class="svc-features">
-<li><span class="svc-check">◆</span>Everything in Build</li>
-<li><span class="svc-check">◆</span>Multiple funnels for different offers or audiences</li>
-<li><span class="svc-check">◆</span>A/B testing and monthly CRO</li>
-<li><span class="svc-check">◆</span>Retargeting pixel setup</li>
-<li><span class="svc-check">◆</span>Full revenue attribution — know exactly what's converting</li>
-</ul>
-<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Full%20Funnel%20Op%20Inquiry">Apply for Full Funnel Op →</a>
-</div>
-</div>
+<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Website%20%26%20Funnel%20Inquiry">Apply for Website &amp; Funnel →</a>
 </div>
 
-<!-- PILLARS 02 + 03 -->
-<div class="pillar-row reveal" style="transition-delay:0.12s">
-<div class="pillar-card">
-<div class="pillar-header">
-<span class="pillar-num">Pillar 02</span>
-<span class="pillar-name">Growth Operations</span>
-</div>
-<p style="font-size:0.83rem;color:var(--gray-light);line-height:1.65;margin:20px 0 24px;padding-bottom:20px;border-bottom:1px solid var(--border);">The system that turns leads into revenue.</p>
-<ul class="svc-features" style="flex:1">
+<!-- Pillar 02: Growth Operations (FEATURED) -->
+<div class="svc-card featured">
+<div class="svc-badge">CORE SYSTEM</div>
+<div class="svc-tier">Pillar 02</div>
+<div class="svc-name">Growth Operations</div>
+<p class="svc-target">The system that turns leads into revenue. CRM, automations, follow-up — built once, running forever.</p>
+<ul class="svc-features">
 <li><span class="svc-check">◆</span>CRM setup and pipeline management</li>
 <li><span class="svc-check">◆</span>Automated follow-up via email and SMS</li>
 <li><span class="svc-check">◆</span>Lead nurture sequences</li>
 <li><span class="svc-check">◆</span>Booking flows and appointment automation</li>
 <li><span class="svc-check">◆</span>Reporting dashboard so nothing falls through</li>
 </ul>
-<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Growth%20Operations%20Inquiry" style="margin-top:32px">Apply for Growth Ops →</a>
+<a class="btn-apply btn-apply-fill" href="mailto:contact@trifactorscaling.com?subject=Growth%20Operations%20Inquiry">Apply for Growth Ops →</a>
 </div>
-<div class="pillar-card">
-<div class="pillar-header">
-<span class="pillar-num">Pillar 03</span>
-<span class="pillar-name">Marketing</span>
-</div>
-<p style="font-size:0.83rem;color:var(--gray-light);line-height:1.65;margin:20px 0 24px;padding-bottom:20px;border-bottom:1px solid var(--border);">Traffic on demand. Meta and TikTok ads built to perform.</p>
-<ul class="svc-features" style="flex:1">
-<li><span class="svc-check">◆</span>Campaign strategy, ad copy, and creative direction</li>
+
+<!-- Pillar 03: Marketing -->
+<div class="svc-card">
+<div class="svc-tier">Pillar 03</div>
+<div class="svc-name">Marketing</div>
+<p class="svc-target">Traffic on demand. Meta and TikTok ads built to perform — strategy, creative, and daily optimization.</p>
+<ul class="svc-features">
+<li><span class="svc-check">◆</span>Campaign strategy, ad copy &amp; creative direction</li>
 <li><span class="svc-check">◆</span>Audience targeting and campaign buildout</li>
 <li><span class="svc-check">◆</span>Daily optimization and retargeting</li>
 <li><span class="svc-check">◆</span>Organic content strategy</li>
 <li><span class="svc-check">◆</span>Monthly ROI reporting</li>
 </ul>
-<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Marketing%20Inquiry" style="margin-top:32px">Apply for Marketing →</a>
+<a class="btn-apply" href="mailto:contact@trifactorscaling.com?subject=Marketing%20Inquiry">Apply for Marketing →</a>
 </div>
+
 </div>
 
 <p class="svc-note reveal" style="transition-delay:0.44s">
