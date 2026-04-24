@@ -757,29 +757,27 @@ const CSS = `
       overflow: hidden;
     }
 
-    /* Full-height relative container */
+    /* Full-height flex row: left column + right clipping column */
     .hiw-pin-sticky {
       position: relative;
       height: 100%;
       width: 100%;
-      overflow: hidden;
+      display: flex;
+      flex-direction: row;
     }
 
-    /* LEFT: eyebrow top-left, H2 centred vertically — static overlay */
+    /* LEFT: static column — eyebrow + H2, fades right into the sliding panels */
     .hiw-head {
-      position: absolute;
+      position: relative;
       z-index: 10;
-      top: 0; left: 0; bottom: 0;
-      width: clamp(260px, 42%, 500px);
+      flex: 0 0 clamp(260px, 42vw, 500px);
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding: 0 48px 0 clamp(24px, 6vw, 80px);
-      /* fades into the sliding panels on the right */
-      background: linear-gradient(90deg, var(--black) 65%, transparent 100%);
+      background: linear-gradient(90deg, var(--black) 70%, transparent 100%);
     }
     .hiw-head .eyebrow {
-      /* eyebrow already styled globally; position it toward the top of the column */
       margin-bottom: 28px;
       align-self: flex-start;
     }
@@ -792,24 +790,31 @@ const CSS = `
       max-width: 380px;
     }
 
-    /* RIGHT: three full-width panels that translate left on scroll */
+    /* RIGHT: clipping column — overflow:hidden so the 300vw strip stays contained */
+    .hiw-right {
+      position: relative;
+      flex: 1 1 0;
+      overflow: hidden;
+    }
+
+    /* The 300vw sliding strip, positioned inside .hiw-right */
     .hiw-pin-wrap {
       position: absolute;
       top: 0; left: 0; bottom: 0;
       display: flex;
-      width: 300vw;
+      width: 300%;          /* 300% of .hiw-right, not 300vw — avoids overflow */
       will-change: transform;
     }
 
-    /* Each panel = 100vw; content lives in the right portion to clear the left overlay */
+    /* Each panel = 1/3 of the strip = 100% of .hiw-right = the visible right column */
     .hiw-step {
-      width: 100vw;
+      width: 33.333%;
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       text-align: left;
-      padding: 0 clamp(40px, 6vw, 80px) 0 46%;
+      padding: 0 clamp(32px, 5vw, 72px);
       box-sizing: border-box;
     }
 
@@ -839,11 +844,11 @@ const CSS = `
       max-width: 440px;
     }
 
-    /* Progress dots — bottom of right-side content area */
+    /* Progress dots — bottom of right-side column */
     .hiw-dots {
       position: absolute;
       bottom: 44px;
-      left: 46%;
+      left: clamp(24px, 5vw, 72px);
       display: flex;
       gap: 10px;
       z-index: 5;
@@ -858,9 +863,10 @@ const CSS = `
     /* Mobile: vertical stack */
     @media (max-width: 768px) {
       #how-it-works { height: auto; overflow: visible; }
-      .hiw-pin-sticky { position: static; height: auto; overflow: visible; padding: 72px 0; }
-      .hiw-head { position: static; width: 100%; background: none; padding: 0 24px 40px; }
+      .hiw-pin-sticky { flex-direction: column; height: auto; padding: 72px 0; }
+      .hiw-head { flex: none; width: 100%; background: none; padding: 0 24px 40px; }
       .hiw-head h2 { font-size: clamp(1.8rem, 6vw, 2.4rem); max-width: 100%; }
+      .hiw-right { flex: none; overflow: visible; }
       .hiw-pin-wrap { position: static; flex-direction: column; width: 100%; transform: none !important; }
       .hiw-step { width: 100%; padding: 40px 24px 0; }
       .hiw-dots { position: static; margin: 32px 0 0 24px; }
@@ -1792,9 +1798,9 @@ const SCRIPT = `
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revObs.observe(el));
 
     /* ============================================================
-       HORIZONTAL PROCESS — scroll hijack
-       Locks page when section reaches viewport top. Wheel drives
-       horizontal strip 01→02→03. Releases once. No looping.
+       HORIZONTAL PROCESS — bidirectional scroll hijack
+       • Scrolling DOWN: hijacks at step 01, drives 01→02→03, releases.
+       • Scrolling UP:   hijacks at step 03 (from below), drives 03→02→01, releases.
     ============================================================ */
     (function() {
       if (window.innerWidth <= 768) return;
@@ -1803,22 +1809,27 @@ const SCRIPT = `
       var dots    = document.querySelectorAll('.hiw-dot');
       if (!section || !wrap) return;
 
-      var progress = 0;    // 0 → 1
-      var hijacked = false;
-      var completed = false; // true after user scrolls through all 3 panels
+      var progress  = 0;     // 0=step01  1=step03
+      var hijacked  = false;
+      var doneDown  = false; // true after forward pass completes (prevents re-lock going down)
+      var doneUp    = false; // true after reverse pass completes (prevents re-lock going up)
 
       function apply(p) {
         progress = Math.max(0, Math.min(1, p));
-        wrap.style.transform = 'translateX(' + (-progress * 200) + 'vw)';
+        /* .hiw-pin-wrap is 300% wide (each panel = 100% of .hiw-right).
+           To advance from panel 1 to panel 3 we shift by -200% of .hiw-right.
+           As % of .hiw-pin-wrap that's -66.666% per full progress sweep. */
+        wrap.style.transform = 'translateX(' + (-progress * 66.6667) + '%)';
         var idx = Math.min(2, Math.floor(progress * 3));
         dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
       }
 
-      function lock() {
+      function lock(snapProgress) {
         var rect = section.getBoundingClientRect();
-        window.scrollTo(0, window.scrollY + rect.top); // snap section to viewport top
+        window.scrollTo(0, window.scrollY + rect.top);
         document.documentElement.style.overflow = 'hidden';
         hijacked = true;
+        apply(snapProgress);
       }
 
       function unlock() {
@@ -1827,13 +1838,20 @@ const SCRIPT = `
       }
 
       window.addEventListener('wheel', function(e) {
-        var rect = section.getBoundingClientRect();
-        var atTop = rect.top > -8 && rect.top < 8;
+        var rect   = section.getBoundingClientRect();
+        /* section is 100vh — it "fills" the viewport when top ≈ 0 */
+        var atTop  = rect.top > -8 && rect.top < 8;
 
-        /* Activate only if: not already done for this visit, section at top, scrolling down */
-        if (!hijacked && !completed && atTop && e.deltaY > 0) {
-          lock();
-          apply(0);
+        /* ---- Forward hijack: section at top, scrolling DOWN ---- */
+        if (!hijacked && !doneDown && atTop && e.deltaY > 0) {
+          doneUp = false;   // allow reverse pass on the way back up
+          lock(0);
+        }
+
+        /* ---- Reverse hijack: section at top, scrolling UP ---- */
+        if (!hijacked && !doneUp && atTop && e.deltaY < 0) {
+          doneDown = false; // allow forward pass on the way back down
+          lock(1);
         }
 
         if (!hijacked) return;
@@ -1845,27 +1863,29 @@ const SCRIPT = `
 
         apply(progress + raw / window.innerWidth);
 
-        /* Reached the end → release and mark done so it doesn't re-lock */
+        /* Reached step 03 going forward → release */
         if (progress >= 1 && e.deltaY > 0) {
-          completed = true;
+          doneDown = true;
           unlock();
           return;
         }
 
-        /* Scrolled back to start → release so page can scroll up */
+        /* Reached step 01 going backward → release */
         if (progress <= 0 && e.deltaY < 0) {
+          doneUp = true;
           unlock();
           return;
         }
       }, { passive: false });
 
-      /* When section scrolls back below the fold, reset so user can experience it again */
+      /* Reset state when section scrolls far above the fold */
       window.addEventListener('scroll', function() {
         if (hijacked) return;
         var rect = section.getBoundingClientRect();
         if (rect.top > window.innerHeight * 0.5) {
           apply(0);
-          completed = false;
+          doneDown = false;
+          doneUp   = false;
         }
       }, { passive: true });
     })();
@@ -2610,6 +2630,7 @@ const HTML = `
 <span class="eyebrow">The Process</span>
 <h2>From audit to automated revenue<br/>in three moves.</h2>
 </div>
+<div class="hiw-right">
 <div class="hiw-pin-wrap" id="hiwPinWrap">
 <div class="hiw-step" id="hiwStep0">
 <span class="hiw-num-ghost">01</span>
@@ -2631,6 +2652,7 @@ const HTML = `
 <div class="hiw-dot active" id="hiwDot0"></div>
 <div class="hiw-dot" id="hiwDot1"></div>
 <div class="hiw-dot" id="hiwDot2"></div>
+</div>
 </div>
 </div>
 </section>
