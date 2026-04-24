@@ -1056,7 +1056,11 @@ const HTML = `
 <div class="page-hero-glow"></div>
 <div class="container">
 <div class="page-hero-inner">
-<h1>Our Services</h1>
+<div class="page-hero-eyebrow">
+<span class="eyebrow"><span class="eline"></span>TriFactor Scaling<span class="eline"></span></span>
+</div>
+<h1>Our <span class="gold-shimmer">Services</span></h1>
+<p class="page-hero-sub">Infrastructure built once. Revenue that compounds forever.</p>
 <div class="hero-stats-row">
 <div class="hstat">
 <span class="hstat-val">4–6 wk</span>
@@ -1138,10 +1142,6 @@ const HTML = `
 <section id="final-cta">
 <div class="container">
 <div class="cta-inner">
-<div class="cta-availability reveal">
-<span class="cta-avail-dot"></span>
-<span class="cta-avail-text">3 Spots Open This Month</span>
-</div>
 <h2 class="cta-headline reveal">
         Ready to see<br/>
         what gets built<br/>
