@@ -170,7 +170,6 @@ const CSS = `
       text-align: center;
       position: relative;
       overflow: hidden;
-      border-bottom: 1px solid var(--border);
     }
     .page-hero::before {
       content: '';
@@ -239,12 +238,7 @@ const CSS = `
       padding: 96px 0;
       position: relative;
     }
-    .service-section::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent 0%, var(--gold-dark) 20%, var(--gold) 50%, var(--gold-dark) 80%, transparent 100%);
-      opacity: 0.5;
-    }
+    .service-section::before { display: none; }
     .service-section:first-of-type::before { display: none; }
     .service-section.bg-black { background: var(--black); }
     .service-section.bg-surface { background: var(--surface); }
@@ -406,19 +400,44 @@ const CSS = `
     .tier-apply-fill { background: var(--gold); color: var(--black); border-color: var(--gold); }
     .tier-apply-fill:hover { background: #e8c840; border-color: #e8c840; color: var(--black); }
 
-    /* ── Pillar flow animation — subtle outline only ── */
-    @keyframes pillarOutline {
-      0%, 100% { border-color: var(--border); }
-      50%      { border-color: rgba(212,175,55,0.45); }
+    /* ── Pillar flow animation (same as homepage) ── */
+    @keyframes pillarFlowStrip {
+      0%   { transform: translateX(0%);   opacity: 0; }
+      6%   { opacity: 1; }
+      27%  { opacity: 1; }
+      33%  { transform: translateX(0%);   opacity: 0; }
+      39%  { transform: translateX(100%); opacity: 0; }
+      45%  { opacity: 1; }
+      61%  { opacity: 1; }
+      66%  { transform: translateX(100%); opacity: 0; }
+      72%  { transform: translateX(200%); opacity: 0; }
+      78%  { opacity: 1; }
+      92%  { opacity: 1; }
+      100% { transform: translateX(200%); opacity: 0; }
+    }
+    @keyframes pillarCardPulse {
+      0%, 100% { background: var(--black); }
+      50%      { background: rgba(212,175,55,0.035); }
+    }
+    @keyframes pillarFeaturedPulse {
+      0%, 100% { box-shadow: none; }
+      50%      { box-shadow: 0 0 48px rgba(212,175,55,0.13); }
+    }
+    .svc-grid-flow { position: relative; overflow: hidden; }
+    .svc-grid-flow::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 33.34%; height: 2px; z-index: 2; pointer-events: none;
+      background: linear-gradient(90deg, transparent 0%, var(--gold) 35%, var(--gold) 65%, transparent 100%);
+      animation: pillarFlowStrip 4.5s ease-in-out infinite;
     }
     .svc-grid-flow .tier-card:nth-child(1) {
-      animation: pillarOutline 4.5s ease-in-out infinite; animation-delay: 0s;
+      animation: pillarCardPulse 4.5s ease-in-out infinite; animation-delay: 0s;
     }
     .svc-grid-flow .tier-card-featured {
-      animation: pillarOutline 4.5s ease-in-out infinite !important; animation-delay: 1.5s !important;
+      animation: pillarFeaturedPulse 4.5s ease-in-out infinite !important; animation-delay: 1.5s !important;
     }
     .svc-grid-flow .tier-card:nth-child(3) {
-      animation: pillarOutline 4.5s ease-in-out infinite; animation-delay: 3s;
+      animation: pillarCardPulse 4.5s ease-in-out infinite; animation-delay: 3s;
     }
 
     @media (max-width: 900px) {
@@ -426,6 +445,7 @@ const CSS = `
       .tier-card { border: 1px solid var(--border); }
       .tier-card-featured { border: 1px solid var(--gold-border); }
       .tier-card-featured::before { display: none; }
+      .svc-grid-flow::before { display: none; }
       .svc-grid-flow .tier-card:nth-child(1),
       .svc-grid-flow .tier-card-featured,
       .svc-grid-flow .tier-card:nth-child(3) { animation: none !important; }
@@ -438,12 +458,7 @@ const CSS = `
       position: relative;
       overflow: hidden;
     }
-    #full-stack::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent 0%, var(--gold-dark) 20%, var(--gold) 50%, var(--gold-dark) 80%, transparent 100%);
-      opacity: 0.5;
-    }
+    #full-stack::before { display: none; }
     .fullstack-header {
       text-align: center;
       max-width: 680px;
@@ -559,12 +574,7 @@ const CSS = `
       padding: 96px 0;
       position: relative;
     }
-    #tech-stack::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent 0%, var(--gold-dark) 20%, var(--gold) 50%, var(--gold-dark) 80%, transparent 100%);
-      opacity: 0.4;
-    }
+    #tech-stack::before { display: none; }
 
     /* 2-col tech split layout */
     .tech-split {
@@ -1063,40 +1073,42 @@ const HTML = `
 <!-- ======================== SECTION 2–4: THREE PILLARS ======================== -->
 <section class="service-section bg-black">
 <div class="container">
-<div class="reveal" style="text-align:center;margin-bottom:56px;">
-<span class="eyebrow" style="justify-content:center;"><span class="eline"></span>Services</span>
-<h2 style="font-size:clamp(1.9rem,3.6vw,2.85rem);font-weight:800;margin-top:18px;">Start where you are.<br/>Scale as you grow.</h2>
-<p style="margin-top:16px;font-size:0.94rem;color:var(--gray-light);max-width:480px;margin-left:auto;margin-right:auto;line-height:1.75;">Three pillars that build on each other naturally. Most clients begin with a Website &amp; Funnel, layer in Growth Ops, then pour fuel on it with Marketing.</p>
-</div>
 <div class="tier-grid svc-grid-flow reveal" style="transition-delay:0.1s">
 
 <!-- Pillar 01: Website & Funnel -->
 <div class="tier-card">
 <div class="tier-eyebrow">Pillar 01</div>
 <div class="tier-name">Website &amp; Funnel</div>
-<p class="tier-desc">Your online presence, engineered to convert. From first impression to first lead — built and maintained for you.</p>
+<p class="tier-desc">Your website should be the hardest-working salesperson you have. We design and build every page with one goal: turning visitors into booked leads — then connect it directly to your CRM so nothing slips through the cracks. Not a template. Built from scratch around your business, your market, and the leads you're trying to close.</p>
 <ul class="feature-list" style="flex:1">
-<li><span class="feature-check">✦</span> Homepage, services, about &amp; contact pages</li>
-<li><span class="feature-check">✦</span> Lead capture form connected to your CRM</li>
-<li><span class="feature-check">✦</span> Campaign landing pages &amp; lead funnels</li>
-<li><span class="feature-check">✦</span> Booking and calendar integration</li>
-<li><span class="feature-check">✦</span> Analytics, A/B testing &amp; retargeting pixel</li>
-<li><span class="feature-check">✦</span> Mobile-optimized, Google-indexed, monthly maintenance</li>
+<li><span class="feature-check">✦</span> Custom-designed homepage, services, about &amp; contact pages</li>
+<li><span class="feature-check">✦</span> Campaign landing pages &amp; lead funnels built for paid traffic</li>
+<li><span class="feature-check">✦</span> Lead capture forms wired directly into your CRM pipeline</li>
+<li><span class="feature-check">✦</span> Booking calendar embedded &amp; synced with appointment automation</li>
+<li><span class="feature-check">✦</span> Mobile-first build, fast load times, Google Search Console setup</li>
+<li><span class="feature-check">✦</span> Analytics installation, heatmap tracking &amp; A/B testing capability</li>
+<li><span class="feature-check">✦</span> Retargeting pixel setup ready for paid media</li>
+<li><span class="feature-check">✦</span> Monthly maintenance, copy updates &amp; performance reviews</li>
 </ul>
 <a class="tier-apply" href="mailto:contact@trifactorscaling.com?subject=Website%20%26%20Funnel%20Inquiry">Apply for Website &amp; Funnel →</a>
 </div>
 
 <!-- Pillar 02: Growth Operations (FEATURED) -->
 <div class="tier-card tier-card-featured">
+<div class="tier-badge">CORE SYSTEM</div>
 <div class="tier-eyebrow">Pillar 02</div>
 <div class="tier-name">Growth Operations</div>
-<p class="tier-desc">The system that turns leads into revenue. CRM, automations, follow-up — built once, running forever.</p>
+<p class="tier-desc">This is the engine. GoHighLevel configured around your exact business type — custom CRM pipelines, SMS and email automations, booking flows, review requests — all built from scratch and handed to you running. Every lead that comes in gets followed up with, booked, reminded, and asked for a review. Automatically. While you stay focused on the work.</p>
 <ul class="feature-list" style="flex:1">
-<li><span class="feature-check">✦</span> CRM setup and pipeline management</li>
-<li><span class="feature-check">✦</span> Automated follow-up via email and SMS</li>
-<li><span class="feature-check">✦</span> Lead nurture sequences</li>
-<li><span class="feature-check">✦</span> Booking flows and appointment automation</li>
-<li><span class="feature-check">✦</span> Reporting dashboard so nothing falls through</li>
+<li><span class="feature-check">✦</span> Full GoHighLevel sub-account setup &amp; configuration</li>
+<li><span class="feature-check">✦</span> Custom CRM pipeline built around your exact sales process</li>
+<li><span class="feature-check">✦</span> Multi-step SMS &amp; email follow-up sequences</li>
+<li><span class="feature-check">✦</span> Lead nurture flows that run 24/7 — no manual input required</li>
+<li><span class="feature-check">✦</span> Appointment booking automation with confirmations &amp; reminders</li>
+<li><span class="feature-check">✦</span> No-show reduction sequences</li>
+<li><span class="feature-check">✦</span> Automated Google review requests triggered on job completion</li>
+<li><span class="feature-check">✦</span> AppSheet reporting dashboard for real-time operations visibility</li>
+<li><span class="feature-check">✦</span> Monthly system monitoring &amp; optimization</li>
 </ul>
 <a class="tier-apply tier-apply-fill" href="mailto:contact@trifactorscaling.com?subject=Growth%20Operations%20Inquiry">Apply for Growth Ops →</a>
 </div>
@@ -1105,13 +1117,16 @@ const HTML = `
 <div class="tier-card">
 <div class="tier-eyebrow">Pillar 03</div>
 <div class="tier-name">Marketing</div>
-<p class="tier-desc">Traffic on demand. Meta and TikTok ads built to perform — strategy, creative, and daily optimization.</p>
+<p class="tier-desc">Meta and TikTok campaigns built to send qualified traffic directly into your pipeline — not just clicks, actual leads. We handle the strategy, the creative direction, and day-to-day optimization. Every campaign ties back to your CRM so you can see exactly which ad produced which booked job and which revenue.</p>
 <ul class="feature-list" style="flex:1">
-<li><span class="feature-check">✦</span> Campaign strategy, ad copy &amp; creative direction</li>
-<li><span class="feature-check">✦</span> Audience targeting and campaign buildout</li>
-<li><span class="feature-check">✦</span> Daily optimization and retargeting</li>
-<li><span class="feature-check">✦</span> Organic content strategy</li>
-<li><span class="feature-check">✦</span> Monthly ROI reporting</li>
+<li><span class="feature-check">✦</span> Meta (Facebook &amp; Instagram) &amp; TikTok campaign strategy &amp; setup</li>
+<li><span class="feature-check">✦</span> Ad creative direction, copywriting &amp; visual brief development</li>
+<li><span class="feature-check">✦</span> Audience research, targeting &amp; lookalike audience buildout</li>
+<li><span class="feature-check">✦</span> Retargeting campaigns tied to website visitors &amp; CRM contacts</li>
+<li><span class="feature-check">✦</span> Daily budget optimization &amp; bid management</li>
+<li><span class="feature-check">✦</span> A/B testing of creative, copy &amp; landing pages</li>
+<li><span class="feature-check">✦</span> Organic content strategy &amp; posting cadence</li>
+<li><span class="feature-check">✦</span> Monthly ROI reporting mapped directly to pipeline revenue</li>
 </ul>
 <a class="tier-apply" href="mailto:contact@trifactorscaling.com?subject=Marketing%20Inquiry">Apply for Marketing →</a>
 </div>
