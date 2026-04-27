@@ -734,7 +734,7 @@ const HTML = `
 <div class="container">
 <div class="nav-inner">
 <a aria-label="TriFactor Scaling" class="nav-logo" href="/">
-<img alt="TriFactor Scaling" height="40" src="./TFS-Logo-Transparent.png"/>
+<img alt="TriFactor Scaling" height="40" src="/TFS-Logo-Transparent.png"/>
 </a>
 <ul class="nav-links">
 <li><a class="nav-link" href="/">Overview</a></li>
@@ -903,12 +903,12 @@ const HTML = `
   <!-- ======================== FOOTER ======================== -->
 <!-- ======================== FOOTER ======================== -->
 <footer>
-<img alt="" aria-hidden="true" class="footer-watermark" src="./TFS-Logo-Transparent.png"/>
+<img alt="" aria-hidden="true" class="footer-watermark" src="/TFS-Logo-Transparent.png"/>
 <div class="container footer-inner">
 <div class="footer-top">
 <!-- Brand -->
 <div class="footer-brand">
-<img alt="TriFactor Scaling" class="footer-logo-img" src="./TFS-Logo-Transparent.png"/>
+<img alt="TriFactor Scaling" class="footer-logo-img" src="/TFS-Logo-Transparent.png"/>
 <p class="footer-tagline">We find what's blocking your growth. We build the systems to fix it.</p>
 <a class="footer-contact-link" href="mailto:contact@trifactorscaling.com">
             contact@trifactorscaling.com →
