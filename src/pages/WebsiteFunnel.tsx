@@ -584,17 +584,121 @@ const CSS = `
     .wf-cta-headline { font-size: 1.9rem !important; }
   }
 
+
+    /* ============================================================
+       SMOOTH SCROLL + PERFORMANCE
+    ============================================================ */
+    html, body {
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    #navbar {
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    /* ============================================================
+       AMBIENT BACKGROUND ANIMATION
+       Subtle gold orbs that drift slowly — gives depth without
+       being distracting
+    ============================================================ */
+    @keyframes ambientDrift {
+      0%   { transform: translate(0px,   0px)   scale(1);    opacity: 1; }
+      33%  { transform: translate(30px, -25px)  scale(1.08); opacity: 0.8; }
+      66%  { transform: translate(-20px, 18px)  scale(0.94); opacity: 0.9; }
+      100% { transform: translate(0px,   0px)   scale(1);    opacity: 1; }
+    }
+    @keyframes ambientDriftB {
+      0%   { transform: translate(0px,   0px)   scale(1);    opacity: 1; }
+      33%  { transform: translate(-25px, 20px)  scale(0.92); opacity: 0.7; }
+      66%  { transform: translate(20px, -15px)  scale(1.06); opacity: 0.85; }
+      100% { transform: translate(0px,   0px)   scale(1);    opacity: 1; }
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20%; left: -10%;
+      width: 55vw; height: 55vw;
+      background: radial-gradient(ellipse, rgba(212,175,55,0.045) 0%, rgba(212,175,55,0.01) 45%, transparent 70%);
+      animation: ambientDrift 18s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+      will-change: transform;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -15%; right: -5%;
+      width: 45vw; height: 45vw;
+      background: radial-gradient(ellipse, rgba(212,175,55,0.03) 0%, rgba(212,175,55,0.008) 45%, transparent 70%);
+      animation: ambientDriftB 22s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+      will-change: transform;
+    }
+
+    /* ============================================================
+       SECTION FLOW — softer transitions, diagonal breaks
+    ============================================================ */
+    section {
+      position: relative;
+      overflow: hidden;
+    }
+    /* Subtle top fade on every section */
+    section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 120px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    /* Diagonal bottom-edge divider */
+    section::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 60px;
+      background: inherit;
+      clip-path: polygon(0 100%, 100% 0, 100% 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+    /* Keep content above pseudo-elements */
+    section > * { position: relative; z-index: 3; }
+
+    /* Gentle gold shimmer line between sections */
+    section + section {
+      border-top: none;
+    }
+    section + section::before {
+      background: linear-gradient(to bottom,
+        rgba(212,175,55,0.06) 0%,
+        rgba(0,0,0,0.45) 30%,
+        transparent 100%);
+    }
+
+    /* Fade-in stagger for cards/items inside sections */
+    @keyframes cardFadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal.visible, .reveal-left.visible, .reveal-right.visible {
+      animation: none; /* keep existing transition, don't double-animate */
+    }
+
 `;
 
 const SCRIPT = `
-  const nav = document.getElementById('navbar');
-  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 50));
+  var nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 50), { passive: true });
   window.toggleMenu = function() { document.getElementById('mobileMenu').classList.toggle('open'); }
   document.addEventListener('click', e => {
     const m = document.getElementById('mobileMenu');
     if (m && m.classList.contains('open') && !document.getElementById('navbar').contains(e.target) && !m.contains(e.target)) m.classList.remove('open');
   });
-  const revObs = new IntersectionObserver(entries => {
+  var revObs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
   }, { threshold: 0, rootMargin: "0px 0px 60px 0px" });
   document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revObs.observe(el));
