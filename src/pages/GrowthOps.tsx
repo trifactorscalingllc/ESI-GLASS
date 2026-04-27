@@ -1007,6 +1007,7 @@ const HTML = `
 <a class="footer-contact-link" href="mailto:contact@trifactorscaling.com">
             contact@trifactorscaling.com →
           </a>
+          <a class="footer-contact-link" href="https://www.linkedin.com/company/trifactor-scaling-llc/" target="_blank" rel="noopener" style="margin-top:6px;">LinkedIn →</a>
 </div>
 <!-- Pages -->
 <div>
