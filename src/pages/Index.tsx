@@ -2083,7 +2083,7 @@ const SCRIPT = `
           x:     Math.random() * W,
           y:     Math.random() * H,
           r:     Math.random() * 1.5 + 0.4,
-          alpha: Math.random() * 0.35 + 0.05,
+          alpha: Math.random() * 0.55 + 0.30,
           vx:    (Math.random() - 0.5) * 0.18,
           vy:    (Math.random() - 0.5) * 0.18,
           life:  Math.random() * 200 + 100,
