@@ -506,7 +506,7 @@ const SCRIPT = `
     });
     const revObs = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
-    }, { threshold: 0.08 });
+    }, { threshold: 0, rootMargin: "0px 0px 60px 0px" });
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revObs.observe(el));
     function toggleFAQ(btn) {
       const item = btn.closest('.faq-item');
@@ -598,6 +598,20 @@ const SCRIPT = `
       });
     }
   
+
+  /* SPA fix: force-reveal elements already in viewport after paint */
+  (function(){
+    function forceReveal() {
+      document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(function(el){
+        if (!el.classList.contains('visible')) {
+          var r = el.getBoundingClientRect();
+          if (r.top < window.innerHeight + 100) el.classList.add('visible');
+        }
+      });
+    }
+    setTimeout(forceReveal, 200);
+    setTimeout(forceReveal, 600);
+  })();
 `;
 const HTML = `
 <!-- STICKY BAR -->
@@ -1069,17 +1083,21 @@ const Apply = () => {
     }
 
     let scriptEl: HTMLScriptElement | null = null;
-    const t = window.setTimeout(() => {
+    const t = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+
       try {
         scriptEl = document.createElement("script");
         // Wrapped in IIFE but window.toggleMenu is set inside the page SCRIPT
         scriptEl.text = "(function(){try{\n" + SCRIPT + "\n}catch(e){console.error('tri page script error',e);}})();";
         document.body.appendChild(scriptEl);
       } catch (e) { console.error("page script error", e); }
-    }, 0);
+    
+      });
+    });
 
     return () => {
-      window.clearTimeout(t);
+      cancelAnimationFrame(t);
       styleEl.remove();
       scriptEl?.remove();
       // Clean up global nav fn to avoid stale refs

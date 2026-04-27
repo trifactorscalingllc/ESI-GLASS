@@ -710,8 +710,22 @@ const SCRIPT = `
   });
   const revObs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
-  }, { threshold: 0.08 });
+  }, { threshold: 0, rootMargin: "0px 0px 60px 0px" });
   document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revObs.observe(el));
+
+  /* SPA fix: force-reveal elements already in viewport after paint */
+  (function(){
+    function forceReveal() {
+      document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(function(el){
+        if (!el.classList.contains('visible')) {
+          var r = el.getBoundingClientRect();
+          if (r.top < window.innerHeight + 100) el.classList.add('visible');
+        }
+      });
+    }
+    setTimeout(forceReveal, 200);
+    setTimeout(forceReveal, 600);
+  })();
 `;
 
 const HTML = `
@@ -964,13 +978,17 @@ export default function Marketing() {
     document.head.appendChild(styleEl);
     styleRef.current = styleEl;
 
-    const timer = setTimeout(() => {
+    const timer = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+
       const scriptEl = document.createElement("script");
       scriptEl.setAttribute("data-tri-page", "tri-marketing");
       scriptEl.textContent = SCRIPT;
       document.body.appendChild(scriptEl);
       scriptRef.current = scriptEl;
-    }, 0);
+    
+      });
+    });
 
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -995,7 +1013,7 @@ export default function Marketing() {
     document.addEventListener("click", handleClick);
 
     return () => {
-      clearTimeout(timer);
+      cancelAnimationFrame(timer);
       document.removeEventListener("click", handleClick);
       if (styleRef.current) styleRef.current.remove();
       if (scriptRef.current) scriptRef.current.remove();
