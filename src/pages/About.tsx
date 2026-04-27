@@ -116,7 +116,7 @@ const CSS = `
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ======================== NAV ======================== */
+        /* ======================== NAV ======================== */
     #navbar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       padding: 8px 0; border-bottom: 1px solid transparent;
@@ -128,24 +128,23 @@ const CSS = `
     }
     .nav-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 0; }
     .nav-logo { display: flex; align-items: center; text-decoration: none; }
-    .nav-logo img { height: 36px; width: auto; object-fit: contain; }
-    .nav-cta-wrap { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
-
+    .nav-logo img {
+      height: 42px; width: auto; object-fit: contain;
+      filter: none;
+    }
     .nav-links { display: flex; align-items: center; justify-content: center; gap: 36px; list-style: none; }
+    .nav-cta-wrap { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
     .nav-links a {
       font-family: var(--fb); font-size: 0.82rem; font-weight: 500;
       color: var(--gray-light); text-decoration: none;
       transition: color 0.2s ease;
     }
     .nav-links a:hover { color: var(--white); }
-    .nav-links a.active-nav { color: var(--gold); }
-
     .hamburger {
       display: none; flex-direction: column; gap: 5px;
       background: none; border: none; cursor: pointer; padding: 4px;
     }
     .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--white); transition: all 0.3s; }
-
     .mobile-menu {
       display: none; position: fixed; top: 61px; left: 0; right: 0;
       background: rgba(0,0,0,0.97); backdrop-filter: blur(24px);
@@ -158,9 +157,7 @@ const CSS = `
       color: var(--white); text-decoration: none;
       padding: 14px 0; border-bottom: 1px solid var(--border);
     }
-    .mobile-menu a.active-nav { color: var(--gold); }
     .mobile-menu a:last-child { border-bottom: none; color: var(--gold); padding-top: 18px; }
-
     @media (max-width: 768px) { .nav-links, .nav-cta { display: none; } .hamburger { display: flex; } }
 
     /* ======================== STICKY BAR ======================== */
@@ -582,26 +579,99 @@ const CSS = `
     .cta-sub a { color: var(--gold); text-decoration: none; }
     .cta-sub a:hover { color: var(--gold-light); }
 
-    /* ======================== FOOTER ======================== */
-    footer { background: var(--black); border-top: 1px solid var(--border); padding: 80px 0 0; position: relative; overflow: hidden; }
-    footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent 0%, var(--gold-border) 30%, var(--gold-border) 70%, transparent 100%); pointer-events: none; }
-    .footer-watermark { position: absolute; right: -40px; bottom: -30px; width: 480px; height: auto; opacity: 0.03; pointer-events: none; user-select: none; filter: grayscale(1) brightness(8); }
+        /* ======================== FOOTER ======================== */
+    footer {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      padding: 80px 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Faded TFS logo watermark */
+    .footer-watermark {
+      position: absolute;
+      right: -40px; bottom: -30px;
+      width: 480px; height: auto;
+      opacity: 0.03;
+      pointer-events: none;
+      user-select: none;
+      filter: grayscale(1) brightness(8);
+    }
+
+    /* Subtle top gradient fade */
+    footer::before {
+      content: \'\';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--gold-border) 30%, var(--gold-border) 70%, transparent 100%);
+      pointer-events: none;
+    }
+
     .footer-inner { position: relative; z-index: 2; }
-    .footer-top { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 60px; align-items: start; padding-bottom: 56px; border-bottom: 1px solid var(--border); }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+      padding-bottom: 56px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .footer-brand {}
     .footer-logo-img { height: 52px; width: auto; margin-bottom: 20px; display: block; }
-    .footer-tagline { font-size: 0.82rem; color: var(--gray); max-width: 260px; line-height: 1.75; margin-bottom: 28px; }
-    .footer-contact-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--fb); font-size: 0.78rem; font-weight: 500; color: var(--gray-light); text-decoration: none; transition: color 0.2s; }
+    .footer-tagline {
+      font-size: 0.82rem; color: var(--gray); max-width: 260px;
+      line-height: 1.75; margin-bottom: 28px;
+    }
+    .footer-contact-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--fb); font-size: 0.78rem; font-weight: 500;
+      color: var(--gray-light); text-decoration: none;
+      transition: color 0.2s;
+    }
     .footer-contact-link:hover { color: var(--gold); }
-    .footer-col-label { font-family: var(--fb); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+
+    .footer-col-label {
+      font-family: var(--fb); font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px;
+    }
     .footer-col-links { display: flex; flex-direction: column; gap: 12px; }
-    .footer-col-links a { font-family: var(--fb); font-size: 0.82rem; font-weight: 400; color: var(--gray-light); text-decoration: none; transition: color 0.2s ease; }
+    .footer-col-links a {
+      font-family: var(--fb); font-size: 0.82rem; font-weight: 400;
+      color: var(--gray-light); text-decoration: none;
+      transition: color 0.2s ease;
+    }
     .footer-col-links a:hover { color: var(--white); }
-    .footer-bottom { padding: 22px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-social-links { display: flex; flex-direction: column; gap: 12px; }
+    .footer-social-links a {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.82rem; color: var(--gray); text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .footer-social-links a:hover { color: var(--gold); }
+    .footer-social-icon { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
+
+    .footer-bottom {
+      padding: 22px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
     .footer-copy { font-size: 0.73rem; color: var(--gray); }
-    .footer-built { font-size: 0.73rem; color: var(--gray); font-style: italic; }
-    .footer-built span { color: var(--gold); font-style: normal; }
-    @media (max-width: 768px) { .footer-top { grid-template-columns: 1fr; gap: 36px; padding-bottom: 40px; } .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; } }
-    .footer-email:hover { color: var(--gold-light); }
+
+    @media (max-width: 1024px) {
+      .footer-top { grid-template-columns: 1.2fr 1fr 1fr; gap: 40px; }
+    }
+    @media (max-width: 768px) {
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; padding-bottom: 40px; }
+      .footer-brand { grid-column: 1 / -1; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+    }
+    @media (max-width: 600px) {
+      .footer-top { grid-template-columns: 1fr; gap: 28px; padding-bottom: 32px; }
+      .footer-bottom { flex-direction: column; gap: 8px; align-items: flex-start; }
+    }
 
     /* ======================== RESPONSIVE ======================== */
     @media (max-width: 900px) {
@@ -827,26 +897,30 @@ const HTML = `
 <nav id="navbar">
 <div class="container">
 <div class="nav-inner">
-<a class="nav-logo" href="/"><img alt="TriFactor Scaling" height="40" src="./TFS-Logo-Transparent.png"/></a>
+<a aria-label="TriFactor Scaling" class="nav-logo" href="/">
+<img alt="TriFactor Scaling" height="40" src="./TFS-Logo-Transparent.png"/>
+</a>
 <ul class="nav-links">
 <li><a class="nav-link" href="/">Overview</a></li>
 <li><a class="nav-link" href="/services">Services</a></li>
-<li><a class="nav-link" href="/results" id="results-link">Results</a></li>
-<li><a class="nav-link active-nav" href="/about" id="about-link">About</a></li>
+<li><a class="nav-link" href="/results">Results</a></li>
+<li><a class="nav-link active-nav" href="/about">About</a></li>
 </ul>
 <div class="nav-cta-wrap">
 <a class="btn-gold nav-cta" href="/apply" style="padding:11px 22px;font-size:0.8rem;">Apply Now →</a>
-<button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+<button aria-label="Menu" class="hamburger" onclick="toggleMenu()">
+<span></span><span></span><span></span>
+</button>
 </div>
 </div>
 </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
-<a href="/">Overview</a>
-<a href="/services">Services</a>
-<a href="/results">Results</a>
-<a class="active-nav" href="/about">About</a>
-<a href="/apply">Apply Now →</a>
+<a href="/" onclick="toggleMenu()">Overview</a>
+<a href="/services" onclick="toggleMenu()">Services</a>
+<a href="/results" onclick="toggleMenu()">Results</a>
+<a class="active-nav" href="/about" onclick="toggleMenu()">About</a>
+<a href="/apply" onclick="toggleMenu()">Apply Now →</a>
 </div>
 <!-- ======================== STICKY BAR ======================== -->
 <div id="stickyBar">
@@ -1013,15 +1087,20 @@ const HTML = `
 </div>
 </section>
 <!-- ======================== FOOTER ======================== -->
+<!-- ======================== FOOTER ======================== -->
 <footer>
 <img alt="" aria-hidden="true" class="footer-watermark" src="./TFS-Logo-Transparent.png"/>
 <div class="container footer-inner">
 <div class="footer-top">
+<!-- Brand -->
 <div class="footer-brand">
 <img alt="TriFactor Scaling" class="footer-logo-img" src="./TFS-Logo-Transparent.png"/>
-<p class="footer-tagline">Growth Operations Agency. We install automated revenue systems into local service businesses — built once, running forever.</p>
-<a class="footer-contact-link" href="mailto:contact@trifactorscaling.com">contact@trifactorscaling.com →</a>
+<p class="footer-tagline">We find what's blocking your growth. We build the systems to fix it.</p>
+<a class="footer-contact-link" href="mailto:contact@trifactorscaling.com">
+            contact@trifactorscaling.com →
+          </a>
 </div>
+<!-- Pages -->
 <div>
 <div class="footer-col-label">Pages</div>
 <div class="footer-col-links">
@@ -1032,6 +1111,7 @@ const HTML = `
 <a href="/apply">Apply Now</a>
 </div>
 </div>
+<!-- Work with us -->
 <div>
 <div class="footer-col-label">Work With Us</div>
 <div class="footer-col-links">
@@ -1039,6 +1119,28 @@ const HTML = `
 <a href="/results">See Client Results</a>
 <a href="/services">What We Build</a>
 <a href="mailto:contact@trifactorscaling.com">Send Us an Email</a>
+</div>
+</div>
+<!-- Social -->
+<div>
+<div class="footer-col-label">Follow Us</div>
+<div class="footer-social-links">
+<a href="https://www.instagram.com/trifactorscaling" target="_blank" rel="noopener">
+<svg class="footer-social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+Instagram
+</a>
+<a href="https://www.facebook.com/trifactorscaling" target="_blank" rel="noopener">
+<svg class="footer-social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+Facebook
+</a>
+<a href="https://www.linkedin.com/company/trifactorscalingllc" target="_blank" rel="noopener">
+<svg class="footer-social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 23.2 24 22.222 0h.003z"/></svg>
+LinkedIn
+</a>
+<a href="https://www.tiktok.com/@trifactorscaling" target="_blank" rel="noopener">
+<svg class="footer-social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+TikTok
+</a>
 </div>
 </div>
 </div>
