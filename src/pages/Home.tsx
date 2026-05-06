@@ -1,232 +1,191 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, ArrowUpRight, CheckCircle2, Building2, GraduationCap, Stethoscope, Sparkles } from "lucide-react";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import SiteLayout from "@/components/SiteLayout";
 import {
   company,
+  contact,
   images,
   projectCategories,
   services,
   stats,
-  valueProps,
 } from "@/lib/site-config";
 
 export default function Home() {
   return (
-    <SiteLayout>
+    <SiteLayout navVariant="dark">
       <Hero />
-      <Stats />
-      <ServicesPreview />
-      <WorkShowcase />
-      <ValuePropsSection />
-      <CallToAction />
+      <SectorMarquee />
+      <Capabilities />
+      <SelectedWork />
+      <Ledger />
+      <Approach />
+      <ClosingCta />
     </SiteLayout>
   );
 }
 
-/* ---------- HERO ---------- */
+/* =========================================================
+   HERO — full-bleed photograph, editorial headline
+   ========================================================= */
 function Hero() {
   return (
-    <section className="relative">
-      <div className="container-x">
-        <div className="grid items-center gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-7 animate-fade-up">
-            <span className="eyebrow">{company.tagline}</span>
-            <h1 className="display-1 mt-6 text-foreground">
-              <span className="text-gradient">Glass facades</span>
-              <br />
-              built to spec.
-              <br />
-              <span className="text-foreground/85">Built to last.</span>
+    <section className="relative h-[100svh] min-h-[640px] w-full bg-night text-night-fg">
+      {/* Photograph */}
+      <div className="absolute inset-0">
+        <img
+          src={images.hero}
+          alt="Custom glass facade by Entrance Systems"
+          className="h-full w-full object-cover opacity-70"
+          loading="eager"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-night/70 via-night/30 to-night" />
+        <div className="absolute inset-0 bg-gradient-to-r from-night/60 via-transparent to-transparent" />
+      </div>
+
+      {/* Content */}
+      <div className="container-x relative flex h-full flex-col justify-end pb-16 pt-32 md:pb-24">
+        <div className="grid gap-12 md:grid-cols-12 md:items-end">
+          <div className="md:col-span-8 animate-fade-up">
+            <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/60">
+              001 — Custom glass facades · Pennsburg, PA · Since 1983
+            </div>
+            <h1 className="display-1 mt-8 max-w-[18ch] text-balance">
+              Glass for the buildings that stay&nbsp;standing.
             </h1>
-            <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              For over four decades, Entrance Systems has engineered, fabricated,
-              and installed custom glass facades for the schools, universities,
+          </div>
+
+          <div className="md:col-span-4 md:pl-6 md:border-l md:border-white/15 animate-fade-up">
+            <p className="text-base leading-relaxed text-white/75 md:text-lg">
+              {company.yearsExperience}+ years engineering, fabricating, and
+              installing custom glass facades for the schools, universities,
               hospitals, and commercial buildings that define Southeastern
               Pennsylvania.
             </p>
-
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link
-                to="/contact"
-                className="group inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-7 text-sm font-semibold text-primary-foreground shadow-[0_12px_40px_hsla(200,95%,55%,0.4)] transition-all hover:scale-[1.02]"
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row md:flex-col">
+              <Button
+                asChild
+                variant="secondary"
+                size="lg"
+                className="rounded-none font-mono text-[11px] uppercase tracking-[0.18em]"
               >
-                Request a Project Bid
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-              <Link
-                to="/work"
-                className="glass-light inline-flex h-12 items-center justify-center gap-2 rounded-full px-7 text-sm font-semibold text-foreground transition-colors hover:bg-white/[0.08]"
+                <Link to="/contact">
+                  Request a project bid
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="link"
+                size="lg"
+                className="rounded-none px-0 font-mono text-[11px] uppercase tracking-[0.18em] text-white/80"
               >
-                See Our Work
-                <ArrowUpRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-muted-foreground">
-              {[
-                "ABC Eastern PA Member",
-                "Merit Shop Organization",
-                "In-house fabrication",
-              ].map((tag) => (
-                <div key={tag} className="inline-flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
-                  <span>{tag}</span>
-                </div>
-              ))}
+                <Link to="/work" className="link-underline">
+                  View selected work
+                  <ArrowUpRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="lg:col-span-5">
-            <HeroVisual />
-          </div>
+      {/* Bottom marker — scroll cue */}
+      <div className="absolute inset-x-0 bottom-0 border-t border-white/10">
+        <div className="container-x flex h-12 items-center justify-between font-mono text-[10px] uppercase tracking-[0.18em] text-white/50">
+          <span>Scroll</span>
+          <span>{contact.city}, {contact.state}</span>
+          <span className="hidden md:inline">{contact.phone}</span>
         </div>
       </div>
     </section>
   );
 }
 
-function HeroVisual() {
+/* =========================================================
+   SECTOR MARQUEE — restrained typographic strip
+   ========================================================= */
+function SectorMarquee() {
+  const sectors = [
+    "K-12 Education",
+    "Higher Education",
+    "Healthcare",
+    "Commercial Office",
+    "Government & Civic",
+    "Retail & Mixed-Use",
+    "Hospitality",
+    "Industrial",
+  ];
+  // Duplicated for seamless marquee.
+  const row = [...sectors, ...sectors, ...sectors];
   return (
-    <div className="relative animate-fade-in">
-      <div className="glass-heavy glass-reflective relative overflow-hidden rounded-[2rem]">
-        <div className="aspect-[4/5] w-full">
-          <img
-            src={images.hero}
-            alt="Custom glass facade installed by Entrance Systems Inc."
-            className="h-full w-full object-cover"
-            loading="eager"
-          />
-          {/* Gradient veil for legibility */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[hsl(215,50%,5%)]/85 via-[hsl(215,50%,8%)]/30 to-transparent" />
-
-          {/* Top-right "BIM" chip — floats over image, doesn't overlap stats */}
-          <div className="glass-light animate-drift absolute right-4 top-4 rounded-full px-3 py-1.5">
-            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/95">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
-              BIM · AutoCAD · Revit
-            </div>
-          </div>
-
-          {/* Active project chip mid-left */}
+    <section className="border-y border-paper-3 bg-paper-2 py-6 overflow-hidden">
+      <div className="flex gap-12 whitespace-nowrap animate-marquee">
+        {row.map((s, i) => (
           <div
-            className="glass animate-drift absolute left-4 top-20 rounded-2xl px-4 py-3"
-            style={{ animationDelay: "-3s" }}
+            key={`${s}-${i}`}
+            className="font-display text-2xl text-ink/70 md:text-3xl"
           >
-            <div className="text-[10px] uppercase tracking-[0.18em] text-primary">
-              Active Project
-            </div>
-            <div className="mt-1 font-display text-sm font-semibold leading-tight">
-              Higher-Ed Curtainwall
-            </div>
-            <div className="text-xs text-muted-foreground">42,000 sq. ft.</div>
+            {s}
+            <span className="ml-12 text-ink-3">·</span>
           </div>
-
-          {/* Bottom panel with stats */}
-          <div className="glass-light absolute inset-x-4 bottom-4 rounded-2xl p-4">
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <div className="font-display text-2xl font-semibold leading-none">
-                  {company.yearsExperience}+ yrs
-                </div>
-                <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Engineering facades
-                </div>
-              </div>
-              <div className="h-10 w-px bg-white/15" />
-              <div className="flex-1">
-                <div className="font-display text-2xl font-semibold leading-none">
-                  100s
-                </div>
-                <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Schools delivered
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ---------- STATS BAND ---------- */
-function Stats() {
-  return (
-    <section className="relative mt-24 md:mt-36">
-      <div className="container-x">
-        <div className="glass glass-reflective grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-white/[0.04] md:grid-cols-4">
-          {stats.map((s) => (
-            <div
-              key={s.label}
-              className="bg-[hsl(var(--background))]/40 px-6 py-8 text-center md:py-10"
-            >
-              <div className="font-display text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-                {s.value}
-              </div>
-              <div className="mt-2 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                {s.label}
-              </div>
-            </div>
-          ))}
-        </div>
+        ))}
       </div>
     </section>
   );
 }
 
-/* ---------- SERVICES PREVIEW ---------- */
-function ServicesPreview() {
+/* =========================================================
+   001 — CAPABILITIES
+   ========================================================= */
+function Capabilities() {
   return (
-    <section className="relative mt-32 md:mt-44">
+    <section className="py-24 md:py-36">
       <div className="container-x">
-        <div className="grid gap-8 md:grid-cols-12 md:items-end">
-          <div className="md:col-span-7">
-            <span className="eyebrow">What we build</span>
-            <h2 className="display-2 mt-4 max-w-2xl">
-              From a single replacement door to a million square feet of curtain
-              wall.
+        <div className="grid gap-10 md:grid-cols-12 md:gap-16">
+          <div className="md:col-span-4">
+            <div className="chapter">001 — Capabilities</div>
+            <h2 className="display-2 mt-8">
+              Four self-performed disciplines.
             </h2>
           </div>
-          <div className="md:col-span-5 md:text-right">
-            <p className="text-base leading-relaxed text-muted-foreground md:ml-auto md:max-w-sm">
-              Four self-performed disciplines, all coordinated under one roof —
-              so the design intent makes it from sketch to facade.
+          <div className="md:col-span-7 md:col-start-6">
+            <p className="lede">
+              For more than three decades, ESI has provided a broad range of
+              commercial glazing solutions — from full building envelopes to
+              the specialty interior elements that finish a space. Every scope
+              is engineered, drafted, fabricated, and installed under one
+              roof.
             </p>
             <Link
               to="/services"
-              className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+              className="mt-8 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] link-underline"
             >
-              Explore all services
-              <ArrowRight className="h-3.5 w-3.5" />
+              All capabilities <ArrowUpRight className="h-3.5 w-3.5" />
             </Link>
           </div>
         </div>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-20 border-t border-ink/15">
           {services.map((service, idx) => (
             <Link
               key={service.slug}
               to={`/services#${service.slug}`}
-              className="glass glass-shimmer group relative overflow-hidden rounded-3xl p-6 transition-all hover:-translate-y-1"
-              style={{ animationDelay: `${idx * 60}ms` }}
+              className="group grid grid-cols-12 items-center gap-6 border-b border-ink/15 py-8 transition-colors hover:bg-paper-2/60 md:py-10"
             >
-              <div className="aspect-[4/3] overflow-hidden rounded-2xl border border-white/10">
-                <img
-                  src={service.image}
-                  alt={service.title}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  loading="lazy"
-                />
+              <div className="col-span-2 font-mono text-xs text-ink-3 md:col-span-1">
+                / 0{idx + 1}
               </div>
-              <h3 className="mt-5 font-display text-xl font-semibold leading-tight">
-                {service.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              <div className="col-span-10 md:col-span-5">
+                <h3 className="font-display text-2xl leading-tight md:text-4xl">
+                  {service.title}
+                </h3>
+              </div>
+              <div className="col-span-12 text-sm text-ink-2 md:col-span-5 md:text-base">
                 {service.short}
-              </p>
-              <div className="mt-5 inline-flex items-center gap-1 text-xs font-semibold text-primary">
-                Learn more
-                <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+              </div>
+              <div className="hidden md:col-span-1 md:flex md:justify-end">
+                <ArrowUpRight className="h-5 w-5 text-ink-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" />
               </div>
             </Link>
           ))}
@@ -236,165 +195,217 @@ function ServicesPreview() {
   );
 }
 
-/* ---------- WORK SHOWCASE ---------- */
-const SECTOR_ICONS = {
-  "k-12-education": GraduationCap,
-  "higher-education": Building2,
-  "commercial-healthcare": Stethoscope,
-  "interior-specialties": Sparkles,
-} as const;
-
-function WorkShowcase() {
+/* =========================================================
+   002 — SELECTED WORK
+   Asymmetric editorial grid
+   ========================================================= */
+function SelectedWork() {
   return (
-    <section className="relative mt-32 md:mt-44">
+    <section className="bg-paper-2 py-24 md:py-36">
       <div className="container-x">
-        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-          <div>
-            <span className="eyebrow">Our work</span>
-            <h2 className="display-2 mt-4 max-w-2xl">
-              The buildings you drive past every day.
+        <div className="grid gap-10 md:grid-cols-12 md:gap-16">
+          <div className="md:col-span-5">
+            <div className="chapter">002 — Selected Work</div>
+            <h2 className="display-2 mt-8 max-w-md">
+              A portfolio of regional landmarks.
             </h2>
           </div>
-          <Link
-            to="/work"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-          >
-            View the portfolio
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          <div className="md:col-span-6 md:col-start-7">
+            <p className="lede">
+              We're the firm behind the curtain walls, storefronts, and
+              specialty glass on hundreds of school buildings, university
+              halls, and medical campuses across the Mid-Atlantic.
+            </p>
+          </div>
         </div>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-12">
+        <div className="mt-16 grid gap-8 md:grid-cols-12">
           {projectCategories.map((cat, idx) => {
-            const Icon =
-              SECTOR_ICONS[cat.slug as keyof typeof SECTOR_ICONS] ?? Building2;
-            // Asymmetric grid: 1st large, 2 medium, 1 large
+            // Asymmetric: idx 0 wide, 1 narrow, 2 narrow, 3 wide
             const span =
-              idx === 0
-                ? "md:col-span-7"
-                : idx === 1
-                ? "md:col-span-5"
-                : idx === 2
-                ? "md:col-span-5"
-                : "md:col-span-7";
+              idx === 0 || idx === 3 ? "md:col-span-7" : "md:col-span-5";
+            const aspect =
+              idx === 0 || idx === 3 ? "aspect-[16/10]" : "aspect-[4/5]";
             return (
               <Link
                 key={cat.slug}
                 to={`/work#${cat.slug}`}
-                className={`group glass-light glass-shimmer relative overflow-hidden rounded-3xl ${span}`}
+                className={`${span} group block`}
               >
-                <div className="relative aspect-[16/10] w-full overflow-hidden">
+                <div className={`photo-frame ${aspect} w-full`}>
                   <img
                     src={cat.image}
                     alt={cat.title}
-                    className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    className="h-full w-full object-cover"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[hsl(215,50%,5%)]/95 via-[hsl(215,50%,5%)]/40 to-transparent" />
-
-                  <div className="absolute inset-0 flex flex-col justify-end p-7">
-                    <div className="glass-light inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] text-foreground/90">
-                      <Icon className="h-3.5 w-3.5 text-primary" />
-                      Sector
+                </div>
+                <div className="mt-5 flex items-start justify-between gap-6">
+                  <div>
+                    <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3">
+                      / 0{idx + 1} — {cat.featured}
                     </div>
-                    <h3 className="mt-3 font-display text-2xl font-semibold leading-tight md:text-3xl">
+                    <h3 className="font-display text-2xl mt-2 md:text-3xl">
                       {cat.title}
                     </h3>
-                    <p className="mt-2 max-w-md text-sm text-foreground/85">
-                      {cat.short}
-                    </p>
-                    <div className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-primary">
-                      <span>Featured: {cat.featured}</span>
-                      <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-                    </div>
                   </div>
+                  <ArrowUpRight className="mt-1 h-5 w-5 flex-shrink-0 text-ink-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" />
                 </div>
               </Link>
             );
           })}
         </div>
-      </div>
-    </section>
-  );
-}
 
-/* ---------- VALUE PROPS ---------- */
-function ValuePropsSection() {
-  return (
-    <section className="relative mt-32 md:mt-44">
-      <div className="container-x">
-        <div className="grid gap-10 md:grid-cols-12 md:gap-16">
-          <div className="md:col-span-5">
-            <span className="eyebrow">Why ESI</span>
-            <h2 className="display-2 mt-4">
-              Forty-plus years of repeat clients.
-            </h2>
-            <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
-              We've built our business on a long list of architects, GCs, and
-              owners who keep coming back — because what we promise on paper is
-              what shows up on site.
-            </p>
-          </div>
-          <div className="md:col-span-7">
-            <div className="grid gap-4">
-              {valueProps.map((vp, idx) => (
-                <div
-                  key={vp.title}
-                  className="glass glass-reflective rounded-3xl p-7"
-                >
-                  <div className="flex items-start gap-5">
-                    <div className="font-display text-3xl font-semibold leading-none text-primary">
-                      0{idx + 1}
-                    </div>
-                    <div>
-                      <h3 className="font-display text-xl font-semibold">
-                        {vp.title}
-                      </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                        {vp.body}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="mt-16 flex justify-end">
+          <Link
+            to="/work"
+            className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] link-underline"
+          >
+            All work <ArrowUpRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
       </div>
     </section>
   );
 }
 
-/* ---------- CTA ---------- */
-function CallToAction() {
+/* =========================================================
+   LEDGER — by the numbers
+   ========================================================= */
+function Ledger() {
   return (
-    <section className="relative mt-32 md:mt-44">
+    <section className="border-t border-paper-3 py-24 md:py-36">
       <div className="container-x">
-        <div className="glass-heavy glass-reflective relative overflow-hidden rounded-[2rem] p-10 md:p-16">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/30 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-blue-500/20 blur-3xl" />
+        <div className="grid gap-10 md:grid-cols-12 md:gap-16">
+          <div className="md:col-span-4">
+            <div className="chapter">003 — By the Numbers</div>
+            <h2 className="display-2 mt-8">Forty years of repeat clients.</h2>
+          </div>
+          <div className="md:col-span-7 md:col-start-6">
+            <p className="lede">
+              We've built our business on a long list of architects, GCs, and
+              owners who keep coming back — because what we promise on paper
+              is what shows up on site.
+            </p>
+          </div>
+        </div>
 
-          <div className="relative grid items-center gap-10 md:grid-cols-12">
-            <div className="md:col-span-7">
-              <span className="eyebrow">Have a project on the boards?</span>
-              <h2 className="display-2 mt-4">
-                Let's talk before bid day.
-              </h2>
-              <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
-                Whether you're an architect specifying glazing, a GC pricing a
-                package, or an owner planning a new facility — start with a
-                short qualifying form and we'll route you to the right
-                estimator.
+        <div className="mt-20 grid grid-cols-2 gap-x-6 gap-y-12 border-t border-ink/15 pt-12 md:grid-cols-4">
+          {stats.map((s, i) => (
+            <div key={s.label}>
+              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3">
+                / 0{i + 1}
+              </div>
+              <div className="display-2 mt-4 leading-none">{s.value}</div>
+              <div className="mt-3 text-sm text-ink-2">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================
+   APPROACH — process, four steps
+   ========================================================= */
+function Approach() {
+  const steps = [
+    {
+      n: "01",
+      t: "Pre-bid review",
+      d: "An estimator reviews drawings, specs, and schedule before pricing.",
+    },
+    {
+      n: "02",
+      t: "Detailed proposal",
+      d: "Scope, qualifications, and pricing documented in writing — no surprises.",
+    },
+    {
+      n: "03",
+      t: "Shop & submittals",
+      d: "AutoCAD/Revit shop drawings, samples, and submittals coordinated through your team.",
+    },
+    {
+      n: "04",
+      t: "Self-performed install",
+      d: "Our own field crews install what our shop fabricates. Quality control never disappears down a sub-tier.",
+    },
+  ];
+  return (
+    <section className="bg-night py-24 text-night-fg md:py-36">
+      <div className="container-x">
+        <div className="grid gap-10 md:grid-cols-12 md:gap-16">
+          <div className="md:col-span-4">
+            <div className="chapter text-white/40">004 — Approach</div>
+            <h2 className="display-2 mt-8">
+              Engineered, not&nbsp;improvised.
+            </h2>
+          </div>
+          <div className="md:col-span-7 md:col-start-6">
+            <p className="lede text-white/70">
+              Every facade is designed, modeled, and prototyped in-house
+              before a single panel is fabricated. The disciplined process is
+              why our drawings, samples, and field crews behave like one
+              continuous team.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-20 grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2 md:grid-cols-4">
+          {steps.map((s) => (
+            <div key={s.n} className="bg-night p-8 md:p-10">
+              <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
+                / {s.n}
+              </div>
+              <h3 className="display-3 mt-6">{s.t}</h3>
+              <p className="mt-4 text-sm leading-relaxed text-white/65">
+                {s.d}
               </p>
             </div>
-            <div className="md:col-span-5 md:text-right">
-              <Link
-                to="/contact"
-                className="group inline-flex h-14 items-center justify-center gap-2 rounded-full bg-primary px-8 text-base font-semibold text-primary-foreground shadow-[0_16px_50px_hsla(200,95%,55%,0.45)] transition-all hover:scale-[1.02]"
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================
+   CLOSING — CTA before footer
+   ========================================================= */
+function ClosingCta() {
+  return (
+    <section className="border-t border-paper-3 py-24 md:py-36">
+      <div className="container-x">
+        <div className="grid gap-12 md:grid-cols-12 md:items-end">
+          <div className="md:col-span-8">
+            <div className="chapter">005 — Next step</div>
+            <h2 className="display-1 mt-8 max-w-[14ch] text-balance">
+              Have a project on the&nbsp;boards?
+            </h2>
+          </div>
+          <div className="md:col-span-4 md:pl-6 md:border-l md:border-ink/15">
+            <p className="lede">
+              Send drawings, scope, and timeline. We'll route the project to
+              the right estimator and respond within two business days.
+            </p>
+            <div className="mt-8 flex flex-col gap-4">
+              <Button
+                asChild
+                size="lg"
+                className="w-full rounded-none font-mono text-[11px] uppercase tracking-[0.18em] sm:w-auto sm:self-start"
               >
-                Start a Project
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
-              </Link>
+                <Link to="/contact">
+                  Start a project
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <a
+                href={`tel:${contact.phoneHref}`}
+                className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-2 link-underline"
+              >
+                Or call {contact.phone}
+              </a>
             </div>
           </div>
         </div>

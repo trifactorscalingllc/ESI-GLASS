@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import SiteLayout from "@/components/SiteLayout";
 
 const NotFound = () => {
@@ -12,24 +13,27 @@ const NotFound = () => {
 
   return (
     <SiteLayout>
-      <section className="container-x">
-        <div className="glass-heavy glass-reflective relative mx-auto max-w-2xl overflow-hidden rounded-[2rem] p-10 text-center md:p-16">
-          <div className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-primary/30 blur-3xl" />
-          <div className="relative">
-            <div className="font-display text-7xl font-bold tracking-tight text-gradient">
-              404
-            </div>
-            <h1 className="display-3 mt-4">Page not found</h1>
-            <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-muted-foreground">
-              The page you're looking for has moved, or never existed.
+      <section className="pt-32 pb-32 md:pt-48 md:pb-48">
+        <div className="container-x">
+          <div className="mx-auto max-w-2xl">
+            <div className="chapter">Error 404</div>
+            <h1 className="display-1 mt-8 max-w-[12ch] text-balance">
+              Page not found.
+            </h1>
+            <p className="lede mt-8">
+              The page you're looking for has moved, been retired, or never
+              existed. Use the navigation above or return home.
             </p>
-            <Link
-              to="/"
-              className="mt-7 inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground"
+            <Button
+              asChild
+              size="lg"
+              className="mt-12 rounded-none font-mono text-[11px] uppercase tracking-[0.18em]"
             >
-              <ArrowLeft className="h-4 w-4" />
-              Back to home
-            </Link>
+              <Link to="/">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Return home
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

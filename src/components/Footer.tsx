@@ -1,89 +1,68 @@
 import { Link } from "react-router-dom";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { company, contact, navigation, services } from "@/lib/site-config";
 
 export default function Footer() {
   return (
-    <footer className="relative mt-32 border-t border-white/10">
-      <div className="container-x py-16">
+    <footer className="bg-night text-night-fg">
+      <div className="container-x py-20 md:py-28">
+        {/* Top — wordmark + tagline */}
         <div className="grid gap-12 md:grid-cols-12">
-          <div className="md:col-span-5">
-            <div className="font-display text-2xl font-bold tracking-tight">
-              Entrance Systems, Inc.
-            </div>
-            <p className="mt-2 text-sm uppercase tracking-[0.2em] text-primary">
-              {company.tagline}
-            </p>
-            <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground">
+          <div className="md:col-span-7">
+            <div className="chapter text-white/40">000 — Colophon</div>
+            <h2 className="display-2 mt-6 max-w-2xl">
+              Specify ESI on your next package.
+            </h2>
+            <p className="lede mt-6 text-white/60">
               {company.description}
             </p>
+            <Link
+              to="/contact"
+              className="mt-10 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] link-underline"
+            >
+              Start a project
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
 
-            <div className="mt-6 flex flex-col gap-3 text-sm">
+          <div className="md:col-span-5 md:pl-8 md:border-l md:border-white/10">
+            <div className="chapter text-white/40">Studio</div>
+            <address className="mt-6 not-italic">
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                   `${contact.address1}, ${contact.city}, ${contact.state} ${contact.zip}`
                 )}`}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-start gap-3 text-foreground/80 hover:text-foreground"
+                className="block font-display text-xl leading-snug link-draw"
               >
-                <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
-                <span>
-                  {contact.address1}
-                  <br />
-                  {contact.city}, {contact.state} {contact.zip}
-                </span>
+                {contact.address1}
+                <br />
+                {contact.city}, {contact.state} {contact.zip}
               </a>
-              <a
-                href={`tel:${contact.phoneHref}`}
-                className="inline-flex items-center gap-3 text-foreground/80 hover:text-foreground"
-              >
-                <Phone className="h-4 w-4 flex-shrink-0 text-primary" />
+            </address>
+            <div className="mt-6 space-y-1 font-mono text-[11px] uppercase tracking-[0.12em] text-white/70">
+              <a href={`tel:${contact.phoneHref}`} className="block link-draw">
                 {contact.phone}
               </a>
-              <a
-                href={`mailto:${contact.email}`}
-                className="inline-flex items-center gap-3 text-foreground/80 hover:text-foreground"
-              >
-                <Mail className="h-4 w-4 flex-shrink-0 text-primary" />
+              <a href={`mailto:${contact.email}`} className="block link-draw">
                 {contact.email}
               </a>
-              <div className="inline-flex items-center gap-3 text-muted-foreground">
-                <Clock className="h-4 w-4 flex-shrink-0 text-primary" />
-                {contact.hours}
-              </div>
+              <div>{contact.hours}</div>
             </div>
           </div>
+        </div>
 
+        <div className="hairline-dark my-16" />
+
+        {/* Index — site nav + services */}
+        <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-3">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground/50">
-              Services
-            </div>
-            <ul className="mt-5 flex flex-col gap-3 text-sm">
-              {services.map((s) => (
-                <li key={s.slug}>
-                  <Link
-                    to={`/services#${s.slug}`}
-                    className="text-foreground/80 hover:text-foreground"
-                  >
-                    {s.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="md:col-span-2">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground/50">
-              Company
-            </div>
-            <ul className="mt-5 flex flex-col gap-3 text-sm">
+            <div className="chapter text-white/40">Index</div>
+            <ul className="mt-6 space-y-3 font-display text-lg">
               {navigation.map((n) => (
                 <li key={n.href}>
-                  <Link
-                    to={n.href}
-                    className="text-foreground/80 hover:text-foreground"
-                  >
+                  <Link to={n.href} className="link-draw">
                     {n.label}
                   </Link>
                 </li>
@@ -91,25 +70,38 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="md:col-span-2">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground/50">
-              Affiliations
-            </div>
-            <ul className="mt-5 flex flex-col gap-3 text-sm text-foreground/80">
-              <li>Member, ABC Eastern PA</li>
+          <div className="md:col-span-5">
+            <div className="chapter text-white/40">Capabilities</div>
+            <ul className="mt-6 space-y-3 font-display text-lg">
+              {services.map((s) => (
+                <li key={s.slug}>
+                  <Link to={`/services#${s.slug}`} className="link-draw">
+                    {s.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="md:col-span-4">
+            <div className="chapter text-white/40">Affiliations</div>
+            <ul className="mt-6 space-y-2 text-sm text-white/70">
+              <li>Member, ABC Eastern Pennsylvania</li>
               <li>Merit Shop Organization</li>
-              <li>Family-Owned Since 1983</li>
+              <li>Family-owned since 1983</li>
             </ul>
           </div>
         </div>
 
-        <div className="hairline mt-12" />
-        <div className="mt-6 flex flex-col items-start justify-between gap-3 text-xs text-muted-foreground md:flex-row md:items-center">
+        <div className="hairline-dark mt-16" />
+
+        {/* Bottom — colophon */}
+        <div className="mt-8 flex flex-col items-start justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.12em] text-white/40 md:flex-row md:items-center">
           <div>
-            © {new Date().getFullYear()} Entrance Systems, Inc. All rights
-            reserved.
+            © {new Date().getFullYear()} Entrance Systems, Inc.
           </div>
-          <div>Pennsburg, PA · Serving the Mid-Atlantic region.</div>
+          <div>Pennsburg, Pennsylvania</div>
+          <div>Mid-Atlantic, USA</div>
         </div>
       </div>
     </footer>

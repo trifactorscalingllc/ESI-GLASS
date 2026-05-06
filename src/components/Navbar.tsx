@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { company, contact, navigation } from "@/lib/site-config";
+import { contact, navigation } from "@/lib/site-config";
 
-export default function Navbar() {
+type NavbarProps = {
+  /** Use the dark variant on pages that lead with a dark hero. */
+  variant?: "light" | "dark";
+};
+
+export default function Navbar({ variant = "light" }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -18,46 +24,58 @@ export default function Navbar() {
 
   useEffect(() => setOpen(false), [location.pathname]);
 
+  const dark = variant === "dark";
+
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled ? "py-2" : "py-4"
+        "fixed inset-x-0 top-0 z-50 transition-[backdrop-filter,background-color] duration-300",
+        scrolled && (dark ? "glass-bar-dark" : "glass-bar")
       )}
     >
       <div className="container-x">
-        <nav
+        <div
           className={cn(
-            "glass-light glass-reflective relative flex items-center justify-between rounded-2xl px-4 py-3 md:px-5",
-            scrolled && "shadow-[0_8px_32px_hsla(215,50%,4%,0.4)]"
+            "flex h-16 items-center justify-between border-b transition-colors md:h-20",
+            scrolled
+              ? "border-transparent"
+              : dark
+              ? "border-white/10"
+              : "border-paper-3"
           )}
         >
+          {/* Wordmark */}
           <Link
             to="/"
-            className="group flex items-center gap-3"
-            aria-label={`${company.name} home`}
+            className={cn(
+              "group flex items-baseline gap-2",
+              dark ? "text-night-fg" : "text-ink"
+            )}
           >
-            <Logo className="h-8 w-8 text-primary transition-transform group-hover:rotate-3" />
-            <div className="leading-tight">
-              <div className="font-display text-[15px] font-bold tracking-tight text-foreground">
-                Entrance Systems
-              </div>
-              <div className="hidden text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:block">
-                Custom Glass Facades · Since 1983
-              </div>
-            </div>
+            <span className="font-display text-xl font-medium tracking-tight md:text-2xl">
+              Entrance Systems
+            </span>
+            <span
+              className={cn(
+                "hidden font-mono text-[10px] uppercase tracking-[0.18em] md:inline",
+                dark ? "text-white/50" : "text-ink-3"
+              )}
+            >
+              Est. 1983
+            </span>
           </Link>
 
-          <ul className="hidden items-center gap-1 md:flex">
+          {/* Desktop nav */}
+          <ul className="hidden items-center gap-8 md:flex">
             {navigation.map((item) => (
               <li key={item.href}>
                 <NavLink
                   to={item.href}
                   className={({ isActive }) =>
                     cn(
-                      "relative inline-flex h-9 items-center rounded-full px-4 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground",
-                      isActive &&
-                        "text-foreground bg-white/[0.06] border border-white/10"
+                      "font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity",
+                      dark ? "text-night-fg" : "text-ink",
+                      isActive ? "opacity-100" : "opacity-60 hover:opacity-100"
                     )
                   }
                 >
@@ -67,44 +85,64 @@ export default function Navbar() {
             ))}
           </ul>
 
-          <div className="hidden items-center gap-2 md:flex">
+          {/* Desktop CTA */}
+          <div className="hidden items-center gap-6 md:flex">
             <a
               href={`tel:${contact.phoneHref}`}
-              className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm text-foreground/80 transition-colors hover:text-foreground"
+              className={cn(
+                "font-mono text-[11px] uppercase tracking-[0.18em]",
+                dark ? "text-night-fg" : "text-ink"
+              )}
             >
-              <Phone className="h-3.5 w-3.5" />
               {contact.phone}
             </a>
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[0_8px_24px_hsla(200,95%,55%,0.35)] transition-transform hover:scale-[1.02] hover:bg-primary/90"
+            <Button
+              asChild
+              size="sm"
+              variant={dark ? "secondary" : "default"}
+              className="rounded-none font-mono text-[11px] uppercase tracking-[0.18em]"
             >
-              Request a Bid
-            </Link>
+              <Link to="/contact">Request a bid</Link>
+            </Button>
           </div>
 
+          {/* Mobile toggle */}
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-foreground md:hidden"
+            className={cn(
+              "inline-flex h-10 w-10 items-center justify-center md:hidden",
+              dark ? "text-night-fg" : "text-ink"
+            )}
             aria-label="Toggle menu"
             aria-expanded={open}
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-        </nav>
+        </div>
+      </div>
 
-        {open && (
-          <div className="glass-heavy mt-2 rounded-2xl p-4 md:hidden">
-            <ul className="flex flex-col gap-1">
+      {/* Mobile drawer */}
+      {open && (
+        <div
+          className={cn(
+            "border-t md:hidden",
+            dark
+              ? "border-white/10 bg-night text-night-fg"
+              : "border-paper-3 bg-paper text-ink"
+          )}
+        >
+          <nav className="container-x py-6">
+            <ul className="flex flex-col">
               {navigation.map((item) => (
                 <li key={item.href}>
                   <NavLink
                     to={item.href}
                     className={({ isActive }) =>
                       cn(
-                        "block rounded-xl px-4 py-3 text-base font-medium text-foreground/80 hover:bg-white/5 hover:text-foreground",
-                        isActive && "bg-white/5 text-foreground"
+                        "block border-b py-4 font-display text-2xl",
+                        dark ? "border-white/10" : "border-paper-3",
+                        isActive ? "opacity-100" : "opacity-60"
                       )
                     }
                   >
@@ -112,61 +150,28 @@ export default function Navbar() {
                   </NavLink>
                 </li>
               ))}
-              <li className="mt-2 flex flex-col gap-2 border-t border-white/10 pt-3">
-                <a
-                  href={`tel:${contact.phoneHref}`}
-                  className="inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm text-foreground"
-                >
-                  <Phone className="h-4 w-4 text-primary" />
-                  {contact.phone}
-                </a>
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground"
-                >
-                  Request a Bid
-                </Link>
-              </li>
             </ul>
-          </div>
-        )}
-      </div>
+            <div className="mt-8 flex flex-col gap-3">
+              <a
+                href={`tel:${contact.phoneHref}`}
+                className={cn(
+                  "font-mono text-[11px] uppercase tracking-[0.18em]",
+                  dark ? "text-white/70" : "text-ink-3"
+                )}
+              >
+                {contact.phone}
+              </a>
+              <Button
+                asChild
+                variant={dark ? "secondary" : "default"}
+                className="rounded-none font-mono text-[11px] uppercase tracking-[0.18em]"
+              >
+                <Link to="/contact">Request a bid</Link>
+              </Button>
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
-  );
-}
-
-function Logo({ className }: { className?: string }) {
-  // Crystalline "E" mark — abstract glass-facade panes
-  return (
-    <svg
-      viewBox="0 0 32 32"
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      aria-hidden
-    >
-      <defs>
-        <linearGradient id="esi-grad" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="hsl(200, 95%, 80%)" stopOpacity="0.85" />
-          <stop offset="100%" stopColor="hsl(200, 95%, 55%)" stopOpacity="0.4" />
-        </linearGradient>
-      </defs>
-      <rect
-        x="3.5"
-        y="3.5"
-        width="25"
-        height="25"
-        rx="3"
-        fill="url(#esi-grad)"
-        stroke="currentColor"
-      />
-      <path
-        d="M10 9.5h12M10 16h9M10 22.5h12"
-        stroke="hsl(215, 50%, 10%)"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
   );
 }

@@ -3,65 +3,67 @@
 @tailwind utilities;
 
 /* =============================================================
-   ESI Glass — Design System
-   Modern, professional, liquid-glass aesthetic for a commercial
-   glazing contractor. Deep cool tones (slate/navy) with crystalline
-   light-blue accents. All colors expressed as HSL.
+   ESI Glass — Editorial design system
+
+   A 40-year-old commercial glazing firm doesn't need SaaS chrome.
+   The visual language is borrowed from architecture monographs:
+   warm off-white paper, deep ink, one editorial serif, generous
+   negative space, numbered sections, and photography that earns
+   its place. Glass effects appear only on the navbar.
    ============================================================= */
 
 @layer base {
   :root {
-    /* Brand palette */
-    --background: 215 35% 7%;         /* deep slate / near-black */
-    --background-elev: 215 30% 10%;   /* elevated surfaces */
-    --foreground: 210 40% 98%;
-    --foreground-muted: 215 20% 75%;
+    /* Paper / Ink — used as the primary surfaces */
+    --paper: 39 28% 95%;          /* warm off-white "paper" */
+    --paper-2: 39 22% 92%;        /* slightly warmer band */
+    --paper-3: 39 18% 88%;        /* hairline / divider */
+    --ink: 220 15% 8%;            /* near-black with a hint of blue */
+    --ink-2: 220 10% 22%;         /* secondary text */
+    --ink-3: 220 8% 45%;          /* tertiary / metadata */
 
-    --surface: 215 30% 12%;
-    --surface-foreground: 210 40% 98%;
+    /* Cinematic dark — used for the hero band and one or two CTAs */
+    --night: 220 18% 6%;
+    --night-2: 220 14% 12%;
+    --night-fg: 39 28% 95%;
 
-    --card: 215 35% 9%;
-    --card-foreground: 210 40% 98%;
+    /* One restrained accent — a deep architectural blue */
+    --accent: 215 50% 28%;
+    --accent-fg: 39 28% 95%;
 
-    --popover: 215 35% 9%;
-    --popover-foreground: 210 40% 98%;
-
-    /* Crystalline accent — light cyan/blue, the "glass" highlight */
-    --primary: 200 95% 65%;
-    --primary-foreground: 215 50% 10%;
-
-    --secondary: 215 25% 18%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 215 25% 14%;
-    --muted-foreground: 215 15% 65%;
-
-    --accent: 200 95% 65%;
-    --accent-foreground: 215 50% 10%;
-
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 215 25% 22%;
-    --border-glass: 210 40% 80%;
-    --input: 215 25% 18%;
-    --ring: 200 95% 65%;
-
-    --radius: 1rem;
-
-    /* Glass surfaces (used in backdrop-blur cards) */
-    --glass-tint: 210 50% 80%;
-    --glass-border: 210 40% 90%;
+    /* shadcn token bridge — kept so existing UI primitives still work */
+    --background: var(--paper);
+    --foreground: var(--ink);
+    --card: 39 25% 97%;
+    --card-foreground: var(--ink);
+    --popover: 39 25% 97%;
+    --popover-foreground: var(--ink);
+    --primary: 220 18% 8%;
+    --primary-foreground: 39 28% 95%;
+    --secondary: var(--paper-2);
+    --secondary-foreground: var(--ink);
+    --muted: var(--paper-2);
+    --muted-foreground: var(--ink-3);
+    --accent-color: var(--accent);
+    --destructive: 0 65% 42%;
+    --destructive-foreground: 39 28% 95%;
+    --border: 39 18% 82%;
+    --input: 39 18% 82%;
+    --ring: 220 18% 8%;
+    --radius: 0.25rem;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
 
   html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   html, body, #root {
@@ -69,242 +71,223 @@
     overflow-x: hidden;
   }
 
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
-
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-    background-image:
-      radial-gradient(circle at 12% -10%, hsla(200, 95%, 55%, 0.18), transparent 55%),
-      radial-gradient(circle at 90% 0%, hsla(220, 80%, 60%, 0.14), transparent 50%),
-      radial-gradient(circle at 50% 110%, hsla(200, 95%, 55%, 0.10), transparent 60%);
-    background-attachment: fixed;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
-    letter-spacing: -0.02em;
-    font-weight: 600;
+    background: hsl(var(--paper));
+    color: hsl(var(--ink));
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    font-feature-settings: "ss01", "cv02", "cv03", "cv11";
   }
 
   ::selection {
-    background: hsla(200, 95%, 65%, 0.35);
-    color: hsl(var(--foreground));
+    background: hsl(var(--ink));
+    color: hsl(var(--paper));
   }
 }
 
 /* =============================================================
-   Liquid glass utilities — the core visual language of the site
+   Typography utilities — the heart of the editorial language
    ============================================================= */
 @layer components {
-  /* Standard frosted-glass card */
-  .glass {
-    background: linear-gradient(
-      135deg,
-      hsla(210, 40%, 100%, 0.08) 0%,
-      hsla(210, 40%, 100%, 0.02) 100%
-    );
-    backdrop-filter: blur(24px) saturate(140%);
-    -webkit-backdrop-filter: blur(24px) saturate(140%);
-    border: 1px solid hsla(210, 40%, 100%, 0.12);
-    box-shadow:
-      0 1px 0 hsla(210, 40%, 100%, 0.12) inset,
-      0 -1px 0 hsla(210, 40%, 100%, 0.04) inset,
-      0 8px 32px hsla(215, 50%, 4%, 0.4),
-      0 24px 60px hsla(215, 50%, 4%, 0.3);
+  /* Editorial serif display, variable optical size. */
+  .font-display {
+    font-family: "Fraunces", "Times New Roman", serif;
+    font-optical-sizing: auto;
+    font-variation-settings: "opsz" 144;
+    letter-spacing: -0.025em;
   }
 
-  /* More translucent — hovering panels, navbar */
-  .glass-light {
-    background: linear-gradient(
-      135deg,
-      hsla(210, 40%, 100%, 0.06) 0%,
-      hsla(210, 40%, 100%, 0.01) 100%
-    );
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    border: 1px solid hsla(210, 40%, 100%, 0.10);
-  }
-
-  /* Heavy frosted — for modals / featured panels */
-  .glass-heavy {
-    background: linear-gradient(
-      135deg,
-      hsla(210, 40%, 100%, 0.12) 0%,
-      hsla(200, 95%, 75%, 0.04) 50%,
-      hsla(210, 40%, 100%, 0.02) 100%
-    );
-    backdrop-filter: blur(40px) saturate(180%);
-    -webkit-backdrop-filter: blur(40px) saturate(180%);
-    border: 1px solid hsla(210, 40%, 100%, 0.18);
-    box-shadow:
-      0 1px 0 hsla(210, 40%, 100%, 0.2) inset,
-      0 0 0 1px hsla(200, 95%, 70%, 0.05) inset,
-      0 30px 80px hsla(215, 50%, 4%, 0.5);
-  }
-
-  /* Reflective top edge — gives the "liquid" highlight */
-  .glass-reflective::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 10%;
-    right: 10%;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      hsla(210, 40%, 100%, 0.5),
-      transparent
-    );
-    pointer-events: none;
-  }
-
-  /* Subtle shimmer/glint on glass panels */
-  .glass-shimmer {
-    position: relative;
-    overflow: hidden;
-  }
-  .glass-shimmer::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      135deg,
-      transparent 30%,
-      hsla(210, 40%, 100%, 0.06) 50%,
-      transparent 70%
-    );
-    transform: translateX(-100%);
-    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-  }
-  .glass-shimmer:hover::after {
-    transform: translateX(100%);
-  }
-
-  /* Section container — consistent horizontal padding */
-  .container-x {
-    @apply mx-auto w-full max-w-7xl px-6 md:px-10;
-  }
-
-  /* Display heading — large, tight */
+  /* Display sizes */
   .display-1 {
-    font-size: clamp(2.75rem, 6.5vw, 5.5rem);
-    line-height: 0.98;
-    letter-spacing: -0.04em;
-    font-weight: 600;
+    font-family: "Fraunces", serif;
+    font-optical-sizing: auto;
+    font-variation-settings: "opsz" 144;
+    font-size: clamp(3rem, 8vw, 7.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    font-weight: 400;
   }
   .display-2 {
-    font-size: clamp(2.25rem, 5vw, 4rem);
-    line-height: 1.02;
-    letter-spacing: -0.035em;
-    font-weight: 600;
+    font-family: "Fraunces", serif;
+    font-optical-sizing: auto;
+    font-variation-settings: "opsz" 144;
+    font-size: clamp(2.25rem, 5.5vw, 4.5rem);
+    line-height: 0.96;
+    letter-spacing: -0.03em;
+    font-weight: 400;
   }
   .display-3 {
+    font-family: "Fraunces", serif;
+    font-optical-sizing: auto;
+    font-variation-settings: "opsz" 96;
     font-size: clamp(1.75rem, 3.5vw, 2.75rem);
-    line-height: 1.1;
+    line-height: 1.05;
     letter-spacing: -0.025em;
-    font-weight: 600;
+    font-weight: 400;
   }
 
-  /* Eyebrow label */
-  .eyebrow {
-    @apply inline-flex items-center gap-2 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[hsl(var(--primary))];
-  }
-  .eyebrow::before {
-    content: "";
-    width: 26px;
-    height: 1px;
-    background: currentColor;
-    opacity: 0.7;
+  /* All-caps tracked label, like a magazine eyebrow */
+  .label {
+    font-family: "JetBrains Mono", "Söhne Mono", ui-monospace, monospace;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 500;
   }
 
-  /* Accent gradient text */
-  .text-gradient {
-    background: linear-gradient(
-      120deg,
-      hsl(210, 40%, 100%) 0%,
-      hsl(200, 90%, 80%) 50%,
-      hsl(210, 40%, 100%) 100%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  /* Numbered chapter marker — "001 — Capabilities" */
+  .chapter {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: hsl(var(--ink-3));
   }
 
-  /* Liquid blob — animated background decoration */
-  .liquid-blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.55;
-    pointer-events: none;
-    will-change: transform;
+  /* Lede paragraph — a touch larger than body */
+  .lede {
+    font-size: 1.125rem;
+    line-height: 1.55;
+    color: hsl(var(--ink-2));
+    max-width: 56ch;
   }
 
-  /* Hairline divider with light bloom */
+  /* Container with editorial side padding */
+  .container-x {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 1320px;
+    padding-inline: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .container-x { padding-inline: 2.5rem; }
+  }
+  @media (min-width: 1280px) {
+    .container-x { padding-inline: 3.5rem; }
+  }
+
+  /* Hairline divider — used between sections instead of empty space */
   .hairline {
     height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      hsla(210, 40%, 100%, 0.18),
-      transparent
-    );
+    background: hsl(var(--paper-3));
+  }
+  .hairline-dark {
+    height: 1px;
+    background: hsl(220 14% 18%);
+  }
+
+  /* Editorial caption — under photography */
+  .caption {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.05em;
+    color: hsl(var(--ink-3));
+    line-height: 1.5;
+  }
+
+  /* The single liquid-glass moment — reserved for the navbar.
+     Used sparingly so it actually reads as glass, not a layer effect. */
+  .glass-bar {
+    background: hsla(39, 28%, 95%, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid hsl(var(--paper-3));
+  }
+  .glass-bar-dark {
+    background: hsla(220, 18%, 6%, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid hsl(220 14% 16%);
+  }
+
+  /* Underline link — editorial style, draws on hover */
+  .link-underline {
+    position: relative;
+    display: inline-block;
+    color: inherit;
+  }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(1);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .link-underline:hover::after {
+    transform: scaleX(0);
+    transform-origin: right;
+  }
+
+  /* Reverse — line draws in on hover */
+  .link-draw {
+    position: relative;
+    display: inline-block;
+  }
+  .link-draw::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .link-draw:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Image vignette + duotone treatment for project photography */
+  .photo-frame {
+    position: relative;
+    overflow: hidden;
+    background: hsl(var(--ink));
+  }
+  .photo-frame img {
+    transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .photo-frame:hover img {
+    transform: scale(1.02);
   }
 }
 
 /* =============================================================
-   Animations
+   Animations — minimal, slow, never decorative
    ============================================================= */
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(24px); }
+@keyframes ed-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-@keyframes fade-in {
+@keyframes ed-fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-@keyframes float-slow {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%      { transform: translate(40px, -30px) scale(1.05); }
-  66%      { transform: translate(-25px, 35px) scale(0.95); }
-}
-@keyframes drift {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-12px); }
-}
-@keyframes shimmer-line {
-  0%   { transform: translateX(-120%); }
-  100% { transform: translateX(120%); }
+@keyframes ed-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
-.animate-fade-up    { animation: fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-.animate-fade-in    { animation: fade-in 0.8s ease-out both; }
-.animate-float-slow { animation: float-slow 18s ease-in-out infinite; }
-.animate-drift      { animation: drift 6s ease-in-out infinite; }
+.animate-fade-up { animation: ed-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-fade-in { animation: ed-fade-in 1s ease-out both; }
+.animate-marquee { animation: ed-marquee 60s linear infinite; }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
   .animate-fade-in,
-  .animate-float-slow,
-  .animate-drift {
-    animation: none !important;
-  }
+  .animate-marquee { animation: none !important; }
   html { scroll-behavior: auto; }
 }
 
 /* =============================================================
-   Form elements — refined for the dark liquid-glass palette
+   Form elements — neutral, editorial, no glow
    ============================================================= */
 input, textarea, select {
-  color-scheme: dark;
+  color-scheme: light;
 }
-
-/* Smooth scroll snap for any horizontal galleries */
-.snap-x-mandatory { scroll-snap-type: x mandatory; }
-.snap-start       { scroll-snap-align: start; }
