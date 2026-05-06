@@ -278,10 +278,234 @@
 .animate-fade-in { animation: ed-fade-in 1s ease-out both; }
 .animate-marquee { animation: ed-marquee 60s linear infinite; }
 
+/* =============================================================
+   <Reveal /> on-scroll states
+   Each variant has an "at rest" state and an "is-in-view" state.
+   The Reveal component flips the class via IntersectionObserver.
+   ============================================================= */
+
+.ed-reveal {
+  --reveal-distance: 28px;
+  will-change: transform, opacity, clip-path;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-duration: 0.95s;
+}
+
+/* fade-up: subtle slide + fade — the workhorse for headlines, lede, lists */
+.ed-reveal--fade-up {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+  transition-property: opacity, transform;
+}
+.ed-reveal--fade-up.is-in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* mask-up: cinematic clip-path reveal from bottom — used on photographs */
+.ed-reveal--mask-up {
+  clip-path: inset(0 0 100% 0);
+  transition-property: clip-path;
+  transition-duration: 1.15s;
+  transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+}
+.ed-reveal--mask-up.is-in-view {
+  clip-path: inset(0 0 0 0);
+}
+
+/* fade-in: opacity only, no movement — for body copy where slide would distract */
+.ed-reveal--fade-in {
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: 1.1s;
+}
+.ed-reveal--fade-in.is-in-view {
+  opacity: 1;
+}
+
+/* line-draw: scaleX from left for hairlines, dividers, underline accents */
+.ed-reveal--line-draw {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition-property: transform;
+  transition-duration: 1s;
+}
+.ed-reveal--line-draw.is-in-view {
+  transform: scaleX(1);
+}
+
+/* Stagger — when children of a .ed-stagger are .ed-reveal, give each a
+   sequentially larger transition-delay. Up to 16 items handled. */
+.ed-stagger > .ed-reveal:nth-child(1)  { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 0  * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(2)  { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 1  * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(3)  { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 2  * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(4)  { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 3  * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(5)  { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 4  * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(6)  { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 5  * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(7)  { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 6  * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(8)  { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 7  * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(9)  { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 8  * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(10) { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 9  * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(11) { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 10 * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(12) { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 11 * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(13) { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 12 * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(14) { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 13 * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(15) { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 14 * var(--ed-stagger-step, 80ms)); }
+.ed-stagger > .ed-reveal:nth-child(16) { transition-delay: calc(var(--ed-stagger-initial, 0ms) + 15 * var(--ed-stagger-step, 80ms)); }
+
+/* =============================================================
+   Hover details — subtle, refined, never wiggling
+   ============================================================= */
+
+/* Service / project list row — chapter marker, headline, arrow all shift
+   together on hover, with a hairline that sweeps in from the left.    */
+.ed-row {
+  position: relative;
+  isolation: isolate;
+  transition: padding-left 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.ed-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transform: translateY(-50%);
+  transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+  pointer-events: none;
+}
+.ed-row:hover {
+  padding-left: 1.5rem;
+}
+.ed-row:hover::before {
+  width: 1rem;
+}
+.ed-row .ed-row-arrow {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ed-row:hover .ed-row-arrow {
+  transform: translate(4px, -4px);
+}
+.ed-row .ed-row-marker {
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ed-row:hover .ed-row-marker {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+/* Project card — image scales gently, caption arrow shifts, title underline
+   draws in from left. Uses .group from Tailwind for hover-state propagation. */
+.ed-card-photo {
+  overflow: hidden;
+  background: hsl(var(--ink));
+}
+.ed-card-photo img {
+  transition: transform 1.4s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity 0.5s ease;
+  will-change: transform;
+}
+.group:hover .ed-card-photo img {
+  transform: scale(1.04);
+}
+.ed-card-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    hsla(var(--ink), 0.45),
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+.group:hover .ed-card-photo::after {
+  opacity: 1;
+}
+
+/* Chapter marker — slight letterspacing animation on hover */
+.ed-marker {
+  transition: letter-spacing 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.3s ease;
+}
+.group:hover .ed-marker,
+.ed-marker:hover {
+  letter-spacing: 0.22em;
+}
+
+/* Stat block — number scales up subtly, label slides in on hover */
+.ed-stat {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ed-stat .ed-stat-value {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-block;
+}
+.ed-stat:hover .ed-stat-value {
+  transform: translateY(-3px);
+}
+
+/* Button arrow — translate on hover. Use on Button asChild children. */
+.ed-cta-arrow {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ed-cta:hover .ed-cta-arrow,
+button:hover .ed-cta-arrow,
+a:hover .ed-cta-arrow {
+  transform: translateX(4px);
+}
+
+/* Section divider — animated hairline that draws in.
+   Used as a visual transition between bands. */
+.ed-divider {
+  position: relative;
+  height: 1px;
+  background: transparent;
+  overflow: hidden;
+}
+.ed-divider::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: hsl(var(--paper-3));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.ed-divider.is-in-view::before {
+  transform: scaleX(1);
+}
+.ed-divider--dark::before {
+  background: hsl(220 14% 18%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
   .animate-fade-in,
   .animate-marquee { animation: none !important; }
+  .ed-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+  .ed-row,
+  .ed-row::before,
+  .ed-row .ed-row-arrow,
+  .ed-row .ed-row-marker,
+  .ed-card-photo img,
+  .ed-card-photo::after,
+  .ed-marker,
+  .ed-stat,
+  .ed-stat .ed-stat-value,
+  .ed-cta-arrow,
+  .ed-divider::before {
+    transition: none !important;
+    transform: none !important;
+  }
   html { scroll-behavior: auto; }
 }
 

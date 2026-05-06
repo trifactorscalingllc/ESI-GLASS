@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import SiteLayout from "@/components/SiteLayout";
+import { Reveal } from "@/components/Reveal";
 import { toast } from "@/hooks/use-toast";
 import {
   budgetRanges,
@@ -154,15 +155,25 @@ export default function Contact() {
         <div className="container-x">
           <div className="grid gap-10 md:grid-cols-12 md:gap-16">
             <header className="md:col-span-7">
-              <div className="chapter">Contact — Step {step} of {STEPS.length}</div>
-              <h1 className="display-1 mt-8 max-w-[16ch] text-balance">
-                Tell us about your project.
-              </h1>
+              <Reveal variant="fade-up">
+                <div className="chapter">Contact — Step {step} of {STEPS.length}</div>
+              </Reveal>
+              <Reveal variant="fade-up" delay={120}>
+                <h1 className="display-1 mt-8 max-w-[16ch] text-balance">
+                  Tell us about your project.
+                </h1>
+              </Reveal>
             </header>
-            <p className="lede md:col-span-4 md:col-start-9 md:pt-14">
-              A few quick questions help us route your inquiry to the right
-              estimator and prepare a meaningful response.
-            </p>
+            <Reveal
+              variant="fade-in"
+              delay={300}
+              className="md:col-span-4 md:col-start-9 md:pt-14"
+            >
+              <p className="lede">
+                A few quick questions help us route your inquiry to the right
+                estimator and prepare a meaningful response.
+              </p>
+            </Reveal>
           </div>
         </div>
       </section>
