@@ -2,95 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* =============================================================
+   ESI Glass — Design System
+   Modern, professional, liquid-glass aesthetic for a commercial
+   glazing contractor. Deep cool tones (slate/navy) with crystalline
+   light-blue accents. All colors expressed as HSL.
+   ============================================================= */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
+    /* Brand palette */
+    --background: 215 35% 7%;         /* deep slate / near-black */
+    --background-elev: 215 30% 10%;   /* elevated surfaces */
     --foreground: 210 40% 98%;
+    --foreground-muted: 215 20% 75%;
 
-    --card: 222.2 84% 4.9%;
+    --surface: 215 30% 12%;
+    --surface-foreground: 210 40% 98%;
+
+    --card: 215 35% 9%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 215 35% 9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Crystalline accent — light cyan/blue, the "glass" highlight */
+    --primary: 200 95% 65%;
+    --primary-foreground: 215 50% 10%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 215 25% 18%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 215 25% 14%;
+    --muted-foreground: 215 15% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 200 95% 65%;
+    --accent-foreground: 215 50% 10%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 75% 55%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 215 25% 22%;
+    --border-glass: 210 40% 80%;
+    --input: 215 25% 18%;
+    --ring: 200 95% 65%;
+
+    --radius: 1rem;
+
+    /* Glass surfaces (used in backdrop-blur cards) */
+    --glass-tint: 210 50% 80%;
+    --glass-border: 210 40% 90%;
   }
 }
 
@@ -99,20 +60,251 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html, body, #root {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    background-image:
+      radial-gradient(circle at 12% -10%, hsla(200, 95%, 55%, 0.18), transparent 55%),
+      radial-gradient(circle at 90% 0%, hsla(220, 80%, 60%, 0.14), transparent 50%),
+      radial-gradient(circle at 50% 110%, hsla(200, 95%, 55%, 0.10), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+
+  ::selection {
+    background: hsla(200, 95%, 65%, 0.35);
+    color: hsl(var(--foreground));
   }
 }
 
-/* TriFactor page transition: opacity-only fade so position:fixed children
-   (like the navbar) keep anchoring to the viewport during the animation. */
-@keyframes tri-page-fade-in {
-  0%   { opacity: 0; }
-  100% { opacity: 1; }
+/* =============================================================
+   Liquid glass utilities — the core visual language of the site
+   ============================================================= */
+@layer components {
+  /* Standard frosted-glass card */
+  .glass {
+    background: linear-gradient(
+      135deg,
+      hsla(210, 40%, 100%, 0.08) 0%,
+      hsla(210, 40%, 100%, 0.02) 100%
+    );
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid hsla(210, 40%, 100%, 0.12);
+    box-shadow:
+      0 1px 0 hsla(210, 40%, 100%, 0.12) inset,
+      0 -1px 0 hsla(210, 40%, 100%, 0.04) inset,
+      0 8px 32px hsla(215, 50%, 4%, 0.4),
+      0 24px 60px hsla(215, 50%, 4%, 0.3);
+  }
+
+  /* More translucent — hovering panels, navbar */
+  .glass-light {
+    background: linear-gradient(
+      135deg,
+      hsla(210, 40%, 100%, 0.06) 0%,
+      hsla(210, 40%, 100%, 0.01) 100%
+    );
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid hsla(210, 40%, 100%, 0.10);
+  }
+
+  /* Heavy frosted — for modals / featured panels */
+  .glass-heavy {
+    background: linear-gradient(
+      135deg,
+      hsla(210, 40%, 100%, 0.12) 0%,
+      hsla(200, 95%, 75%, 0.04) 50%,
+      hsla(210, 40%, 100%, 0.02) 100%
+    );
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid hsla(210, 40%, 100%, 0.18);
+    box-shadow:
+      0 1px 0 hsla(210, 40%, 100%, 0.2) inset,
+      0 0 0 1px hsla(200, 95%, 70%, 0.05) inset,
+      0 30px 80px hsla(215, 50%, 4%, 0.5);
+  }
+
+  /* Reflective top edge — gives the "liquid" highlight */
+  .glass-reflective::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsla(210, 40%, 100%, 0.5),
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  /* Subtle shimmer/glint on glass panels */
+  .glass-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .glass-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      transparent 30%,
+      hsla(210, 40%, 100%, 0.06) 50%,
+      transparent 70%
+    );
+    transform: translateX(-100%);
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+  .glass-shimmer:hover::after {
+    transform: translateX(100%);
+  }
+
+  /* Section container — consistent horizontal padding */
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-6 md:px-10;
+  }
+
+  /* Display heading — large, tight */
+  .display-1 {
+    font-size: clamp(2.75rem, 6.5vw, 5.5rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    font-weight: 600;
+  }
+  .display-2 {
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    font-weight: 600;
+  }
+  .display-3 {
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    font-weight: 600;
+  }
+
+  /* Eyebrow label */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[hsl(var(--primary))];
+  }
+  .eyebrow::before {
+    content: "";
+    width: 26px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.7;
+  }
+
+  /* Accent gradient text */
+  .text-gradient {
+    background: linear-gradient(
+      120deg,
+      hsl(210, 40%, 100%) 0%,
+      hsl(200, 90%, 80%) 50%,
+      hsl(210, 40%, 100%) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Liquid blob — animated background decoration */
+  .liquid-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.55;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  /* Hairline divider with light bloom */
+  .hairline {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsla(210, 40%, 100%, 0.18),
+      transparent
+    );
+  }
 }
-.tri-page-fade {
-  animation: tri-page-fade-in 0.4s ease-out both;
+
+/* =============================================================
+   Animations
+   ============================================================= */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(40px, -30px) scale(1.05); }
+  66%      { transform: translate(-25px, 35px) scale(0.95); }
+}
+@keyframes drift {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+@keyframes shimmer-line {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
+}
+
+.animate-fade-up    { animation: fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.animate-fade-in    { animation: fade-in 0.8s ease-out both; }
+.animate-float-slow { animation: float-slow 18s ease-in-out infinite; }
+.animate-drift      { animation: drift 6s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
-  .tri-page-fade { animation: none; }
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-float-slow,
+  .animate-drift {
+    animation: none !important;
+  }
+  html { scroll-behavior: auto; }
 }
+
+/* =============================================================
+   Form elements — refined for the dark liquid-glass palette
+   ============================================================= */
+input, textarea, select {
+  color-scheme: dark;
+}
+
+/* Smooth scroll snap for any horizontal galleries */
+.snap-x-mandatory { scroll-snap-type: x mandatory; }
+.snap-start       { scroll-snap-align: start; }

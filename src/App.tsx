@@ -4,16 +4,12 @@ import ScrollToTop from "./components/ScrollToTop";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import Services from "./pages/Services.tsx";
-import About from "./pages/About.tsx";
-import Results from "./pages/Results.tsx";
-import Apply from "./pages/Apply.tsx";
-import NotFound from "./pages/NotFound.tsx";
-import Admin from "./pages/Admin.tsx";
-import WebsiteFunnel from "./pages/WebsiteFunnel.tsx";
-import GrowthOps from "./pages/GrowthOps.tsx";
-import MarketingPage from "./pages/Marketing.tsx";
+import Home from "./pages/Home";
+import Services from "./pages/Services";
+import Work from "./pages/Work";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -25,16 +21,11 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<Home />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/services/website-funnel" element={<WebsiteFunnel />} />
-          <Route path="/services/growth-operations" element={<GrowthOps />} />
-          <Route path="/services/marketing" element={<MarketingPage />} />
+          <Route path="/work" element={<Work />} />
           <Route path="/about" element={<About />} />
-          <Route path="/results" element={<Results />} />
-          <Route path="/apply" element={<Apply />} />
-          <Route path="/admin" element={<Admin />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
